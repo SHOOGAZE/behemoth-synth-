@@ -1,0 +1,42 @@
+<!doctype html>
+<!--
+  BEHEMOTH — wavetable bass synth for the browser. Single file, no dependencies.
+  Copyright (c) 2026 Kirill Kinderhart. Released under the MIT License (see LICENSE).
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="BEHEMOTH">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="theme-color" content="#0a0a0a">
+<title>BEHEMOTH</title>
+<style>
+{{CSS}}</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><radialGradient id="kg" cx=".36" cy=".28" r=".85"><stop offset="0" stop-color="#5a5252"/><stop offset=".55" stop-color="#2a2323"/><stop offset="1" stop-color="#100c0c"/></radialGradient></defs></svg>
+<div id="app"></div>
+<div id="start">
+  <div class="big" aria-label="BEHEMOTH">BEHEMOTH</div>
+  <div class="err" id="startErr"></div>
+  <i class="hz" id="startHz">touch anywhere to start · headphones recommended</i>
+  <button id="startBtn" type="button" aria-label="Touch to start"></button>
+</div>
+<div id="toast" role="status"></div>
+
+<script id="engine-src">
+{{ENGINE}}</script>
+<script>
+(function () {
+'use strict';
+{{UI}}})();
+
+</script>
+</body>
+</html>

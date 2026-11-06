@@ -1,0 +1,184 @@
+/* ================= side menu, settings sections, illumination swatches ================= */
+
+details.sec { border: 1px solid #232323; border-radius: 6px; margin-bottom: 8px; background: #0f0f0f; }
+details.sec > summary { list-style: none; cursor: pointer; padding: 13px 12px; font: 700 11px var(--f-display); letter-spacing: .22em; text-transform: uppercase; color: var(--fg); display: flex; align-items: center; justify-content: space-between; }
+details.sec > summary::-webkit-details-marker { display: none; }
+details.sec > summary::after { content: "+"; color: var(--accent-fg); font-size: 16px; }
+details.sec[open] > summary::after { content: "–"; }
+details.sec .secb { padding: 2px 12px 12px; }
+.lab2 { display: flex; align-items: center; justify-content: space-between; }
+.sval { color: var(--accent-fg); letter-spacing: .06em; font-weight: 700; }
+.setg input[type=range] { width: 100%; accent-color: var(--accent); }
+
+:root[data-meters="off"] #scope, :root[data-meters="off"] #meter, :root[data-meters="off"] #voices { display: none; }
+:root[data-srcbar="off"] #srcbar, :root[data-hint="off"] #hint { display: none !important; }
+:root[data-ksize="s"] .knob { --kw: clamp(48px, 15cqw, 68px); }
+:root[data-ksize="l"] .knob { --kw: clamp(68px, 23cqw, 104px); }
+:root.calm *, :root.calm *::before, :root.calm *::after { animation: none !important; transition: none !important; }
+.hbtn.menu { width: 42px; }
+
+/* narrow portrait screens: give the modules more room */
+@media (max-width: 560px) and (orientation: portrait) {
+  header#top { padding: 6px 0 4px; row-gap: 5px; }
+  #srcbar { padding: 2px 0 4px; }
+  #hint { min-height: 0; font-size: 10.5px; padding-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .card { padding: 10px 9px 8px; }
+}
+
+/* dock: large Stage / hide-keys buttons, compact the rest so everything fits on one row */
+/* dock controls: one height, one radius, square icon buttons */
+#dock { --ch: 44px; }
+#dock .drow { display: flex; align-items: center; gap: 6px; }
+#dock .drow .dgap { flex: 1; min-width: 0; }
+#dock .drow .pill, #dock .drow .stepper { height: var(--ch); border-radius: 8px; }
+#dock .drow .pill { padding: 0 12px; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; letter-spacing: .1em; flex: none; }
+#dock .drow .pill.sq { width: var(--ch); padding: 0; } #dock .drow .pill svg { display: block; }
+#dock .drow .tog svg { transition: transform .2s ease; } #dock .drow .tog.up svg { transform: rotate(180deg); }
+#dock .drow .stepper { flex: none; } #dock .drow .stepper button { width: calc(var(--ch) * .72); height: 100%; } #dock .drow .stepper span { min-width: 46px; padding: 0 2px; font-size: 12px; }
+@media (max-width: 430px) { #dock { --ch: 40px; } #dock .drow { gap: 5px; } #dock .drow .pill { padding: 0 9px; } #dock .drow .stepper span { min-width: 34px; } }
+@media (max-width: 380px) { #dock { --ch: 36px; } #dock .drow { gap: 4px; } #dock .drow .pill { padding: 0 8px; font-size: 10px; letter-spacing: .06em; } #dock .drow .stepper span { min-width: 34px; font-size: 11px; } }
+
+.hbtn.rec { min-width: 56px; } .hbtn.rec.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); animation: recpulse 1.2s ease-in-out infinite; }
+@keyframes recpulse { 50% { opacity: .65; } }
+
+#learnBar { position: fixed; left: 10px; right: 10px; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); z-index: 300; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; background: var(--raised); border: 1px solid var(--accent); border-radius: 10px; font-size: 12px; box-shadow: 0 6px 24px #000a; }
+body.learning .knob { outline: 1px dashed color-mix(in srgb, var(--accent) 60%, transparent); outline-offset: 2px; border-radius: 10px; }
+.knob.learn-target { outline: 2px solid var(--accent) !important; background: color-mix(in srgb, var(--accent) 14%, transparent); }
+.mmap { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
+.mrow2 { display: flex; align-items: center; gap: 10px; padding: 7px 10px; background: var(--raised); border: 1px solid var(--line); border-radius: 8px; font-size: 12px; }
+.mrow2 b { flex: 1; font-weight: 600; } .mrow2 button { background: none; border: 0; color: var(--mute); padding: 4px 8px; cursor: pointer; }
+
+#stage .smacros { display: none; flex: none; justify-content: center; gap: 18px; padding: 2px 0 0; }
+#stage.macros .smacros { display: flex; }
+#stage .smacros .knob { --kw: min(76px, calc((100vw - 80px) / 4)); }
+#stage .smacros { gap: 14px; }
+
+.ptools { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 10px; } .ptools .btn { flex: 1 1 auto; padding: 9px 10px; font-size: 12px; } .ptools .btn:disabled { opacity: .35; }
+.ptools .btn.on, .pnav.ab.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.pnav:disabled { opacity: .3; } .pnav.ab { width: auto; min-width: 44px; padding: 0 8px; font: 700 11px var(--f-mono); letter-spacing: .06em; }
+#psearch { width: 100%; margin: 2px 0 8px; }
+.pi .fav { margin-left: 10px; font-size: 18px; line-height: 1; color: var(--dim); padding: 4px; } .pi .fav.on { color: var(--accent); }
+
+.sqgrid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 5px; margin: 8px 0; } .sqgrid.sm { gap: 4px; }
+.sq { position: relative; height: 54px; border-radius: 8px; border: 1px solid var(--line); background: var(--raised); color: var(--dim); display: flex; align-items: center; justify-content: center; touch-action: none; cursor: ns-resize; padding: 0; font: inherit; }
+.sqgrid.sm .sq { height: 38px; cursor: pointer; }
+.sq b { font: 700 13px var(--f-mono); } .sq i { position: absolute; left: 5px; top: 3px; font: 600 8px var(--f-mono); font-style: normal; color: var(--dim); }
+.sq[data-s="1"] { background: color-mix(in srgb, var(--accent) 22%, var(--raised)); color: var(--fg); border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.sq[data-s="2"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); } .sq[data-s="2"] i { color: var(--accent-ink); }
+.sq.cur { box-shadow: 0 0 0 2px var(--accent-fg), 0 0 12px var(--accent-glow); } .sq.off { opacity: .28; }
+.sqgrid.sm .sq b { font-size: 10px; }
+
+.card h3.cth { cursor: pointer; } .card h3.cth .ct::after { content: "−"; margin-left: 8px; color: var(--dim); font-weight: 400; } .card.collapsed h3.cth .ct::after { content: "+"; }
+.card.collapsed > :not(h3) { display: none !important; }
+#vbubble { position: fixed; z-index: 400; transform: translateX(-50%); pointer-events: none; opacity: 0; transition: opacity .12s; background: var(--fg); color: var(--bg); border-radius: 12px; padding: 7px 14px; text-align: center; box-shadow: 0 6px 22px #000b; }
+#vbubble.on { opacity: 1; } #vbubble i { display: block; font: 700 9px var(--f-mono); font-style: normal; letter-spacing: .14em; text-transform: uppercase; opacity: .6; } #vbubble b { font: 700 22px var(--f-display); letter-spacing: .01em; }
+:root[data-contrast="high"] { --mute: #c9c5be; --dim: #a39f98; --line: #3d3d3d; --fg: #fff; }
+:root[data-text="l"] .knob .lbl { font-size: 12px; } :root[data-text="l"] .knob .vv { font-size: 13px; } :root[data-text="l"] .card h3, :root[data-text="l"] .lab2 { font-size: 13px; }
+:root[data-text="l"] #hint, :root[data-text="l"] .empty, :root[data-text="l"] .pi small { font-size: 13px; } :root[data-text="l"] .chip, :root[data-text="l"] .pill, :root[data-text="l"] .btn, :root[data-text="l"] .cap { font-size: 14px; }
+:root[data-text="l"] nav#tabs button { font-size: 13px; } :root[data-text="l"] .sq b { font-size: 15px; }
+#tour { position: fixed; inset: 0; z-index: 500; } #tour .tspot { position: fixed; border-radius: 12px; box-shadow: 0 0 0 100vmax rgba(0,0,0,.72); border: 1.5px solid var(--accent); transition: all .25s ease; pointer-events: none; }
+#tour .tcard { position: fixed; left: 14px; right: 14px; max-width: 420px; margin: 0 auto; background: var(--raised); border: 1px solid var(--accent); border-radius: 14px; padding: 14px 16px; box-shadow: 0 10px 40px #000c; }
+#tour .tcard b { font: 700 11px var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--accent-fg); } #tour .tcard p { margin: 8px 0 12px; font-size: 14px; line-height: 1.45; }
+
+/* tablets and other wide screens: cards flow into 2-3 columns, the keyboard stays on screen in landscape */
+@media (min-width: 820px) {
+  .view.on { display: block; column-count: 2; column-gap: 14px; }
+  .view.on > * { break-inside: avoid; margin-bottom: 14px; }
+  .view.on > .card.wide { column-span: all; }
+}
+@media (min-width: 1280px) { .view.on { column-count: 3; } }
+@media (display-mode: standalone), (display-mode: fullscreen) { body { padding-top: env(safe-area-inset-top, 0px); } }
+@media (min-width: 820px) { #stage .smacros .knob { --kw: 96px; } #stage .smacros { gap: 34px; } }
+.card h3 button.mini.ico { padding: 5px 8px; display: inline-flex; align-items: center; }
+
+#tour .tdots { display: flex; gap: 5px; margin: 0 0 12px; } #tour .tdots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); } #tour .tdots i.on { background: var(--accent); }
+#tour .tcard .btns { display: flex; gap: 8px; } #tour .tcard .btns .pri { margin-left: auto; }
+#tip { position: fixed; left: 12px; right: 12px; bottom: calc(78px + env(safe-area-inset-bottom, 0px)); z-index: 240; max-width: 460px; margin: 0 auto; background: var(--raised); border: 1px solid var(--accent); border-radius: 12px; padding: 12px 14px; box-shadow: 0 8px 30px #000c; }
+#tip p { margin: 0 0 10px; font-size: 13px; line-height: 1.45; } #tip .tbtns { display: flex; gap: 8px; flex-wrap: wrap; } #tip .tbtns .btn { padding: 8px 12px; font-size: 12px; }
+
+/* tablet header, source strip, split stage */
+.pnav { display: inline-flex; align-items: center; justify-content: center; padding: 0; font-size: 20px; }
+#hint b { margin-right: .5em; }
+#srcbar { -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; scroll-snap-type: x proximity; padding-right: 24px; }
+#srcbar .cap { touch-action: pan-x; scroll-snap-align: start; }
+@media (max-width: 1100px) { #scope, #voices, .meter { display: none; } }
+@media (max-width: 900px) { #presetBtn i { display: none; } }
+#presetBtn { min-width: 120px; }
+#stage .splitw { height: 100%; display: flex; flex-direction: column; justify-content: center; gap: 8px; min-height: 0; }
+#stage .splitrow { flex: 0 1 var(--kh, 180px); min-height: 0; display: flex; flex-direction: column; justify-content: center; }
+#stage .splitrow .kbd { flex: 1 1 0; height: auto; min-height: 0; max-height: var(--kh, 180px); }
+#stage .splitw .kbd .bk { height: 60%; }
+
+/* ---- unified controls: one radius, two heights, one type style, one pressed/on state ---- */
+:root { --br: 6px; --bh: 40px; --bh-s: 32px; --b-bg: #151515; --b-line: #2a2a2a; }
+@media (min-width: 820px) { :root { --bh: 44px; --bh-s: 36px; } }
+@media (orientation: landscape) and (max-height: 540px) { :root { --bh: 34px; --bh-s: 30px; } }
+.pnav, .hbtn, .pill, .btn, .chip, .stepper, .tabhead .tn, .pi, .snap, .route button, #presetBtn, #srcbar .cap, .mini, .card h3 button.mini { border-radius: var(--br); }
+/* modulation sources (strip above the modules and the source picker in the matrix) stay rounded capsules */
+#srcbar .cap, .chip.s-lfo, .chip.s-env, .chip.s-macro, .chip.s-touch, .chip.s-key { border-radius: 999px; }
+.pnav, .hbtn, .pill, .btn, .chip, .stepper, .tabhead .tn, .pi, .snap, .route button, #presetBtn, .mini, .card h3 button.mini { background: var(--b-bg); border: 1px solid var(--b-line); color: var(--fg); box-shadow: none; }
+.hbtn, .pill, .btn, .chip, .pnav.ab, .mini, .card h3 button.mini, #srcbar .cap, #stage .seg button { font-family: var(--f-display); font-weight: 700; font-size: 11.5px; letter-spacing: .1em; text-transform: none; }
+.hbtn, .pnav { height: var(--bh); }
+.pill, .btn, .stepper, .tabhead .tn, #presetBtn { min-height: var(--bh); }
+.chip, #srcbar .cap { min-height: var(--bh-s); }
+.mini, .card h3 button.mini { min-height: 32px; padding: 4px 10px; }
+.hbtn.stg, .btn.pri { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.pill.on, .chip.on, .snap.on, .pi.cur, .mini.on, .card h3 button.mini.on { background: color-mix(in srgb, var(--accent) 13%, #0a0a0a); color: var(--accent-fg); border-color: var(--accent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent); }
+.pnav:active, .hbtn:active, .pill:active, .btn:not(.pri):active, .chip:active, .snap:active, .pi:active, .mini:active, #presetBtn:active, .tabhead .tn:active { background: #212121; }
+#dock .drow .pill, #dock .drow .stepper { border-radius: var(--br); }
+#stage .seg { border-radius: var(--br); border: 1px solid var(--b-line); }
+#tabs button { border-radius: var(--br); }
+#dock .drow .pill { font-size: 11.5px; }
+button:focus-visible, .chip:focus-visible, .pill:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* short screens (phone landscape): compact bar, small macros, keys shrink to what is left */
+@media (max-height: 520px) {
+  #stage { gap: 4px; padding-top: max(4px, env(safe-area-inset-top)); padding-bottom: max(4px, env(safe-area-inset-bottom)); }
+  #stage .sbar { padding-bottom: 5px; }
+  #stage .smacros { gap: 10px; padding: 0; }
+  #stage .smacros .knob { --kw: 68px; }
+  #stage .sbar { gap: 4px; }
+  #stage .sbar .pill { padding-left: 9px; padding-right: 9px; }
+  #stage .sbar .stepper span { min-width: 38px; }
+  #stage .sbar .pill.sq, #stage .sbar .pill[aria-label="Panic"] { min-width: 34px; padding: 0; }
+}
+
+/* octave stepper buttons never shrink below a thumb-friendly width */
+.stepper button { flex: none; }
+#stage .stepper button, #dock .drow .stepper button { min-width: 32px; }
+/* very narrow phones (320 pt): keep the dock row inside the screen */
+@media (max-width: 340px) { #dock .drow .dgap { display: none; } #dock .drow .stepper button { width: calc(var(--ch) * .6); min-width: 26px; } #dock .drow .stepper span { min-width: 24px; font-size: 10px; } #dock .drow { gap: 3px; } #dock .drow .pill { padding: 0 5px; letter-spacing: .02em; } #dock .drow .pill.sq { min-width: 32px; padding: 0; } }
+
+#stage .sctl .pill.sq, #stage .sctl .pill[aria-label="Panic"] { min-width: 36px; }
+
+/* small landscape phones: the preset switcher stays in the main header, the Stage bar keeps only what plays */
+@media (orientation: landscape) and (max-width: 820px) { #stage .spre { display: none; } }
+@media (orientation: landscape) and (max-width: 700px) { #stage .sbar .pill { padding-left: 7px; padding-right: 7px; } #stage .seg button { padding-left: 11px; padding-right: 11px; } }
+#stage .sbar .pill[aria-label*="preset"] { min-width: 34px; }
+
+/* ================= landscape Stage: slim bar on top, macro knobs in a 2x2 column beside the keys, rows fill the height ================= */
+@media (orientation: landscape) {
+  #stage.on { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); column-gap: 10px; row-gap: 6px; }
+  #stage.on.lh { grid-template-columns: minmax(0, 1fr) auto; }
+  #stage .sbar { grid-column: 1 / -1; grid-row: 1; }
+  #stage .sbody { grid-row: 2; grid-column: 2; min-width: 0; min-height: 0; }
+  #stage.lh .sbody { grid-column: 1; }
+  #stage:not(.macros) .sbody { grid-column: 1 / -1; }
+  #stage.macros .smacros { grid-row: 2; grid-column: 1; display: grid; grid-template-columns: repeat(2, auto); align-content: center; justify-content: center; justify-items: center; gap: 4px 6px; padding: 0; }
+  #stage.macros.lh .smacros { grid-column: 2; }
+  #stage .smacros .knob { --kw: clamp(50px, 16vh, 66px); }
+  #stage .wgrp { height: 100%; align-self: stretch; max-height: none; }
+  #stage .splitw { justify-content: center; }
+  #stage .splitrow { flex: 1 1 0; max-height: 230px; }
+  #stage .splitrow .kbd { max-height: none; }
+}
+
+/* portrait tab bar (same look as ELEPHANT): the active mark is a thick bar on the divider line, right above the label */
+@media (orientation: portrait) {
+  nav#tabs { gap: 0; padding: 0 0 calc(2px + env(safe-area-inset-bottom, 0px)); }
+  nav#tabs button { padding: 18px 0 14px; gap: 0; }
+  nav#tabs button::before { display: none; }
+  nav#tabs button span { position: relative; display: inline-block; padding: 0 calc(14px - .2em) 0 14px; }
+  nav#tabs button span::before { content: ""; position: absolute; left: 0; right: 0; top: -19px; height: 3px; background: transparent; }
+  nav#tabs button.on span::before { background: var(--accent); }
+}

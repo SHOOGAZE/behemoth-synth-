@@ -1,0 +1,33 @@
+/* ================= living interface: live beads, cable, ignition ================= */
+.knob .liv { fill: #fff; stroke: var(--kc, var(--accent)); stroke-width: 1.6; filter: drop-shadow(0 0 4px var(--kc, var(--accent))); pointer-events: none; }
+.knob .cap { transition: stroke .35s ease; }
+.knob .val { filter: drop-shadow(0 0 0 transparent); transition: filter .35s ease; }
+.knob .vv { text-shadow: 0 0 0 transparent; transition: color .35s ease, text-shadow .35s ease; }
+.knob.touch .cap { stroke: color-mix(in srgb, var(--accent) 70%, #fff 20%); }
+.knob.touch .val { filter: drop-shadow(0 0 8px color-mix(in srgb, var(--kc, var(--accent)) 90%, transparent)); }
+.knob.touch .vv { color: var(--accent-fg); text-shadow: 0 0 8px var(--accent-glow); }
+.knob.zap svg { animation: zap .6s ease-out; }
+.knob.zap .mod { animation: modin .6s ease-out; }
+@keyframes zap { 0% { transform: scale(1); } 25% { transform: scale(1.17); filter: drop-shadow(0 0 14px var(--arm, var(--accent))); } 100% { transform: scale(1); } }
+@keyframes modin { 0% { stroke-width: 10; opacity: 0; } 40% { stroke-width: 7; opacity: 1; } 100% { stroke-width: 3; opacity: .95; } }
+.cap { position: relative; }
+.cap::before { opacity: calc(.5 + var(--lv, 0) * .5); box-shadow: 0 0 calc(var(--lv, 0) * 12px) var(--sc); }
+.cap::after { content: ""; position: absolute; left: 14px; right: 14px; bottom: 2px; height: 2px; border-radius: 2px; background: var(--sc); transform-origin: left center; transform: scaleX(var(--lv, 0)); box-shadow: 0 0 6px var(--sc); pointer-events: none; }
+#cable { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 89; pointer-events: none; display: none; overflow: visible; }
+#cable.show { display: block; }
+#cable path { fill: none; stroke: var(--sc, var(--accent)); stroke-linecap: round; }
+#cable .glow { stroke-width: 10; opacity: .22; filter: blur(3px); }
+#cable .core { stroke-width: 2.6; stroke-dasharray: 8 6; animation: cflow .6s linear infinite; }
+#cable .end, #cable .start { fill: var(--sc, var(--accent)); filter: drop-shadow(0 0 6px var(--sc, var(--accent))); }
+#cable.plug { animation: unplug .38s ease-in forwards; }
+#cable.plug .core { animation: none; stroke-dasharray: none; }
+@keyframes cflow { to { stroke-dashoffset: -28; } }
+@keyframes unplug { to { opacity: 0; } }
+.chip, .pill, .btn, .snap, .pnav, .hbtn, #presetBtn, .pi, .cap { transition: box-shadow .22s ease, color .18s ease, border-color .18s ease, transform .09s ease; }
+.sw::after { transition: transform .2s cubic-bezier(.3,1.4,.5,1), background .2s, box-shadow .25s; }
+.sw { transition: box-shadow .25s ease, border-color .2s; }
+@keyframes ignite { 0% { box-shadow: 0 0 0 transparent, inset 0 0 0 transparent; } 30% { box-shadow: 0 0 26px var(--accent-glow), inset 0 0 10px var(--accent-glow); } }
+.pill.on, .chip.on, .snap.on, .mini.on, .pi.cur { animation: ignite .5s ease-out; }
+.sw.on { animation: ignite .5s ease-out; }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+
