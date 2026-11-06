@@ -1,6 +1,7 @@
 # BEHEMOTH
 
-A wavetable bass synthesizer that runs in the browser. One HTML file, no dependencies, built for touch screens (phones and tablets). Works with a computer keyboard and MIDI too, and installs as an app that runs offline. Member of a design family with [GRAINS](https://shoogaze.github.io/grains-synth/) and [ELEPHANT](https://github.com/SHOOGAZE/elephant-sequencer).
+A wavetable bass synthesizer that runs in the browser. One HTML file, no dependencies, built for touch screens (phones and tablets). Works with a computer keyboard and MIDI too, and installs as an app that runs offline. Member of a design family with [GRAINS](https://github.com/SHOOGAZE/grains-synth) and [ELEPHANT](https://github.com/SHOOGAZE/elephant-sequencer)
+
 
 **Try it:** open [BEHEMOTH](https://shoogaze.github.io/behemoth-synth-/) on your phone and tap the screen to start audio. On an iPhone or iPad use *Share → Add to Home Screen* for a full-screen app.
 
