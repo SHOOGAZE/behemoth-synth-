@@ -2,7 +2,7 @@
 
 A wavetable bass synthesizer that runs in the browser. One HTML file, no dependencies, built for touch screens (phones and tablets). Works with a computer keyboard and MIDI too, and installs as an app that runs offline. Sibling of the [ELEPHANT](https://github.com/SHOOGAZE/elephant-sequencer) sampler groovebox.
 
-**Try it:** open [[shoogaze.github.io/behemoth-synth](https://shoogaze.github.io/behemoth-synth/)](https://shoogaze.github.io/behemoth-synth-/) on your phone and tap the screen to start audio. On an iPhone or iPad use *Share → Add to Home Screen* for a full-screen app.
+**Try it:** open https://shoogaze.github.io/behemoth-synth-/ on your phone and tap the screen to start audio. On an iPhone or iPad use *Share → Add to Home Screen* for a full-screen app.
 
 ## Screenshots
 
