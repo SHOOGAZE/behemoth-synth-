@@ -1,0 +1,60 @@
+/* ================= STAGE: fullscreen keys / big touch pad ================= */
+#stage { position: fixed; inset: 0; z-index: 120; display: none; flex-direction: column; gap: 8px; padding: max(8px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left)); background: #080808; }
+#stage.on { display: flex; animation: stin .22s ease-out; }
+@keyframes stin { from { opacity: 0; transform: scale(.985); } }
+#stage .sbar { flex: none; display: flex; align-items: center; gap: 6px; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 8px; position: relative; }
+#stage .sbar::-webkit-scrollbar { display: none; }
+#stage .sbar::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; border-radius: 2px; background: var(--accent); opacity: .8; }
+#stage .back { display: flex; align-items: center; gap: 6px; flex: none; font-weight: 800; letter-spacing: .08em; }
+#stage .sname { flex: 1; min-width: 48px; text-align: center; font-weight: 700; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--fg); }
+#stage .seg { display: flex; flex: none; border-radius: 999px; overflow: hidden; border: 1px solid #000; box-shadow: inset 0 1px 0 rgba(255,255,255,.08); }
+#stage .seg button { padding: 8px 14px; border: 0; background: #111; color: var(--mute); font-weight: 800; font-size: 12px; letter-spacing: .08em; cursor: pointer; }
+#stage .seg button.on { background: var(--accent); color: var(--accent-ink); }
+#stage .sbody { flex: 1; min-height: 0; display: flex; gap: 8px; }
+#stage .wgrp { flex: none; display: flex; gap: 4px; order: 2; align-self: center; height: min(calc(var(--kh, 180px) * 2 + 6px), 260px); max-height: 100%; }
+#stage.lh .wgrp { order: 0; }
+#stage .sbody .wheel { display: block; width: 40px; height: auto; align-self: stretch; }
+#stage .main.m-split { display: flex; flex-direction: column; justify-content: center; }
+#stage .main { flex: 1; min-width: 0; min-height: 0; position: relative; overflow: hidden; }
+#stage .kbd { height: var(--kh, 180px); flex: 0 1 auto; min-height: 56px; border-radius: 10px; }
+#stage .kbd .wk { font-size: 12px; padding-bottom: 10px; }
+#stage .kbd .bk { height: 62%; }
+#stage #surfaceS { height: 100%; border-radius: 14px; }
+#stage .padinfo { position: absolute; left: 12px; top: 10px; font: 600 10px var(--f-mono); letter-spacing: .12em; color: color-mix(in srgb, var(--accent) 35%, #888 30%); pointer-events: none; z-index: 3; }
+#stage .pady { position: absolute; right: 12px; top: 10px; bottom: 10px; width: 3px; border-radius: 3px; background: var(--accent); opacity: .22; pointer-events: none; z-index: 3; }
+#stage .scope { display: none; }
+
+#stage .snav, #stage .spre, #stage .sctl { display: contents; }
+#stage .sbar .stepper, #stage .sbar .pill, #stage .sbar .back { flex: none; }
+/* stage button: the loudest control in the header, red and solid */
+.hbtn.stg { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 800; letter-spacing: .12em; padding: 0 12px; }
+@media (max-width: 560px) { .logo { font-size: 14px; letter-spacing: .14em; } .hbtn { padding: 0 9px; } .hbtn.ico { padding: 0; } }
+.hbtn.stg:active { background: color-mix(in srgb, var(--accent) 80%, #fff); }
+@media (orientation: landscape) { .hbtn.stg { height: 40px; padding: 0 20px; font-size: 12px; } }
+
+
+/* ================= portrait: no full-screen Stage, the dock expands in place ================= */
+#dock .dxp { display: none; }
+#dock .dxbar { display: flex; align-items: center; gap: 6px; }
+#dock .dxbar .dgap { flex: 1; min-width: 0; }
+#dock .seg { display: flex; flex: none; border-radius: 8px; overflow: hidden; border: 1px solid #000; box-shadow: inset 0 1px 0 rgba(255,255,255,.08); }
+#dock .seg button { height: var(--ch, 40px); padding: 0 16px; border: 0; background: #111; color: var(--mute); font-weight: 800; font-size: 11.5px; letter-spacing: .08em; cursor: pointer; }
+#dock .seg button.on { background: var(--accent); color: var(--accent-ink); }
+#dock .dxbody { display: flex; gap: 6px; height: clamp(200px, 30vh, 300px); }
+@supports (height: 100dvh) { #dock .dxbody { height: clamp(200px, 30dvh, 300px); } }
+#dock .dxmain { flex: 1; min-width: 0; min-height: 0; position: relative; }
+#dock .dxsplit { display: flex; flex-direction: column; gap: 6px; height: 100%; }
+#dock .dxp .kbd { flex: 1 1 0; height: auto; min-height: 0; border-radius: 10px; }
+#dock .dxp .kbd .wk { font-size: 11px; padding-bottom: 6px; }
+#dock .dxp .kbd .bk { height: 60%; }
+#dock .dxp #surfaceD { height: 100%; border-radius: 12px; }
+#dock .dxp .wgrp { flex: none; display: flex; gap: 4px; order: 2; }
+:root[data-hand="left"] #dock .dxp .wgrp { order: 0; }
+#dock .dxp .wheel { display: block; width: 38px; height: auto; align-self: stretch; }
+#dock .drow .xbtn .i2 { display: none; }
+@media (orientation: portrait) {
+  .hbtn.stg, .fsbtn { display: none !important; }
+  #dock.open:not(.min) .dmain { display: none; }
+  #dock.open:not(.min) .dxp { display: flex; flex-direction: column; gap: 6px; }
+  #dock.open:not(.min) .drow .xbtn .i1 { display: none; } #dock.open:not(.min) .drow .xbtn .i2 { display: block; }
+}

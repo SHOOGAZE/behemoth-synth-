@@ -1,0 +1,41 @@
+/* ================= landscape: one full-bleed console (rail + stage + keyboard), edge to edge ================= */
+@media (orientation: landscape) and (min-width: 640px) {
+  body { padding-left: max(6px, env(safe-area-inset-left, 0px)); padding-right: max(6px, env(safe-area-inset-right, 0px)); padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  #app { display: grid; max-width: none; height: 100%; column-gap: 10px; grid-template-columns: 108px minmax(0, 1fr); grid-template-rows: auto auto auto minmax(0, 1fr) auto;
+    grid-template-areas: "top top" "rail src" "rail hint" "rail views" "rail dock"; }
+  :root[data-hand="left"] #app { grid-template-columns: minmax(0, 1fr) 108px; grid-template-areas: "top top" "src rail" "hint rail" "views rail" "dock rail"; }
+  /* the screens panel is a size container: heights inside it follow the panel (cqh), not the browser window (vh) */
+  #views { container: views / size; }
+  header#top { grid-area: top; } #srcbar { grid-area: src; } #hint { grid-area: hint; } #views { grid-area: views; } #dock { grid-area: dock; }
+  #rail { grid-area: rail; display: flex; flex-direction: column; gap: 8px; min-height: 0; padding-bottom: 8px; }
+  #rail nav#tabs { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 4px; padding: 6px; border-radius: 12px; border: 1px solid rgba(0,0,0,.7); border-top: 1px solid rgba(255,255,255,.08); box-shadow: none; }
+  #rail nav#tabs button { flex: 1; max-height: 90px; flex-direction: row; justify-content: flex-start; gap: 7px; padding: 0 6px; font-size: 12px; letter-spacing: .1em; }
+  #rail nav#tabs button::before { width: 3px; height: 22px; }
+  #dock { margin: 0 0 8px; padding: 6px; }
+  :root[data-hand="left"] #rail nav#tabs button { flex-direction: row-reverse; justify-content: flex-end; }
+}
+@media (orientation: landscape) and (max-height: 540px) {
+  header#top { padding: 3px 0 5px; margin-bottom: 2px; } #srcbar { padding: 2px 0 4px; } #hint { display: none !important; } #views { padding-bottom: 6px; }
+  .logo { font-size: 16px; } #scope { height: 28px; } .meter { height: 28px; } .hbtn, .pnav { height: 32px; } #presetBtn { padding: 5px 10px; }
+  #surface { height: clamp(110px, 52cqh, 220px); } .card { padding-top: 8px; } #toast { bottom: 70px; }
+  :root { --dkh: 46px; } :root[data-kh="s"] { --dkh: 40px; } :root[data-kh="m"] { --dkh: 50px; } :root[data-kh="l"] { --dkh: 64px; }
+  .knob { --kw: clamp(52px, 19cqw, 84px); }
+  #dock { padding: 5px; border-radius: 10px; } #dock .wheel { width: 40px; }
+}
+
+/* ================= landscape: no keyboard here - it lives on STAGE; the rail keeps the four screens ================= */
+@media (orientation: landscape) and (min-width: 640px) and (max-height: 600px) { #dock { display: none !important; } }
+@media (orientation: landscape) and (max-height: 540px) { :root { --dkh: 46px; } }
+
+
+/* tablet in landscape: the living surface takes a share of the panel it sits in */
+@media (orientation: landscape) and (min-width: 700px) and (min-height: 541px) { #surface { height: clamp(220px, 41cqh, 440px); } }
+
+/* landscape: popups float over the screen as centred overlays instead of stretching across it; steps get a full-width card */
+@media (orientation: landscape) and (max-height: 500px) {
+  .sheet { max-width: 760px; margin: 0 auto; max-height: 96%; border-radius: 14px 14px 0 0; }
+}
+@media (orientation: landscape) and (min-width: 640px) {
+  #v-play .card:has(.sqgrid) { column-span: all; }
+  #v-play .card:has(.sqgrid) .sqgrid:has(> :nth-child(16)) { grid-template-columns: repeat(16, 1fr); }
+}
