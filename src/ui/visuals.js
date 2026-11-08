@@ -3,6 +3,7 @@ var dpr = Math.min(2, window.devicePixelRatio || 1);
 function fit(cv, hCss) {
   if (cv._fg === layoutGen && cv._fh === hCss && cv._fit) return cv._fit;
   var w = Math.max(40, Math.round(cv.clientWidth || cv.parentNode && cv.parentNode.clientWidth || 300)), ht = hCss || parseInt(cv.dataset.h || '100', 10); if (cv.dataset.ls && window.matchMedia && matchMedia('(orientation: landscape) and (max-height: 540px)').matches) ht = Math.round(ht * 0.62);
+  if (cv.dataset.grow) { var vw = window.innerWidth; ht = Math.round(ht * (vw >= 1100 ? 1.65 : vw >= 700 ? 1.45 : 1)); }
   cv.style.height = ht + 'px';
   if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(ht * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(ht * dpr); }
   var g = cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); cv._fg = layoutGen; cv._fh = hCss; cv._fit = { g: g, w: w, h: ht }; return cv._fit;
@@ -52,7 +53,7 @@ function relayout() { layoutGen++; clearTimeout(relayoutT); relayoutT = setTimeo
 
 /* 3D wavetable stack: static layer cached offscreen; per frame only the live slice is drawn */
 function TableView(slot, hgt) {
-  var cv = h('canvas', { class: 'vis', 'data-h': hgt || 104, 'data-ls': 1 }), bgc = document.createElement('canvas');
+  var cv = h('canvas', { class: 'vis', 'data-h': hgt || 104, 'data-ls': 1, 'data-grow': 1 }), bgc = document.createElement('canvas');
   var posK = slot ? 'bPos' : 'aPos', dest = slot ? 1 : 0, PTS = 96, SKEW = 26, AMP = 15, G = null, pos = null, dirty = true, lastSig = '';
   function build(c, t) {
     var W = c.w, H = c.h, Ln = Math.min(t.n, 22), dy = (H - 36) / Math.max(1, Ln - 1), lines = [], li, i, f, yb, xo, a;
