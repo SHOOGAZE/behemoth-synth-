@@ -41,8 +41,8 @@ function buildStage() {
   var bar = h('div', { class: 'sbar' },
     h('div', { class: 'snav' }, back, h('div', { class: 'seg' }, bSplit, bPad)),
     h('div', { class: 'spre' },
-      h('button', { class: 'pill', type: 'button', 'aria-label': 'Previous preset', onclick: function () { stepPreset(-1); } }, '‹'), nameEl,
-      h('button', { class: 'pill', type: 'button', 'aria-label': 'Next preset', onclick: function () { stepPreset(1); } }, '›')),
+      h('button', { class: 'pill', type: 'button', 'aria-label': 'Previous preset', onclick: function () { stepPreset(-1); }, html: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>' }), nameEl,
+      h('button', { class: 'pill', type: 'button', 'aria-label': 'Next preset', onclick: function () { stepPreset(1); }, html: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>' })),
     sctl);
   var mrow = h('div', { class: 'smacros' });
   for (var mj = 0; mj < 4; mj++) { var mk = Knob({ k: 'm' + (mj + 1), label: 'M' + (mj + 1), big: false }); macroKnobs[mj] = mk; mrow.append(mk.el); }
