@@ -182,3 +182,11 @@ button:focus-visible, .chip:focus-visible, .pill:focus-visible { outline: 2px so
   nav#tabs button span::before { content: ""; position: absolute; left: 0; right: 0; top: -19px; height: 3px; background: transparent; }
   nav#tabs button.on span::before { background: var(--accent); }
 }
+
+/* side rail: framed buttons, the same as GRAINS and ELEPHANT */
+@media (orientation: landscape) and (min-width: 640px) {
+  #rail nav#tabs { background: transparent; border: 0; box-shadow: none; padding: 0 0 6px; gap: 4px; }
+  #rail nav#tabs button { border: 1px solid #1c1c1c; border-radius: 3px; padding: 0 12px; }
+  #rail nav#tabs button.on { background: #121212; border-color: #2c2c2c; }
+  #rail nav#tabs button::before { display: none; }
+}
