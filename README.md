@@ -1,9 +1,8 @@
 # BEHEMOTH
 
-A wavetable bass synthesizer that runs in the browser. One HTML file, no dependencies, built for touch screens (phones and tablets). Works with a computer keyboard and MIDI too, and installs as an app that runs offline. Member of a design family with [GRAINS](https://github.com/SHOOGAZE/grains-synth) and [ELEPHANT](https://github.com/SHOOGAZE/elephant-sequencer)
+A wavetable bass synthesizer that runs in the browser. One HTML file, no dependencies, built for touch screens (phones and tablets). Works with a computer keyboard and MIDI too, and installs as an app that runs offline. Member of a design family with [GRAINS](https://shoogaze.github.io/grains-synth/) and [ELEPHANT](https://shoogaze.github.io/elephant-sequencer/).
 
-
-**Try it:** open [BEHEMOTH](https://shoogaze.github.io/behemoth-synth-/) on your phone and tap the screen to start audio. On an iPhone or iPad use *Share → Add to Home Screen* for a full-screen app.
+**Try it:** open [BEHEMOTH](https://shoogaze.github.io/behemoth-synth/) on your phone and tap the screen to start audio. On an iPhone or iPad use *Share → Add to Home Screen* for a full-screen app.
 
 ## Screenshots
 
@@ -109,6 +108,16 @@ node test/engine.test.mjs
 ## Browser support
 
 Current Chrome, Edge, Safari and Firefox. Web MIDI is available in Chromium-based browsers, not in iOS Safari.
+
+## The family
+
+Three instruments in one black-and-white design, each a single HTML file that runs offline. Open them on the same phone or tablet and add the ones you like to the Home Screen.
+
+| App | What it is | Open | Source |
+| --- | --- | --- | --- |
+| **ELEPHANT** | Pocket sampler groovebox: 16 pads, p-lock sequencer, sampler, FX | [shoogaze.github.io/elephant-sequencer](https://shoogaze.github.io/elephant-sequencer/) | [SHOOGAZE/elephant-sequencer](https://github.com/SHOOGAZE/elephant-sequencer) |
+| **BEHEMOTH** | Wavetable bass synthesizer with a modulation matrix | [shoogaze.github.io/behemoth-synth](https://shoogaze.github.io/behemoth-synth/) | [SHOOGAZE/behemoth-synth](https://github.com/SHOOGAZE/behemoth-synth) |
+| **GRAINS** | Granular sampler and playable instrument | [shoogaze.github.io/grains-synth](https://shoogaze.github.io/grains-synth/) | [SHOOGAZE/grains-synth](https://github.com/SHOOGAZE/grains-synth) |
 
 ## License
 
