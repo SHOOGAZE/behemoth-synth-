@@ -683,14 +683,6 @@ button:focus-visible, .chip:focus-visible, .pill:focus-visible { outline: 2px so
 .dotsrc{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;white-space:nowrap!important;margin:0!important;padding:0!important;border:0!important}
 .dotcv{display:block;flex:none;max-width:100%}
 
-/* stage in portrait: keyboards (or the pad) fill all the room under the macro knobs, wheels run the full height - no dead gap */
-@media (orientation: portrait) {
-  #stage .splitw { justify-content: stretch; gap: 10px; }
-  #stage .splitrow { flex: 1 1 0; max-height: none; }
-  #stage .splitrow .kbd { max-height: none; }
-  #stage .wgrp { height: 100%; max-height: none; align-self: stretch; }
-  #stage .sbody .wheel { width: 44px; }
-}
 @media (orientation: portrait) { #stage #surfaceS { background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.02)); border: 1px solid var(--b-line, #2a2a2a); } }
 
 /* unified OLED panel: the same display as GRAINS and ELEPHANT - caption and dot-matrix name on the left, the scope on the right */
@@ -705,6 +697,8 @@ button:focus-visible, .chip:focus-visible, .pill:focus-visible { outline: 2px so
 @media (min-width: 820px) { #oled { height: 52px; } #oled #scope { width: 130px; height: 36px !important; } }
 @media (orientation: landscape) and (max-height: 540px) { #oled { display: none; } }
 :root[data-meters="off"] #oled #scope { display: none !important; }
+
+@media (orientation: portrait) { .hbtn.stg, .fsbtn { display: none !important; } }
 </style>
 </head>
 <body>
@@ -3530,10 +3524,11 @@ function buildStage() {
   stageEl._name = nameEl; stageEl._set = setMode; stageEl._gl = gl; stageEl.classList.toggle('macros', !!mdef); applyMacroNames();
   document.body.append(stageEl);
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && stageEl.classList.contains('on')) closeStage(); });
-  window.addEventListener('resize', function () { if (stageEl.classList.contains('on')) { requestAnimationFrame(function () { stageEl._set(stageMode); }); } });
+  window.addEventListener('resize', function () { if (stageEl.classList.contains('on') && isPortrait()) closeStage(); else if (stageEl.classList.contains('on')) { requestAnimationFrame(function () { stageEl._set(stageMode); }); } });
 }
 function openStage(mode) {
-  if (!stageEl) return; hideTip(); stageEl._hand();
+  /* Stage is landscape-only: in portrait the docked keys/pad panel is the play surface */
+  if (!stageEl || isPortrait()) return; hideTip(); stageEl._hand();
   if (typeof mode === 'string') { stageMode = mode === 'pad' ? 'pad' : 'split'; store('beh.stage', stageMode); } stageEl.classList.add('on'); stageEl._name.textContent = curPreset; stageEl._gl(); stageEl._set(stageMode);
   try { var d = document.documentElement; if (d.requestFullscreen && !document.fullscreenElement) d.requestFullscreen().catch(function () { }); } catch (e) { }
 }

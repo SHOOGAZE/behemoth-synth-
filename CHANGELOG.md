@@ -2,7 +2,7 @@
 
 ## Unreleased
 - Unified OLED panel (caption, dot-matrix name with Cyrillic, scope) shared by GRAINS, ELEPHANT and BEHEMOTH.
-- Stage fills the screen in portrait; Sound screen is a swipe pager (Osc A | Osc B, then Sub & Noise | Filter, then Amp) on a phone held sideways.
+- Stage is landscape-only; in portrait the docked keys and pad panel is the play surface. Sound screen is a swipe pager (Osc A | Osc B, then Sub & Noise | Filter, then Amp) on a phone held sideways.
 
 ## 1.1.0 (2026-11-13)
 
