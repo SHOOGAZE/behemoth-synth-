@@ -25,7 +25,8 @@ Phone held sideways and a tablet (a permanent tab rail on tablets): the tabs mov
 
 <p>
   <img src="screenshots/landscape.png" width="49%" alt="Landscape layout">
-  <img src="screenshots/landscape-stage.png" width="49%" alt="Landscape Stage: split keyboard, macro knobs and wheels">
+  <img src="screenshots/landscape-stage.png" width="49%" alt="Landscape Stage: wide keys low under the thumbs, pitch and mod wheels">
+  <img src="screenshots/landscape-macro.png" width="49%" alt="Landscape Stage, MACRO tab: four big macro knobs">
 </p>
 <p>
   <img src="screenshots/tablet.png" width="70%" alt="Tablet layout">
@@ -34,7 +35,7 @@ Phone held sideways and a tablet (a permanent tab rail on tablets): the tabs mov
 ## Playing
 
 - **Portrait:** the keyboard sits at the bottom of every tab. The arrows button expands it in place into a window with a **split keyboard** (two rows, one continuing the other) or a **multi-touch pad**, with pitch and mod wheels on your playing hand's side. All knobs above stay reachable, the window never closes by itself and HOLD stays on while you turn them. The chevron hides the keys completely.
-- **Landscape:** the same button opens **Stage**, a full-screen version: a slim control bar, four macro knobs in a column beside the keys, two finger-sized rows that fill the height, and the wheels on your playing hand's side. MACRO hides the knob column when you need the room.
+- **Landscape:** the same button opens **Stage**, a full-screen version: a slim control bar, one or two finger-sized key rows that use the full width and sit low under the thumbs, and the wheels on your playing hand's side. The **MACRO** tab swaps the keys for four big macro knobs.
 - **Keys, pad, arpeggiator, chords, sequencer** are on the PLAY tab; MIDI and a computer keyboard work everywhere.
 - Left-handed mode mirrors the wheels and the macro column (menu → Hand).
 

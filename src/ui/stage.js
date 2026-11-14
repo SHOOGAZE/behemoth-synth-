@@ -1,7 +1,7 @@
 /* STAGE: the whole screen becomes one instrument - split keyboard (two rows) or one big touch pad; BACK returns to the normal view */
 var stageEl = null, stageMode = store('beh.stage') === 'pad' ? 'pad' : 'split';
 /* minimum key width: landscape rows are short, so keys can be narrower and more octaves fit */
-function stagePer() { var land = window.innerWidth > window.innerHeight; return (land ? { s: 38, m: 46, l: 54 } : { s: 46, m: 62, l: 76 })[CFG.skw] || (land ? 54 : 76); }
+function stagePer() { var land = window.innerWidth > window.innerHeight; return (land ? { s: 52, m: 66, l: 80 } : { s: 46, m: 62, l: 76 })[CFG.skw] || (land ? 80 : 76); }
 function buildStage() {
   var pad = h('div', { id: 'surfaceS' }), main = h('div', { class: 'main' }), nameEl = h('div', { class: 'sname' }, '');
   function stageForce() { var el = this, w = (el.clientWidth || window.innerWidth), per = stagePer(); return clamp(Math.ceil((w / per - 1) / 7 - .1), 1, 5); }
@@ -13,11 +13,11 @@ function buildStage() {
   }
   pad._cols = 12;
   var padS = Surface(pad, 12);
-  var bSplit = h('button', { type: 'button', onclick: function () { setMode('split'); } }, 'SPLIT'), bPad = h('button', { type: 'button', onclick: function () { setMode('pad'); } }, 'PAD');
+  var bSplit = h('button', { type: 'button', onclick: function () { setMode('split'); } }, 'SPLIT'), bPad = h('button', { type: 'button', onclick: function () { setMode('pad'); } }, 'PAD'), bMac = h('button', { type: 'button', onclick: function () { setMode('macro'); } }, 'MACRO');
   var glide = h('button', { class: 'pill', type: 'button', onclick: function () { PL.glide = !PL.glide; gl(); } }, 'GLIDE');
   function gl() { glide.classList.toggle('on', !!PL.glide); }
   function setMode(m) {
-    stageMode = m; store('beh.stage', m); bSplit.classList.toggle('on', m === 'split'); bPad.classList.toggle('on', m === 'pad');
+    stageMode = m; if (m !== 'macro') store('beh.stage', m); bSplit.classList.toggle('on', m === 'split'); bPad.classList.toggle('on', m === 'pad'); bMac.classList.toggle('on', m === 'macro'); stageEl.classList.toggle('mac', m === 'macro');
     main.innerHTML = ''; main.className = 'main m-' + m; glide.style.display = m === 'pad' ? '' : 'none';
     var D = keyDims();
     stageEl.style.setProperty('--kh', D.kh + 'px');
@@ -30,11 +30,14 @@ function buildStage() {
       /* two rows around the global octave: upper = Oct+1, lower = Oct-1 (the OCT control in the bar moves both) */
       (one ? [[0, 7000]] : [[1, 7000], [-1, 8000]]).forEach(function (r) {
         var el = h('div', { class: 'kbd' });
-        el._force = function () { return stageForce.call(el); }; el._oct = function () { return clamp(PL.oct + r[0], 0, 7); }; el._idb = r[1];
+        el._force = function () { return stageForce.call(el); };
+        /* white keys at least stagePer() wide, as many as fit (from C up) */
+        el._nwk = function () { var w = el.clientWidth || (main.clientWidth || window.innerWidth * .8); return clamp(Math.floor(w / stagePer()), 8, 36); }; el._oct = function () { return clamp(PL.oct + r[0], 0, 7); }; el._idb = r[1];
         wrap.append(h('div', { class: 'splitrow' }, el));
       });
       main.append(wrap); requestAnimationFrame(function () { $$('.kbd', wrap).forEach(buildKeyboard); });
     }
+    else if (m === 'macro') main.append(mrow);
     else { main.append(pad, h('div', { class: 'padinfo' }, 'X  PITCH / NOTE    Y  BRIGHTNESS'), h('div', { class: 'pady' })); padS.rebuild(); }
   }
   var back = h('button', { class: 'hbtn back', type: 'button', 'aria-label': 'Back', onclick: closeStage, html: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square"><path d="M15 5l-7 7 7 7"/></svg>BACK' });
@@ -43,25 +46,23 @@ function buildStage() {
   /* three groups: navigation (back, mode), preset, controls. On a phone in portrait they are rows of one panel; elsewhere they flatten into one bar */
   var sctl = h('div', { class: 'sctl' }, holdButton('pill'), OctControl(), arp, glide, h('button', { class: 'pill', type: 'button', 'aria-label': 'Panic', onclick: panicAll }, '■'));
   var bar = h('div', { class: 'sbar' },
-    h('div', { class: 'snav' }, back, h('div', { class: 'seg' }, bSplit, bPad)),
+    h('div', { class: 'snav' }, back, h('div', { class: 'seg' }, bSplit, bPad, bMac)),
     h('div', { class: 'spre' },
       h('button', { class: 'pill', type: 'button', 'aria-label': 'Previous preset', onclick: function () { stepPreset(-1); }, html: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>' }), nameEl,
       h('button', { class: 'pill', type: 'button', 'aria-label': 'Next preset', onclick: function () { stepPreset(1); }, html: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>' })),
     sctl);
   var mrow = h('div', { class: 'smacros' });
   for (var mj = 0; mj < 4; mj++) { var mk = Knob({ k: 'm' + (mj + 1), label: 'M' + (mj + 1), big: false }); macroKnobs[mj] = mk; mrow.append(mk.el); }
-  var mdef = store('behemoth.stageMacros'); if (mdef == null) mdef = true;
-  var mbtn = h('button', { class: 'pill' + (mdef ? ' on' : ''), type: 'button', 'aria-label': 'Macro knobs', onclick: function () { mdef = !mdef; store('behemoth.stageMacros', mdef); mbtn.classList.toggle('on', mdef); stageEl.classList.toggle('macros', mdef); requestAnimationFrame(function () { stageEl._set(stageMode); }); } }, 'MACRO');
-  sctl.insertBefore(mbtn, sctl.lastChild);
-  stageEl = h('div', { id: 'stage', role: 'dialog', 'aria-label': 'Stage' }, bar, mrow, h('div', { class: 'sbody' }, h('div', { class: 'wgrp' }, Wheel('pitch'), Wheel('mod')), main));
+  stageEl = h('div', { id: 'stage', role: 'dialog', 'aria-label': 'Stage' }, bar, h('div', { class: 'sbody' }, h('div', { class: 'wgrp' }, Wheel('pitch'), Wheel('mod')), main));
   function hand() { stageEl.classList.toggle('lh', CFG.hand === 'left'); } stageEl._hand = hand; hand();
-  stageEl._name = nameEl; stageEl._set = setMode; stageEl._gl = gl; stageEl.classList.toggle('macros', !!mdef); applyMacroNames();
+  stageEl._name = nameEl; stageEl._set = setMode; stageEl._gl = gl; applyMacroNames();
   document.body.append(stageEl);
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && stageEl.classList.contains('on')) closeStage(); });
-  window.addEventListener('resize', function () { if (stageEl.classList.contains('on')) { requestAnimationFrame(function () { stageEl._set(stageMode); }); } });
+  window.addEventListener('resize', function () { if (stageEl.classList.contains('on') && isPortrait()) closeStage(); else if (stageEl.classList.contains('on')) { requestAnimationFrame(function () { stageEl._set(stageMode); }); } });
 }
 function openStage(mode) {
-  if (!stageEl) return; hideTip(); stageEl._hand();
+  /* Stage is landscape-only: in portrait the docked keys/pad panel is the play surface */
+  if (!stageEl || isPortrait()) return; hideTip(); stageEl._hand();
   if (typeof mode === 'string') { stageMode = mode === 'pad' ? 'pad' : 'split'; store('beh.stage', stageMode); } stageEl.classList.add('on'); stageEl._name.textContent = curPreset; stageEl._gl(); stageEl._set(stageMode);
   try { var d = document.documentElement; if (d.requestFullscreen && !document.fullscreenElement) d.requestFullscreen().catch(function () { }); } catch (e) { }
 }

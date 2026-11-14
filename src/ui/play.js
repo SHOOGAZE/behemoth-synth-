@@ -182,13 +182,14 @@ function kbdOcts(el) {
 function kOct(el) { return el._oct ? el._oct() : PL.oct; }
 function buildKeyboard(el) {
   if (KBDS.indexOf(el) < 0) KBDS.push(el);
-  var oc = kbdOcts(el); el._oc = oc; el.innerHTML = '';
-  var WS = [0, 2, 4, 5, 7, 9, 11], nw = 7 * oc + 1, bw = 100 / nw, i, o;
+  var oc = kbdOcts(el), nw = el._nwk ? el._nwk() : 7 * oc + 1; el._oc = oc; el._nw = nw; el.innerHTML = '';
+  /* a keyboard may ask for any number of white keys (el._nwk), not only whole octaves, so keys can be as wide as the screen allows */
+  var WS = [0, 2, 4, 5, 7, 9, 11], bw = 100 / nw, i, o;
   for (i = 0; i < nw; i++) el.append(h('div', { class: 'wk', 'data-s': 12 * Math.floor(i / 7) + WS[i % 7] }, i % 7 === 0 ? 'C' + (kOct(el) + Math.floor(i / 7)) : ''));
-  for (o = 0; o < oc; o++) [[1, 1], [3, 2], [6, 4], [8, 5], [10, 6]].forEach(function (b) { var k = h('div', { class: 'bk', 'data-s': 12 * o + b[0] }); k.style.left = ((o * 7 + b[1]) * bw) + '%'; k.style.width = (bw * 0.62) + '%'; el.append(k); });
+  for (o = 0; o < Math.ceil(nw / 7); o++) [[1, 1], [3, 2], [6, 4], [8, 5], [10, 6]].forEach(function (b) { if (o * 7 + b[1] >= nw) return; var k = h('div', { class: 'bk', 'data-s': 12 * o + b[0] }); k.style.left = ((o * 7 + b[1]) * bw) + '%'; k.style.width = (bw * 0.62) + '%'; el.append(k); });
   if (el._wired) return; el._wired = true;
   var fing = el._fing = {};
-  if (window.ResizeObserver) new ResizeObserver(function () { if (kbdOcts(el) !== el._oc && !Object.keys(fing).length) buildKeyboard(el); }).observe(el);
+  if (window.ResizeObserver) new ResizeObserver(function () { if ((el._nwk ? el._nwk() !== el._nw : kbdOcts(el) !== el._oc) && !Object.keys(fing).length) buildKeyboard(el); }).observe(el);
   function keyAt(x, y) { var t = document.elementFromPoint(x, y); return t && t.dataset && t.dataset.s !== undefined && el.contains(t) ? t : null; }
   function nn(k) { return 12 * (kOct(el) + 1) + PL.root + (+k.dataset.s); }
   el.addEventListener('pointerdown', function (e) {

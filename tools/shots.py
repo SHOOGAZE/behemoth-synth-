@@ -6,11 +6,12 @@ os.makedirs(D+'screenshots',exist_ok=True)
 P=(390,844); L=(844,390); T=(820,1180)
 TAB=lambda t:"document.querySelector('nav#tabs button[data-t=%s]').click()"%t
 STG=lambda m:"document.querySelector('.hbtn.stg').click();setTimeout(()=>{const b=[...document.querySelectorAll('#stage .bar button, #stage button')].find(x=>x.textContent.trim()==='%s');b&&b.click()},200)"%m
+DK=lambda m:"document.querySelector('.xbtn').click();setTimeout(()=>{const b=[...document.querySelectorAll('#dock button')].find(x=>x.textContent.trim()==='%s');b&&b.click()},500)"%m
 S=[('sound',P,TAB('sound')),('modulation',P,TAB('mod')),('effects',P,TAB('fx')),('play',P,TAB('play')),
    ('wavetable-editor',P,"document.querySelector('.tn').click()"),
    ('presets',P,"document.querySelector('#presetBtn').click()"),
-   ('dock-split',P,STG('SPLIT')),('dock-pad',P,STG('PAD')),
-   ('landscape',L,TAB('sound')),('landscape-stage',L,STG('SPLIT')),
+   ('dock-split',P,DK('SPLIT')),('dock-pad',P,DK('PAD')),
+   ('landscape',L,TAB('sound')),('landscape-stage',L,STG('SPLIT')),('landscape-macro',L,STG('MACRO')),
    ('tablet',T,TAB('sound'))]
 with sync_playwright() as p:
     b=p.chromium.launch(args=['--autoplay-policy=no-user-gesture-required'])

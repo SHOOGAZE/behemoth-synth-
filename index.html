@@ -424,7 +424,7 @@ input[type=range]::-webkit-slider-thumb { box-shadow: none; }
 #stage .sbody { flex: 1; min-height: 0; display: flex; gap: 8px; }
 #stage .wgrp { flex: none; display: flex; gap: 4px; order: 2; align-self: center; height: min(calc(var(--kh, 180px) * 2 + 6px), 260px); max-height: 100%; }
 #stage.lh .wgrp { order: 0; }
-#stage .sbody .wheel { display: block; width: 40px; height: auto; align-self: stretch; }
+#stage .sbody .wheel { display: block; width: 34px; height: auto; align-self: stretch; }
 #stage .main.m-split { display: flex; flex-direction: column; justify-content: center; }
 #stage .main { flex: 1; min-width: 0; min-height: 0; position: relative; overflow: hidden; }
 #stage .kbd { height: var(--kh, 180px); flex: 0 1 auto; min-height: 56px; border-radius: 10px; }
@@ -519,10 +519,10 @@ body.learning .knob { outline: 1px dashed color-mix(in srgb, var(--accent) 60%, 
 .mrow2 { display: flex; align-items: center; gap: 10px; padding: 7px 10px; background: var(--raised); border: 1px solid var(--line); border-radius: 8px; font-size: 12px; }
 .mrow2 b { flex: 1; font-weight: 600; } .mrow2 button { background: none; border: 0; color: var(--mute); padding: 4px 8px; cursor: pointer; }
 
-#stage .smacros { display: none; flex: none; justify-content: center; gap: 18px; padding: 2px 0 0; }
-#stage.macros .smacros { display: flex; }
-#stage .smacros .knob { --kw: min(76px, calc((100vw - 80px) / 4)); }
-#stage .smacros { gap: 14px; }
+/* MACRO tab: four big knobs fill the play area */
+#stage .smacros { display: flex; justify-content: center; align-items: center; gap: clamp(18px, 6vw, 56px); height: 100%; }
+#stage .smacros .knob { --kw: clamp(64px, 26vh, 120px); }
+#stage.mac .wgrp { display: none; }
 
 .ptools { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 10px; } .ptools .btn { flex: 1 1 auto; padding: 9px 10px; font-size: 12px; } .ptools .btn:disabled { opacity: .35; }
 .ptools .btn.on, .pnav.ab.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
@@ -559,7 +559,6 @@ body.learning .knob { outline: 1px dashed color-mix(in srgb, var(--accent) 60%, 
 }
 @media (min-width: 1280px) { .view.on { column-count: 3; } }
 @media (display-mode: standalone), (display-mode: fullscreen) { body { padding-top: env(safe-area-inset-top, 0px); } }
-@media (min-width: 820px) { #stage .smacros .knob { --kw: 96px; } #stage .smacros { gap: 34px; } }
 .card h3 button.mini.ico { padding: 5px 8px; display: inline-flex; align-items: center; }
 
 #tour .tdots { display: flex; gap: 5px; margin: 0 0 12px; } #tour .tdots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); } #tour .tdots i.on { background: var(--accent); }
@@ -606,8 +605,6 @@ button:focus-visible, .chip:focus-visible, .pill:focus-visible { outline: 2px so
 @media (max-height: 520px) {
   #stage { gap: 4px; padding-top: max(4px, env(safe-area-inset-top)); padding-bottom: max(4px, env(safe-area-inset-bottom)); }
   #stage .sbar { padding-bottom: 5px; }
-  #stage .smacros { gap: 10px; padding: 0; }
-  #stage .smacros .knob { --kw: 68px; }
   #stage .sbar { gap: 4px; }
   #stage .sbar .pill { padding-left: 9px; padding-right: 9px; }
   #stage .sbar .stepper span { min-width: 38px; }
@@ -627,21 +624,14 @@ button:focus-visible, .chip:focus-visible, .pill:focus-visible { outline: 2px so
 @media (orientation: landscape) and (max-width: 700px) { #stage .sbar .pill { padding-left: 7px; padding-right: 7px; } #stage .seg button { padding-left: 11px; padding-right: 11px; } }
 #stage .sbar .pill[aria-label*="preset"] { min-width: 34px; }
 
-/* ================= landscape Stage: slim bar on top, macro knobs in a 2x2 column beside the keys, rows fill the height ================= */
+/* ================= landscape Stage: slim bar on top, the keys take the whole width and sit low and tall under the thumbs ================= */
 @media (orientation: landscape) {
-  #stage.on { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); column-gap: 10px; row-gap: 6px; }
-  #stage.on.lh { grid-template-columns: minmax(0, 1fr) auto; }
-  #stage .sbar { grid-column: 1 / -1; grid-row: 1; }
-  #stage .sbody { grid-row: 2; grid-column: 2; min-width: 0; min-height: 0; }
-  #stage.lh .sbody { grid-column: 1; }
-  #stage:not(.macros) .sbody { grid-column: 1 / -1; }
-  #stage.macros .smacros { grid-row: 2; grid-column: 1; display: grid; grid-template-columns: repeat(2, auto); align-content: center; justify-content: center; justify-items: center; gap: 4px 6px; padding: 0; }
-  #stage.macros.lh .smacros { grid-column: 2; }
-  #stage .smacros .knob { --kw: clamp(50px, 16vh, 66px); }
+  #stage .sbody { flex: 1; min-width: 0; min-height: 0; }
   #stage .wgrp { height: 100%; align-self: stretch; max-height: none; }
-  #stage .splitw { justify-content: center; }
-  #stage .splitrow { flex: 1 1 0; max-height: 230px; }
+  #stage .splitw { justify-content: flex-end; }
+  #stage .splitrow { flex: 1 1 0; max-height: none; }
   #stage .splitrow .kbd { max-height: none; }
+}
 }
 
 /* portrait tab bar (same look as ELEPHANT): the active mark is a thick bar on the divider line, right above the label */
@@ -2988,7 +2978,7 @@ function buildSettings() {
     section('Illumination', true, [
       slider('Glow', 0, 1.6, 0.05, function () { return CFG.glow; }, function (v) { CFG.glow = v; applyCfg(); applyTheme(); }, function (v) { return Math.round(v * 100) + '%'; })]),
     section('Interface', false, [
-      cfgChips('Level', 'level', [['simple', 'Simple'], ['full', 'Full']], function () { showTab(curTab); }),
+      cfgChips('Level', 'level', [['simple', 'Simple'], ['full', 'Full']], function () { showTab(curTab); kickLayout(); }),
       cfgChips('Text size', 'text', [['m', 'Normal'], ['l', 'Large']]),
       cfgChips('Contrast', 'contrast', [['normal', 'Normal'], ['high', 'High']]),
       cfgChips('Knob size', 'ksize', [['s', 'Small'], ['m', 'Normal'], ['l', 'Large']], drawAllVis),
@@ -3442,13 +3432,14 @@ function kbdOcts(el) {
 function kOct(el) { return el._oct ? el._oct() : PL.oct; }
 function buildKeyboard(el) {
   if (KBDS.indexOf(el) < 0) KBDS.push(el);
-  var oc = kbdOcts(el); el._oc = oc; el.innerHTML = '';
-  var WS = [0, 2, 4, 5, 7, 9, 11], nw = 7 * oc + 1, bw = 100 / nw, i, o;
+  var oc = kbdOcts(el), nw = el._nwk ? el._nwk() : 7 * oc + 1; el._oc = oc; el._nw = nw; el.innerHTML = '';
+  /* a keyboard may ask for any number of white keys (el._nwk), not only whole octaves, so keys can be as wide as the screen allows */
+  var WS = [0, 2, 4, 5, 7, 9, 11], bw = 100 / nw, i, o;
   for (i = 0; i < nw; i++) el.append(h('div', { class: 'wk', 'data-s': 12 * Math.floor(i / 7) + WS[i % 7] }, i % 7 === 0 ? 'C' + (kOct(el) + Math.floor(i / 7)) : ''));
-  for (o = 0; o < oc; o++) [[1, 1], [3, 2], [6, 4], [8, 5], [10, 6]].forEach(function (b) { var k = h('div', { class: 'bk', 'data-s': 12 * o + b[0] }); k.style.left = ((o * 7 + b[1]) * bw) + '%'; k.style.width = (bw * 0.62) + '%'; el.append(k); });
+  for (o = 0; o < Math.ceil(nw / 7); o++) [[1, 1], [3, 2], [6, 4], [8, 5], [10, 6]].forEach(function (b) { if (o * 7 + b[1] >= nw) return; var k = h('div', { class: 'bk', 'data-s': 12 * o + b[0] }); k.style.left = ((o * 7 + b[1]) * bw) + '%'; k.style.width = (bw * 0.62) + '%'; el.append(k); });
   if (el._wired) return; el._wired = true;
   var fing = el._fing = {};
-  if (window.ResizeObserver) new ResizeObserver(function () { if (kbdOcts(el) !== el._oc && !Object.keys(fing).length) buildKeyboard(el); }).observe(el);
+  if (window.ResizeObserver) new ResizeObserver(function () { if ((el._nwk ? el._nwk() !== el._nw : kbdOcts(el) !== el._oc) && !Object.keys(fing).length) buildKeyboard(el); }).observe(el);
   function keyAt(x, y) { var t = document.elementFromPoint(x, y); return t && t.dataset && t.dataset.s !== undefined && el.contains(t) ? t : null; }
   function nn(k) { return 12 * (kOct(el) + 1) + PL.root + (+k.dataset.s); }
   el.addEventListener('pointerdown', function (e) {
@@ -3467,7 +3458,7 @@ function buildKeyboard(el) {
 /* STAGE: the whole screen becomes one instrument - split keyboard (two rows) or one big touch pad; BACK returns to the normal view */
 var stageEl = null, stageMode = store('beh.stage') === 'pad' ? 'pad' : 'split';
 /* minimum key width: landscape rows are short, so keys can be narrower and more octaves fit */
-function stagePer() { var land = window.innerWidth > window.innerHeight; return (land ? { s: 38, m: 46, l: 54 } : { s: 46, m: 62, l: 76 })[CFG.skw] || (land ? 54 : 76); }
+function stagePer() { var land = window.innerWidth > window.innerHeight; return (land ? { s: 52, m: 66, l: 80 } : { s: 46, m: 62, l: 76 })[CFG.skw] || (land ? 80 : 76); }
 function buildStage() {
   var pad = h('div', { id: 'surfaceS' }), main = h('div', { class: 'main' }), nameEl = h('div', { class: 'sname' }, '');
   function stageForce() { var el = this, w = (el.clientWidth || window.innerWidth), per = stagePer(); return clamp(Math.ceil((w / per - 1) / 7 - .1), 1, 5); }
@@ -3479,11 +3470,11 @@ function buildStage() {
   }
   pad._cols = 12;
   var padS = Surface(pad, 12);
-  var bSplit = h('button', { type: 'button', onclick: function () { setMode('split'); } }, 'SPLIT'), bPad = h('button', { type: 'button', onclick: function () { setMode('pad'); } }, 'PAD');
+  var bSplit = h('button', { type: 'button', onclick: function () { setMode('split'); } }, 'SPLIT'), bPad = h('button', { type: 'button', onclick: function () { setMode('pad'); } }, 'PAD'), bMac = h('button', { type: 'button', onclick: function () { setMode('macro'); } }, 'MACRO');
   var glide = h('button', { class: 'pill', type: 'button', onclick: function () { PL.glide = !PL.glide; gl(); } }, 'GLIDE');
   function gl() { glide.classList.toggle('on', !!PL.glide); }
   function setMode(m) {
-    stageMode = m; store('beh.stage', m); bSplit.classList.toggle('on', m === 'split'); bPad.classList.toggle('on', m === 'pad');
+    stageMode = m; if (m !== 'macro') store('beh.stage', m); bSplit.classList.toggle('on', m === 'split'); bPad.classList.toggle('on', m === 'pad'); bMac.classList.toggle('on', m === 'macro'); stageEl.classList.toggle('mac', m === 'macro');
     main.innerHTML = ''; main.className = 'main m-' + m; glide.style.display = m === 'pad' ? '' : 'none';
     var D = keyDims();
     stageEl.style.setProperty('--kh', D.kh + 'px');
@@ -3496,11 +3487,14 @@ function buildStage() {
       /* two rows around the global octave: upper = Oct+1, lower = Oct-1 (the OCT control in the bar moves both) */
       (one ? [[0, 7000]] : [[1, 7000], [-1, 8000]]).forEach(function (r) {
         var el = h('div', { class: 'kbd' });
-        el._force = function () { return stageForce.call(el); }; el._oct = function () { return clamp(PL.oct + r[0], 0, 7); }; el._idb = r[1];
+        el._force = function () { return stageForce.call(el); };
+        /* white keys at least stagePer() wide, as many as fit (from C up) */
+        el._nwk = function () { var w = el.clientWidth || (main.clientWidth || window.innerWidth * .8); return clamp(Math.floor(w / stagePer()), 8, 36); }; el._oct = function () { return clamp(PL.oct + r[0], 0, 7); }; el._idb = r[1];
         wrap.append(h('div', { class: 'splitrow' }, el));
       });
       main.append(wrap); requestAnimationFrame(function () { $$('.kbd', wrap).forEach(buildKeyboard); });
     }
+    else if (m === 'macro') main.append(mrow);
     else { main.append(pad, h('div', { class: 'padinfo' }, 'X  PITCH / NOTE    Y  BRIGHTNESS'), h('div', { class: 'pady' })); padS.rebuild(); }
   }
   var back = h('button', { class: 'hbtn back', type: 'button', 'aria-label': 'Back', onclick: closeStage, html: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square"><path d="M15 5l-7 7 7 7"/></svg>BACK' });
@@ -3509,19 +3503,16 @@ function buildStage() {
   /* three groups: navigation (back, mode), preset, controls. On a phone in portrait they are rows of one panel; elsewhere they flatten into one bar */
   var sctl = h('div', { class: 'sctl' }, holdButton('pill'), OctControl(), arp, glide, h('button', { class: 'pill', type: 'button', 'aria-label': 'Panic', onclick: panicAll }, '■'));
   var bar = h('div', { class: 'sbar' },
-    h('div', { class: 'snav' }, back, h('div', { class: 'seg' }, bSplit, bPad)),
+    h('div', { class: 'snav' }, back, h('div', { class: 'seg' }, bSplit, bPad, bMac)),
     h('div', { class: 'spre' },
       h('button', { class: 'pill', type: 'button', 'aria-label': 'Previous preset', onclick: function () { stepPreset(-1); }, html: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>' }), nameEl,
       h('button', { class: 'pill', type: 'button', 'aria-label': 'Next preset', onclick: function () { stepPreset(1); }, html: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>' })),
     sctl);
   var mrow = h('div', { class: 'smacros' });
   for (var mj = 0; mj < 4; mj++) { var mk = Knob({ k: 'm' + (mj + 1), label: 'M' + (mj + 1), big: false }); macroKnobs[mj] = mk; mrow.append(mk.el); }
-  var mdef = store('behemoth.stageMacros'); if (mdef == null) mdef = true;
-  var mbtn = h('button', { class: 'pill' + (mdef ? ' on' : ''), type: 'button', 'aria-label': 'Macro knobs', onclick: function () { mdef = !mdef; store('behemoth.stageMacros', mdef); mbtn.classList.toggle('on', mdef); stageEl.classList.toggle('macros', mdef); requestAnimationFrame(function () { stageEl._set(stageMode); }); } }, 'MACRO');
-  sctl.insertBefore(mbtn, sctl.lastChild);
-  stageEl = h('div', { id: 'stage', role: 'dialog', 'aria-label': 'Stage' }, bar, mrow, h('div', { class: 'sbody' }, h('div', { class: 'wgrp' }, Wheel('pitch'), Wheel('mod')), main));
+  stageEl = h('div', { id: 'stage', role: 'dialog', 'aria-label': 'Stage' }, bar, h('div', { class: 'sbody' }, h('div', { class: 'wgrp' }, Wheel('pitch'), Wheel('mod')), main));
   function hand() { stageEl.classList.toggle('lh', CFG.hand === 'left'); } stageEl._hand = hand; hand();
-  stageEl._name = nameEl; stageEl._set = setMode; stageEl._gl = gl; stageEl.classList.toggle('macros', !!mdef); applyMacroNames();
+  stageEl._name = nameEl; stageEl._set = setMode; stageEl._gl = gl; applyMacroNames();
   document.body.append(stageEl);
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && stageEl.classList.contains('on')) closeStage(); });
   window.addEventListener('resize', function () { if (stageEl.classList.contains('on') && isPortrait()) closeStage(); else if (stageEl.classList.contains('on')) { requestAnimationFrame(function () { stageEl._set(stageMode); }); } });
@@ -4047,7 +4038,7 @@ function buildUi() {
       h('button', { class: 'hbtn rec', id: 'recBtn', type: 'button', 'aria-label': 'Record audio', onclick: toggleRec }, 'REC'),
       h('button', { class: 'hbtn stg', type: 'button', 'aria-label': 'Stage: fullscreen keys and pad', onclick: openStage }, 'STAGE'),
       h('button', { class: 'hbtn ico menu', type: 'button', 'aria-label': 'Menu', onclick: function () { settingsSheet.open(); buzz(6); }, html: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="square"><path d="M4 7h16M4 12h16M4 17h16"/></svg>' })),
-    h('div', { id: 'oled', role: 'button', tabindex: '0', 'aria-label': 'Presets', onclick: function () { presetSheet.open(); }, onkeydown: function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); presetSheet.open(); } } }, h('div', { class: 'ptxt' }, h('small', null, h('span', { class: 'pcap' }, 'PRESET'), ' \u00B7 ', h('b', { id: 'voices' }, '0v')), h('span', { id: 'oledName' }, curPreset)), h('canvas', { id: 'scope', 'aria-label': 'Oscilloscope' })),
+    h('div', { id: 'oled', class: 'glass', role: 'button', tabindex: '0', 'aria-label': 'Presets', onclick: function () { presetSheet.open(); }, onkeydown: function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); presetSheet.open(); } } }, h('div', { class: 'ptxt' }, h('small', null, h('span', { class: 'pcap' }, 'PRESET'), ' \u00B7 ', h('b', { id: 'voices' }, '0v')), h('span', { id: 'oledName' }, curPreset)), h('canvas', { id: 'scope', 'aria-label': 'Oscilloscope' })),
     h('div', { id: 'srcbar' }), h('div', { id: 'hint' }),
     h('main', { id: 'views' }, ['sound', 'mod', 'fx', 'play'].map(function (n) { var d = h('div', { class: 'view', id: 'v-' + n }); views[n] = d; return d; })),
     buildDock(),
@@ -4055,6 +4046,11 @@ function buildUi() {
   buildCaps(); buildSound(); buildMod(); buildFx(); buildPlay(); buildPresetSheet(); buildSettings(); buildTableSheet(); buildQpm(); buildStage(); buildRec();
   showTab('sound');
   applyTheme(); applyMotion(); applyWake(); setLang(CFG.lang);
+}
+/* iOS Safari can keep stale hit-testing for blocks that were just un-hidden (a level change): force a layer and layout refresh, now and again once the sheet has finished closing */
+function kickLayout() {
+  function go() { ['#views', '#app', '#tabs', '.nav', '.main'].forEach(function (s) { var e = document.querySelector(s); if (!e) return; e.style.transform = 'translateZ(0)'; void e.offsetHeight; e.style.transform = ''; }); try { window.dispatchEvent(new Event('resize')); } catch (x) { } }
+  go(); requestAnimationFrame(go); setTimeout(go, 450);
 }
 var curTab = 'sound';
 function showTab(n) {

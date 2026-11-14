@@ -35,7 +35,7 @@ function buildSettings() {
     section('Illumination', true, [
       slider('Glow', 0, 1.6, 0.05, function () { return CFG.glow; }, function (v) { CFG.glow = v; applyCfg(); applyTheme(); }, function (v) { return Math.round(v * 100) + '%'; })]),
     section('Interface', false, [
-      cfgChips('Level', 'level', [['simple', 'Simple'], ['full', 'Full']], function () { showTab(curTab); }),
+      cfgChips('Level', 'level', [['simple', 'Simple'], ['full', 'Full']], function () { showTab(curTab); kickLayout(); }),
       cfgChips('Text size', 'text', [['m', 'Normal'], ['l', 'Large']]),
       cfgChips('Contrast', 'contrast', [['normal', 'Normal'], ['high', 'High']]),
       cfgChips('Knob size', 'ksize', [['s', 'Small'], ['m', 'Normal'], ['l', 'Large']], drawAllVis),

@@ -48,10 +48,10 @@ body.learning .knob { outline: 1px dashed color-mix(in srgb, var(--accent) 60%, 
 .mrow2 { display: flex; align-items: center; gap: 10px; padding: 7px 10px; background: var(--raised); border: 1px solid var(--line); border-radius: 8px; font-size: 12px; }
 .mrow2 b { flex: 1; font-weight: 600; } .mrow2 button { background: none; border: 0; color: var(--mute); padding: 4px 8px; cursor: pointer; }
 
-#stage .smacros { display: none; flex: none; justify-content: center; gap: 18px; padding: 2px 0 0; }
-#stage.macros .smacros { display: flex; }
-#stage .smacros .knob { --kw: min(76px, calc((100vw - 80px) / 4)); }
-#stage .smacros { gap: 14px; }
+/* MACRO tab: four big knobs fill the play area */
+#stage .smacros { display: flex; justify-content: center; align-items: center; gap: clamp(18px, 6vw, 56px); height: 100%; }
+#stage .smacros .knob { --kw: clamp(64px, 26vh, 120px); }
+#stage.mac .wgrp { display: none; }
 
 .ptools { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 10px; } .ptools .btn { flex: 1 1 auto; padding: 9px 10px; font-size: 12px; } .ptools .btn:disabled { opacity: .35; }
 .ptools .btn.on, .pnav.ab.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
@@ -88,7 +88,6 @@ body.learning .knob { outline: 1px dashed color-mix(in srgb, var(--accent) 60%, 
 }
 @media (min-width: 1280px) { .view.on { column-count: 3; } }
 @media (display-mode: standalone), (display-mode: fullscreen) { body { padding-top: env(safe-area-inset-top, 0px); } }
-@media (min-width: 820px) { #stage .smacros .knob { --kw: 96px; } #stage .smacros { gap: 34px; } }
 .card h3 button.mini.ico { padding: 5px 8px; display: inline-flex; align-items: center; }
 
 #tour .tdots { display: flex; gap: 5px; margin: 0 0 12px; } #tour .tdots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); } #tour .tdots i.on { background: var(--accent); }
@@ -135,8 +134,6 @@ button:focus-visible, .chip:focus-visible, .pill:focus-visible { outline: 2px so
 @media (max-height: 520px) {
   #stage { gap: 4px; padding-top: max(4px, env(safe-area-inset-top)); padding-bottom: max(4px, env(safe-area-inset-bottom)); }
   #stage .sbar { padding-bottom: 5px; }
-  #stage .smacros { gap: 10px; padding: 0; }
-  #stage .smacros .knob { --kw: 68px; }
   #stage .sbar { gap: 4px; }
   #stage .sbar .pill { padding-left: 9px; padding-right: 9px; }
   #stage .sbar .stepper span { min-width: 38px; }
@@ -156,21 +153,14 @@ button:focus-visible, .chip:focus-visible, .pill:focus-visible { outline: 2px so
 @media (orientation: landscape) and (max-width: 700px) { #stage .sbar .pill { padding-left: 7px; padding-right: 7px; } #stage .seg button { padding-left: 11px; padding-right: 11px; } }
 #stage .sbar .pill[aria-label*="preset"] { min-width: 34px; }
 
-/* ================= landscape Stage: slim bar on top, macro knobs in a 2x2 column beside the keys, rows fill the height ================= */
+/* ================= landscape Stage: slim bar on top, the keys take the whole width and sit low and tall under the thumbs ================= */
 @media (orientation: landscape) {
-  #stage.on { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); column-gap: 10px; row-gap: 6px; }
-  #stage.on.lh { grid-template-columns: minmax(0, 1fr) auto; }
-  #stage .sbar { grid-column: 1 / -1; grid-row: 1; }
-  #stage .sbody { grid-row: 2; grid-column: 2; min-width: 0; min-height: 0; }
-  #stage.lh .sbody { grid-column: 1; }
-  #stage:not(.macros) .sbody { grid-column: 1 / -1; }
-  #stage.macros .smacros { grid-row: 2; grid-column: 1; display: grid; grid-template-columns: repeat(2, auto); align-content: center; justify-content: center; justify-items: center; gap: 4px 6px; padding: 0; }
-  #stage.macros.lh .smacros { grid-column: 2; }
-  #stage .smacros .knob { --kw: clamp(50px, 16vh, 66px); }
+  #stage .sbody { flex: 1; min-width: 0; min-height: 0; }
   #stage .wgrp { height: 100%; align-self: stretch; max-height: none; }
-  #stage .splitw { justify-content: center; }
-  #stage .splitrow { flex: 1 1 0; max-height: 230px; }
+  #stage .splitw { justify-content: flex-end; }
+  #stage .splitrow { flex: 1 1 0; max-height: none; }
   #stage .splitrow .kbd { max-height: none; }
+}
 }
 
 /* portrait tab bar (same look as ELEPHANT): the active mark is a thick bar on the divider line, right above the label */
@@ -212,14 +202,6 @@ button:focus-visible, .chip:focus-visible, .pill:focus-visible { outline: 2px so
 .dotsrc{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;white-space:nowrap!important;margin:0!important;padding:0!important;border:0!important}
 .dotcv{display:block;flex:none;max-width:100%}
 
-/* stage in portrait: keyboards (or the pad) fill all the room under the macro knobs, wheels run the full height - no dead gap */
-@media (orientation: portrait) {
-  #stage .splitw { justify-content: stretch; gap: 10px; }
-  #stage .splitrow { flex: 1 1 0; max-height: none; }
-  #stage .splitrow .kbd { max-height: none; }
-  #stage .wgrp { height: 100%; max-height: none; align-self: stretch; }
-  #stage .sbody .wheel { width: 44px; }
-}
 @media (orientation: portrait) { #stage #surfaceS { background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.02)); border: 1px solid var(--b-line, #2a2a2a); } }
 
 /* unified OLED panel: the same display as GRAINS and ELEPHANT - caption and dot-matrix name on the left, the scope on the right */
@@ -234,3 +216,5 @@ button:focus-visible, .chip:focus-visible, .pill:focus-visible { outline: 2px so
 @media (min-width: 820px) { #oled { height: 52px; } #oled #scope { width: 130px; height: 36px !important; } }
 @media (orientation: landscape) and (max-height: 540px) { #oled { display: none; } }
 :root[data-meters="off"] #oled #scope { display: none !important; }
+
+@media (orientation: portrait) { .hbtn.stg, .fsbtn { display: none !important; } }

@@ -28,7 +28,7 @@ function buildUi() {
       h('button', { class: 'hbtn rec', id: 'recBtn', type: 'button', 'aria-label': 'Record audio', onclick: toggleRec }, 'REC'),
       h('button', { class: 'hbtn stg', type: 'button', 'aria-label': 'Stage: fullscreen keys and pad', onclick: openStage }, 'STAGE'),
       h('button', { class: 'hbtn ico menu', type: 'button', 'aria-label': 'Menu', onclick: function () { settingsSheet.open(); buzz(6); }, html: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="square"><path d="M4 7h16M4 12h16M4 17h16"/></svg>' })),
-    h('div', { id: 'oled', role: 'button', tabindex: '0', 'aria-label': 'Presets', onclick: function () { presetSheet.open(); }, onkeydown: function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); presetSheet.open(); } } }, h('div', { class: 'ptxt' }, h('small', null, h('span', { class: 'pcap' }, 'PRESET'), ' \u00B7 ', h('b', { id: 'voices' }, '0v')), h('span', { id: 'oledName' }, curPreset)), h('canvas', { id: 'scope', 'aria-label': 'Oscilloscope' })),
+    h('div', { id: 'oled', class: 'glass', role: 'button', tabindex: '0', 'aria-label': 'Presets', onclick: function () { presetSheet.open(); }, onkeydown: function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); presetSheet.open(); } } }, h('div', { class: 'ptxt' }, h('small', null, h('span', { class: 'pcap' }, 'PRESET'), ' \u00B7 ', h('b', { id: 'voices' }, '0v')), h('span', { id: 'oledName' }, curPreset)), h('canvas', { id: 'scope', 'aria-label': 'Oscilloscope' })),
     h('div', { id: 'srcbar' }), h('div', { id: 'hint' }),
     h('main', { id: 'views' }, ['sound', 'mod', 'fx', 'play'].map(function (n) { var d = h('div', { class: 'view', id: 'v-' + n }); views[n] = d; return d; })),
     buildDock(),
@@ -36,6 +36,11 @@ function buildUi() {
   buildCaps(); buildSound(); buildMod(); buildFx(); buildPlay(); buildPresetSheet(); buildSettings(); buildTableSheet(); buildQpm(); buildStage(); buildRec();
   showTab('sound');
   applyTheme(); applyMotion(); applyWake(); setLang(CFG.lang);
+}
+/* iOS Safari can keep stale hit-testing for blocks that were just un-hidden (a level change): force a layer and layout refresh, now and again once the sheet has finished closing */
+function kickLayout() {
+  function go() { ['#views', '#app', '#tabs', '.nav', '.main'].forEach(function (s) { var e = document.querySelector(s); if (!e) return; e.style.transform = 'translateZ(0)'; void e.offsetHeight; e.style.transform = ''; }); try { window.dispatchEvent(new Event('resize')); } catch (x) { } }
+  go(); requestAnimationFrame(go); setTimeout(go, 450);
 }
 var curTab = 'sound';
 function showTab(n) {
