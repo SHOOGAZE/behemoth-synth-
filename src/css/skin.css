@@ -32,7 +32,7 @@ header#top { padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid v
 .knob .mod { stroke-linecap: butt; }
 .knob .cap { fill: #161616; stroke: #343434; stroke-width: 1; }
 .knob .ind { stroke: var(--accent); stroke-width: 2.6; stroke-linecap: butt; }
-.knob .lbl { font-family: var(--f-display); font-size: 9.5px; font-weight: 700; letter-spacing: .12em; color: var(--mute); }
+.knob .lbl { font-family: var(--f-display); font-size: 10px; font-weight: 700; letter-spacing: .1em; color: var(--mute); }
 .knob .vv { color: var(--fg); }
 .knob.armed svg { filter: drop-shadow(0 0 6px var(--arm)); }
 
@@ -86,3 +86,21 @@ input[type=range]::-webkit-slider-thumb { box-shadow: none; }
 #start #startBtn { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; border: 0; background: transparent; cursor: pointer; }
 @media (prefers-reduced-motion: reduce) { #start .hz { animation: none; opacity: .7; } }
 
+
+/* glass: a lens over the displays (gradients only, cheap on iPhone) */
+@property --gx { syntax: '<percentage>'; inherits: true; initial-value: 30%; }
+@property --gy { syntax: '<percentage>'; inherits: true; initial-value: -8%; }
+.glass { position: relative; border-radius: 6px; box-shadow: 0 0 0 3px #0c0c0c, 0 0 0 4px #000, 0 1px 0 4px rgba(255,255,255,.07); --gx: 30%; --gy: -8%; transition: --gx .3s ease-out, --gy .3s ease-out; }
+.glass canvas.vis { border-color: #000; box-shadow: inset 0 3px 10px rgba(0,0,0,.9); }
+.glass::after { content: ""; position: absolute; inset: 1px; border-radius: 5px; pointer-events: none; z-index: 2;
+  border: 1px solid rgba(255,255,255,.09); box-shadow: inset 0 1px 0 rgba(255,255,255,.2), inset 0 0 22px rgba(255,255,255,.03);
+  background: radial-gradient(60% 90% at var(--gx) var(--gy), rgba(255,255,255,.14), rgba(255,255,255,0) 70%),
+    linear-gradient(112deg, rgba(255,255,255,.07) 0, rgba(255,255,255,.02) 34%, rgba(255,255,255,0) 35%, rgba(255,255,255,0) 62%, rgba(255,255,255,.03) 63%, rgba(255,255,255,0) 80%); }
+.glass::before { content: ""; position: absolute; left: 8px; right: 8px; top: 2px; height: 1px; z-index: 3; pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.4) var(--gx), transparent 90%); }
+@media (prefers-reduced-motion: reduce) { .glass { transition: none; } }
+
+/* seating: displays sit in a double rim, main buttons catch a thin light on top */
+#scope { box-shadow: inset 0 2px 6px #000c, 0 0 0 3px #0c0c0c,0 0 0 4px #000,0 1px 0 4px rgba(255,255,255,.07); }
+.btn, .hbtn { box-shadow: inset 0 1px 0 rgba(255,255,255,.07); }
+.btn.pri { box-shadow: none; }

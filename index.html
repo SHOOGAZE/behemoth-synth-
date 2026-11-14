@@ -15,6 +15,10 @@
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <meta name="theme-color" content="#0a0a0a">
+<meta name="description" content="Wavetable bass synthesizer for the browser. One HTML file, works offline on phone and tablet.">
+<meta property="og:title" content="BEHEMOTH">
+<meta property="og:description" content="Wavetable bass synthesizer for the browser. One HTML file, works offline on phone and tablet.">
+<meta property="og:type" content="website">
 <title>BEHEMOTH</title>
 <style>
 /* Layout: one-screen instrument. Header, source strip, scrolling module view, bottom tab bar in thumb reach. */
@@ -187,7 +191,7 @@ textarea { min-height: 90px; resize: vertical; }
 .pnav { width: 34px; flex: none; font-size: 22px; line-height: 1; cursor: pointer; background: var(--raised); border: 1px solid var(--line); border-radius: 3px; padding: 0 0 3px; }
 .hbtn { height: 38px; padding: 0 11px; font: 700 11px var(--f-mono); letter-spacing: .1em; cursor: pointer; background: var(--raised); border: 1px solid var(--line); border-radius: 3px; display: inline-flex; align-items: center; justify-content: center; flex: none; }
 .hbtn.ico { width: 38px; padding: 0; }
-@media (max-width: 560px) { #scope, #voices, .meter { display: none; } header#top { flex-wrap: wrap; row-gap: 6px; } .logo { flex: 1; } .pgroup { order: 5; flex: 1 1 100%; } }
+@media (max-width: 560px) { .meter { display: none; } header#top { flex-wrap: wrap; row-gap: 6px; } .logo { flex: 1; } .pgroup { order: 5; flex: 1 1 100%; } }
 .setg { margin-bottom: 14px; }
 .setg .chips { flex-wrap: wrap; overflow: visible; }
 .lab2 { font: 700 10px var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--mute); margin-bottom: 6px; }
@@ -199,10 +203,10 @@ textarea { min-height: 90px; resize: vertical; }
 :root[data-wheels="on"] .wheel { display: block; }
 #dock .dmain { display: flex; gap: 8px; align-items: stretch; }
 #dock .dmain .kbd { flex: 1; min-width: 0; }
-:root { --dkh: 58px; }
-:root[data-kh="s"] { --dkh: 44px; }
-:root[data-kh="m"] { --dkh: 60px; }
-:root[data-kh="l"] { --dkh: 84px; }
+:root { --dkh: 76px; }
+:root[data-kh="s"] { --dkh: 58px; }
+:root[data-kh="m"] { --dkh: 76px; }
+:root[data-kh="l"] { --dkh: 100px; }
 #dock .kbd { height: var(--dkh); }
 #dock.min .dmain { display: none; }
 
@@ -210,7 +214,7 @@ textarea { min-height: 90px; resize: vertical; }
 @media (min-width: 700px) and (min-height: 541px) {
   :root { --dkh: 88px; } :root[data-kh="s"] { --dkh: 64px; } :root[data-kh="m"] { --dkh: 92px; } :root[data-kh="l"] { --dkh: 128px; }
   body { font-size: 15px; }
-  .logo { font-size: 22px; } .hbtn { height: 44px; } .pnav { width: 44px; height: 44px; } #presetBtn { padding: 11px 14px; } #scope { width: 150px; height: 44px; } .meter { height: 44px; }
+  .logo { font-size: 22px; } .hbtn { height: 44px; } .pnav { width: 44px; height: 44px; } #presetBtn { padding: 11px 14px; }  .meter { height: 44px; }
   #surface { height: clamp(220px, 36vh, 440px); } #v-play .kbd { height: 140px; }
   #dock .pill { height: 46px; padding: 0 18px; } #dock .stepper button { width: 44px; height: 46px; }
   .chip { min-height: 42px; padding: 10px 14px; } .knob.big { width: 110px; } .knob.big svg { width: 104px; height: 104px; }
@@ -251,7 +255,7 @@ header#top { padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid v
 .knob .mod { stroke-linecap: butt; }
 .knob .cap { fill: #161616; stroke: #343434; stroke-width: 1; }
 .knob .ind { stroke: var(--accent); stroke-width: 2.6; stroke-linecap: butt; }
-.knob .lbl { font-family: var(--f-display); font-size: 9.5px; font-weight: 700; letter-spacing: .12em; color: var(--mute); }
+.knob .lbl { font-family: var(--f-display); font-size: 10px; font-weight: 700; letter-spacing: .1em; color: var(--mute); }
 .knob .vv { color: var(--fg); }
 .knob.armed svg { filter: drop-shadow(0 0 6px var(--arm)); }
 
@@ -305,6 +309,24 @@ input[type=range]::-webkit-slider-thumb { box-shadow: none; }
 #start #startBtn { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; border: 0; background: transparent; cursor: pointer; }
 @media (prefers-reduced-motion: reduce) { #start .hz { animation: none; opacity: .7; } }
 
+
+/* glass: a lens over the displays (gradients only, cheap on iPhone) */
+@property --gx { syntax: '<percentage>'; inherits: true; initial-value: 30%; }
+@property --gy { syntax: '<percentage>'; inherits: true; initial-value: -8%; }
+.glass { position: relative; border-radius: 6px; box-shadow: 0 0 0 3px #0c0c0c, 0 0 0 4px #000, 0 1px 0 4px rgba(255,255,255,.07); --gx: 30%; --gy: -8%; transition: --gx .3s ease-out, --gy .3s ease-out; }
+.glass canvas.vis { border-color: #000; box-shadow: inset 0 3px 10px rgba(0,0,0,.9); }
+.glass::after { content: ""; position: absolute; inset: 1px; border-radius: 5px; pointer-events: none; z-index: 2;
+  border: 1px solid rgba(255,255,255,.09); box-shadow: inset 0 1px 0 rgba(255,255,255,.2), inset 0 0 22px rgba(255,255,255,.03);
+  background: radial-gradient(60% 90% at var(--gx) var(--gy), rgba(255,255,255,.14), rgba(255,255,255,0) 70%),
+    linear-gradient(112deg, rgba(255,255,255,.07) 0, rgba(255,255,255,.02) 34%, rgba(255,255,255,0) 35%, rgba(255,255,255,0) 62%, rgba(255,255,255,.03) 63%, rgba(255,255,255,0) 80%); }
+.glass::before { content: ""; position: absolute; left: 8px; right: 8px; top: 2px; height: 1px; z-index: 3; pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.4) var(--gx), transparent 90%); }
+@media (prefers-reduced-motion: reduce) { .glass { transition: none; } }
+
+/* seating: displays sit in a double rim, main buttons catch a thin light on top */
+#scope { box-shadow: inset 0 2px 6px #000c, 0 0 0 3px #0c0c0c,0 0 0 4px #000,0 1px 0 4px rgba(255,255,255,.07); }
+.btn, .hbtn { box-shadow: inset 0 1px 0 rgba(255,255,255,.07); }
+.btn.pri { box-shadow: none; }
 /* ================= landscape: one full-bleed console (rail + stage + keyboard), edge to edge ================= */
 @media (orientation: landscape) and (min-width: 640px) {
   body { padding-left: max(6px, env(safe-area-inset-left, 0px)); padding-right: max(6px, env(safe-area-inset-right, 0px)); padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
@@ -323,7 +345,7 @@ input[type=range]::-webkit-slider-thumb { box-shadow: none; }
 }
 @media (orientation: landscape) and (max-height: 540px) {
   header#top { padding: 3px 0 5px; margin-bottom: 2px; } #srcbar { padding: 2px 0 4px; } #hint { display: none !important; } #views { padding-bottom: 6px; }
-  .logo { font-size: 16px; } #scope { height: 28px; } .meter { height: 28px; } .hbtn, .pnav { height: 32px; } #presetBtn { padding: 5px 10px; }
+  .logo { font-size: 16px; }  .meter { height: 28px; } .hbtn, .pnav { height: 32px; } #presetBtn { padding: 5px 10px; }
   #surface { height: clamp(110px, 52cqh, 220px); } .card { padding-top: 8px; } #toast { bottom: 70px; }
   :root { --dkh: 46px; } :root[data-kh="s"] { --dkh: 40px; } :root[data-kh="m"] { --dkh: 50px; } :root[data-kh="l"] { --dkh: 64px; }
   .knob { --kw: clamp(52px, 19cqw, 84px); }
@@ -345,6 +367,14 @@ input[type=range]::-webkit-slider-thumb { box-shadow: none; }
 @media (orientation: landscape) and (min-width: 640px) {
   #v-play .card:has(.sqgrid) { column-span: all; }
   #v-play .card:has(.sqgrid) .sqgrid:has(> :nth-child(16)) { grid-template-columns: repeat(16, 1fr); }
+}
+
+/* phone sideways: the SOUND screen is a swipe pager - Osc A and Osc B side by side, swipe for Sub & Noise + Filter, then Amp */
+@media (orientation: landscape) and (max-height: 540px) {
+  #views:has(#v-sound.on) { overflow: hidden; }
+  #v-sound.on { height: 100%; display: grid; grid-auto-flow: column; grid-template-columns: none; grid-auto-columns: calc((100% - 10px) / 2); gap: 10px; align-items: stretch; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  #v-sound.on::-webkit-scrollbar { display: none; }
+  #v-sound.on > .card { scroll-snap-align: start; overflow-y: auto; min-height: 0; max-height: 100%; margin: 0; overscroll-behavior: contain; touch-action: pan-x pan-y; }
 }
 /* ================= living interface: live beads, cable, ignition ================= */
 .knob .liv { fill: #fff; stroke: var(--kc, var(--accent)); stroke-width: 1.6; filter: drop-shadow(0 0 4px var(--kc, var(--accent))); pointer-events: none; }
@@ -542,7 +572,7 @@ body.learning .knob { outline: 1px dashed color-mix(in srgb, var(--accent) 60%, 
 #hint b { margin-right: .5em; }
 #srcbar { -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; scroll-snap-type: x proximity; padding-right: 24px; }
 #srcbar .cap { touch-action: pan-x; scroll-snap-align: start; }
-@media (max-width: 1100px) { #scope, #voices, .meter { display: none; } }
+@media (max-width: 1100px) { .meter { display: none; } }
 @media (max-width: 900px) { #presetBtn i { display: none; } }
 #presetBtn { min-width: 120px; }
 #stage .splitw { height: 100%; display: flex; flex-direction: column; justify-content: center; gap: 8px; min-height: 0; }
@@ -631,6 +661,50 @@ button:focus-visible, .chip:focus-visible, .pill:focus-visible { outline: 2px so
   #rail nav#tabs button.on { background: #121212; border-color: #2c2c2c; }
   #rail nav#tabs button::before { display: none; }
 }
+
+/* level: simple hides the MOD tab and the mod source strip; full shows everything */
+:root[data-level="simple"] nav#tabs button[data-t="mod"] { display: none !important; }
+:root[data-level="simple"] nav#tabs { grid-template-columns: repeat(3, 1fr); }
+
+/* touch targets: chips answer a little above and below their outline */
+.chip { position: relative; }
+.chip::before { content: ""; position: absolute; left: 0; right: 0; top: -4px; bottom: -6px; }
+/* folded phones (under 330px): the preset row and the dock row must fit without sideways scroll */
+@media (max-width: 330px) {
+  .pgroup { gap: 4px; } .pnav { width: 30px; } .pnav.ab { min-width: 32px; padding: 0 4px; letter-spacing: 0; }
+  #presetBtn { min-width: 0; padding-left: 8px; padding-right: 8px; }
+  #dock .drow { gap: 2px; } #dock .drow .pill { padding: 0 3px; font-size: 9.5px; letter-spacing: 0; } #dock .drow .pill.sq { min-width: 25px; width: 25px; } #dock .drow .stepper button { width: 20px; min-width: 20px; } #dock .drow .stepper span { min-width: 20px; font-size: 9.5px; }
+  #dock { padding-left: 6px; padding-right: 6px; }
+}
+/* long knob captions ("Bend range") may not push past their knob on narrow phones */
+@media (max-width: 420px) { .knob .lbl { max-width: 100%; overflow: hidden; text-overflow: ellipsis; letter-spacing: .04em; } }
+
+/* DOT TEXT: the source element stays in the page for readers and tests but takes no room; a canvas shows the dots */
+.dotsrc{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;white-space:nowrap!important;margin:0!important;padding:0!important;border:0!important}
+.dotcv{display:block;flex:none;max-width:100%}
+
+/* stage in portrait: keyboards (or the pad) fill all the room under the macro knobs, wheels run the full height - no dead gap */
+@media (orientation: portrait) {
+  #stage .splitw { justify-content: stretch; gap: 10px; }
+  #stage .splitrow { flex: 1 1 0; max-height: none; }
+  #stage .splitrow .kbd { max-height: none; }
+  #stage .wgrp { height: 100%; max-height: none; align-self: stretch; }
+  #stage .sbody .wheel { width: 44px; }
+}
+@media (orientation: portrait) { #stage #surfaceS { background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.02)); border: 1px solid var(--b-line, #2a2a2a); } }
+
+/* unified OLED panel: the same display as GRAINS and ELEPHANT - caption and dot-matrix name on the left, the scope on the right */
+#presetBtn i { display: inline !important; font-size: 12px; }
+#oled { flex: none; display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 8px; cursor: pointer; border-radius: 8px; border: 1px solid #222; box-shadow: inset 0 2px 6px #000c, 0 0 0 3px #0c0c0c, 0 0 0 4px #000, 0 1px 0 4px rgba(255,255,255,.07); background: #050505 radial-gradient(rgba(255,255,255,.05) 1px, transparent 1.2px) 0 0 / 4px 4px; margin: 3px 4px 5px; }
+#oled .ptxt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; align-items: flex-start; }
+#oled small { font: 500 9.5px var(--f-mono, ui-monospace, monospace); letter-spacing: .1em; color: var(--mute); white-space: nowrap; text-transform: uppercase; }
+#oled small b { font-weight: 500; }
+#oled #scope { display: block !important; width: 96px; height: 30px !important; flex: none; background: none; border: 0; box-shadow: none; border-radius: 0; }
+#oled .dotcv { align-self: flex-start; color: var(--fg); }
+@media (max-width: 360px) { #oled #scope { width: 64px; } }
+@media (min-width: 820px) { #oled { height: 52px; } #oled #scope { width: 130px; height: 36px !important; } }
+@media (orientation: landscape) and (max-height: 540px) { #oled { display: none; } }
+:root[data-meters="off"] #oled #scope { display: none !important; }
 </style>
 </head>
 <body>
@@ -1465,7 +1539,7 @@ function h(tag, attrs) {
 function clamp(x, a, b) { return x < a ? a : x > b ? b : x; }
 /* user settings: persisted in localStorage, applied to <html> data-attributes and CSS variables */
 var CFG = { keys: 'auto', kh: 'm', wheels: 'auto', hand: 'right', dockPlay: 'off',
-  lang: 'auto', tips: 'on', text: 'm', contrast: 'normal', hue: 0, sat: 0, glow: 1, srcbar: 'on', hint: 'on', meters: 'on', ksize: 'm', ksens: 1, haptics: 'on', motion: 'auto', wake: 'off', skw: 'l', tune: 0 };
+  lang: 'en', tips: 'on', text: 'm', contrast: 'normal', hue: 0, sat: 0, glow: 1, srcbar: 'on', hint: 'on', level: 'simple', meters: 'on', ksize: 'm', ksens: 1, haptics: 'on', motion: 'auto', wake: 'off', skw: 'l', tune: 0 };
 function store(k, v) {
   try {
     if (v === undefined) { var raw = localStorage.getItem(k); if (raw === null && k.indexOf('behemoth.') === 0) raw = localStorage.getItem('strata.' + k.slice(9)); /* migrate data saved by earlier builds */ return JSON.parse(raw); }
@@ -1476,7 +1550,7 @@ var CFG_DEFAULT = JSON.parse(JSON.stringify(CFG));
 (function () { var c = store('beh.cfg'); if (c) for (var k in c) if (k in CFG) CFG[k] = c[k]; })();
 function applyCfg() {
   var r = document.documentElement.dataset;
-  r.hand = CFG.hand; r.kh = CFG.kh; r.wheels = CFG.wheels; r.srcbar = CFG.srcbar; r.hint = CFG.hint; r.meters = CFG.meters; r.ksize = CFG.ksize; r.text = CFG.text; r.contrast = CFG.contrast;
+  r.hand = CFG.hand; r.kh = CFG.kh; r.wheels = CFG.wheels; r.srcbar = CFG.srcbar; r.level = CFG.level; r.hint = CFG.hint; r.meters = CFG.meters; r.ksize = CFG.ksize; r.text = CFG.text; r.contrast = CFG.contrast;
   store('beh.cfg', CFG);
 }
 applyCfg();
@@ -1554,7 +1628,11 @@ document.addEventListener('visibilitychange', function () { if (!document.hidden
 var I18N = {
 "ru": {
 "SPLIT": "СПЛИТ",
+"KEYS": "КЛАВИШИ",
 "Stage key size": "Размер клавиш на сцене",
+"Level": "Уровень",
+"Simple": "Простой",
+"Full": "Полный",
 "Text size": "Размер текста",
 "Contrast": "Контраст",
 "High": "Высокий",
@@ -1668,6 +1746,10 @@ var I18N = {
 "Sus4": "Sus4",
 "Maj7": "Maj7",
 "Min7": "Min7",
+"Voice leading": "Ведение голосов",
+"Voice leading on": "Ведение голосов включено",
+"Voice leading off": "Ведение голосов выключено",
+"One key plays the whole chord. Voice leading keeps the upper notes close to the previous chord. Combine with the arpeggiator for instant patterns.": "Одна клавиша играет весь аккорд. Ведение голосов держит верхние ноты рядом с предыдущим аккордом. Сочетайте с арпеджиатором для готовых рисунков.",
 "One key plays the whole chord. Combine with the arpeggiator for instant patterns.": "Одна клавиша играет весь аккорд. Сочетайте с арпеджиатором для готовых партий.",
 "Step sequencer": "Секвенсор",
 "Clear": "Очистить",
@@ -1861,6 +1943,7 @@ var I18N = {
 "Voices": "Голоса",
 "Master": "Мастер",
 "Bend range": "Диапазон бенда",
+"Bend": "Бенд",
 "Edit": "Правка",
 "A Position": "Позиция A",
 "B Position": "Позиция B",
@@ -1949,495 +2032,25 @@ var I18N = {
 "Oscillator A": "Осциллятор A",
 "Oscillator B": "Осциллятор B",
 "Wave editor": "Редактор волны"
-},
-"de": {
-"touch anywhere to start": "zum Starten irgendwo tippen",
-"headphones recommended": "Kopfhörer empfohlen",
-"loading…": "lädt…",
-"touch anywhere to retry": "zum Wiederholen tippen",
-"Audio running": "Audio läuft",
-"compat mode": "Kompatibilitätsmodus",
-"Web Audio is not available in this browser.": "Web Audio ist in diesem Browser nicht verfügbar.",
-"Minor pent": "Moll-Pentatonik",
-"Major pent": "Dur-Pentatonik",
-"Major": "Dur",
-"Minor": "Moll",
-"Dorian": "Dorisch",
-"Whole tone": "Ganzton",
-"Chromatic": "Chromatisch",
-"Hold": "Halten",
-"Hold on": "Halten an",
-"Hold off": "Halten aus",
-"Octave down": "Oktave runter",
-"Octave up": "Oktave hoch",
-"Pitch bend": "Pitch-Bend",
-"Mod wheel (Macro 1)": "Mod-Rad (Makro 1)",
-"Show or hide keys": "Tasten ein-/ausblenden",
-"Panic: stop all notes": "Panik: alle Noten stoppen",
-"Panic": "Panik",
-"Open stage": "Bühne öffnen",
-"X  PITCH / NOTE    Y  BRIGHTNESS": "X  TONHÖHE / NOTE    Y  HELLIGKEIT",
-"Back": "Zurück",
-"Previous preset": "Vorheriges Preset",
-"Next preset": "Nächstes Preset",
-"Stage": "Bühne",
-"Stage: fullscreen keys and pad": "Bühne: Vollbild-Tasten und Pad",
-"Live": "Live",
-"Keys": "Tasten",
-"Pad": "Pad",
-"Living surface": "Lebendige Fläche",
-"One finger per voice. Slide sideways to glide between notes, move up and down for the Y-AXIS source, press harder for PRESSURE.": "Ein Finger pro Stimme. Seitlich wischen für Glide zwischen Noten, auf/ab für die Y-AXIS-Quelle, fester drücken für PRESSURE.",
-"Glide": "Glide",
-"Scale & keys": "Skala & Tonart",
-"Octave": "Oktave",
-"Arpeggiator": "Arpeggiator",
-"Arp": "Arp",
-"Tempo": "Tempo",
-"1 oct": "1 Okt",
-"2 oct": "2 Okt",
-"3 oct": "3 Okt",
-"Gate": "Gate",
-"Enable tilt": "Neigung aktivieren",
-"Performance": "Performance",
-"Quick Performance Mode": "Schneller Performance-Modus",
-"Tilt turns the phone into a TILT modulation source. Route it from the source strip. Quick Performance Mode shows four big macros, four snapshots and a full-screen surface.": "Neigung macht das Telefon zur TILT-Modulationsquelle. Weise sie über die Quellenleiste zu. Der schnelle Performance-Modus zeigt vier große Makros, vier Snapshots und eine Vollbildfläche.",
-"Tilt on": "Neigung an",
-"Hold the pad to store a snapshot": "Pad halten, um einen Snapshot zu speichern",
-"hold to store": "halten zum Speichern",
-"Motion access was declined": "Bewegungszugriff abgelehnt",
-"Motion is not available here": "Bewegung ist hier nicht verfügbar",
-"Oscilloscope": "Oszilloskop",
-"Smooth": "Glätten",
-"Drag a source onto a knob, or tap it and drag knobs to set depth.": "Ziehe eine Quelle auf einen Regler oder tippe sie an und ziehe Regler für die Tiefe.",
-"No routes yet. Drag a coloured source from the strip above onto any ringed knob, or add one below.": "Noch keine Routen. Ziehe eine farbige Quelle aus der Leiste oben auf einen beringten Regler oder füge unten eine hinzu.",
-"Depth": "Tiefe",
-"Remove route": "Route entfernen",
-"Route already exists": "Route existiert bereits",
-"1. Pick a source": "1. Quelle wählen",
-"2. Tap a destination to add the route": "2. Ziel antippen, um die Route hinzuzufügen",
-"Matrix full (24 routes)": "Matrix voll (24 Routen)",
-"Custom": "Eigene",
-"Untitled": "Unbenannt",
-"Done": "Fertig",
-"Presets": "Presets",
-"Name for a new preset": "Name für neues Preset",
-"Paste a preset JSON here to import, or press Export.": "Preset-JSON zum Importieren hier einfügen oder Export drücken.",
-"Delete": "Löschen",
-"Save current": "Aktuelles speichern",
-"Copied to clipboard": "In Zwischenablage kopiert",
-"Select and copy the text": "Text markieren und kopieren",
-"Export JSON": "JSON exportieren",
-"Import JSON": "JSON importieren",
-"Imported": "Importiert",
-"That is not a BEHEMOTH preset": "Das ist kein BEHEMOTH-Preset",
-"All": "Alle",
-"User": "Eigene",
-"Bass": "Bass",
-"Pluck": "Pluck",
-"Wavetable": "Wavetable",
-"tap to edit as Custom": "tippen, um als Custom zu bearbeiten",
-"Copy → all": "Kopieren → alle",
-"Morph first → last": "Morph erster → letzter",
-"Normalize": "Normalisieren",
-"Reverse": "Umkehren",
-"Sine": "Sinus",
-"Invert": "Invertieren",
-"Fold": "Falten",
-"Skew": "Neigen",
-"Shift": "Verschieben",
-"Random": "Zufall",
-"Brighter": "Heller",
-"Darker": "Dunkler",
-"Random morph": "Zufalls-Morph",
-"Harmonic sweep": "Obertonlauf",
-"Sine → saw": "Sinus → Säge",
-"Import WAV": "WAV importieren",
-"Could not read that audio file": "Audiodatei konnte nicht gelesen werden",
-"Draw with a finger or use the spectrum bars. Editing a factory table makes a copy called Custom. Serum wavetable .wav files (2048-sample frames) import as they are.": "Mit dem Finger zeichnen oder Spektrumbalken nutzen. Das Bearbeiten einer Werkstabelle erzeugt eine Kopie namens Custom. Serum-Wavetable-.wav-Dateien (2048-Sample-Frames) werden unverändert importiert.",
-"Pos": "Pos",
-"On": "An",
-"Position": "Position",
-"Warp": "Warp",
-"Lev": "Pegel",
-"Level": "Pegel",
-"Uni": "Uni",
-"Unison": "Unisono",
-"Det": "Det",
-"Detune": "Verstimm.",
-"Blend": "Blend",
-"Spread": "Breite",
-"Oct": "Okt",
-"Semi": "Halbton",
-"Sub & Noise": "Sub & Rauschen",
-"Sub": "Sub",
-"Noise": "Rauschen",
-"Filter": "Filter",
-"Cutoff": "Cutoff",
-"Reso": "Reso",
-"Drive": "Drive",
-"Key trk": "Key-Track",
-"Env amt": "Env-Stärke",
-"Mix": "Mix",
-"Amp envelope": "Amp-Hüllkurve",
-"Drag the three nodes. Velocity sensitivity:": "Ziehe die drei Knoten. Velocity-Empfindlichkeit:",
-"Macros": "Makros",
-"Rate": "Rate",
-"Envelope 2": "Hüllkurve 2",
-"Mod matrix": "Mod-Matrix",
-"Chorus": "Chorus",
-"Delay": "Delay",
-"Time": "Zeit",
-"Feedback": "Feedback",
-"Reverb": "Hall",
-"Size": "Größe",
-"Damp": "Dämpfung",
-"Voice & master": "Stimme & Master",
-"Mono": "Mono",
-"Voices": "Stimmen",
-"Master": "Master",
-"Bend range": "Bend-Bereich",
-"Edit": "Bearb.",
-"A Position": "Position A",
-"B Position": "Position B",
-"A Warp": "Warp A",
-"B Warp": "Warp B",
-"A Level": "Pegel A",
-"B Level": "Pegel B",
-"Pitch": "Tonhöhe",
-"Resonance": "Resonanz",
-"Unison Detune": "Unisono-Verstimmung",
-"Sub Level": "Sub-Pegel",
-"Noise Level": "Rauschpegel",
-"Delay Mix": "Delay-Mix",
-"Reverb Mix": "Hall-Mix",
-"FX Drive": "FX-Drive",
-"Velocity": "Anschlag",
-"Pressure": "Druck",
-"Key": "Taste",
-"Tilt": "Neigung",
-"Y-axis": "Y-Achse",
-"Sound": "Klang",
-"Mod": "Mod",
-"Play": "Spiel",
-"Menu": "Menü",
-"Screens": "Ansichten",
-"Quick access": "Schnellzugriff",
-"Wave A": "Welle A",
-"Wave B": "Welle B",
-"Show": "Anzeigen",
-"Mod source strip": "Quellenleiste (LFO, Makros)",
-"Hints": "Hinweise",
-"Scope & meter": "Oszilloskop & Pegel",
-"Settings": "Einstellungen",
-"Close": "Schließen",
-"Fullscreen": "Vollbild",
-"Language": "Sprache",
-"Illumination": "Beleuchtung",
-"Colour": "Farbe",
-"Hue": "Farbton",
-"Glow": "Leuchten",
-"Red": "Rot",
-"Orange": "Orange",
-"Amber": "Bernstein",
-"Green": "Grün",
-"Cyan": "Cyan",
-"Blue": "Blau",
-"Violet": "Violett",
-"Magenta": "Magenta",
-"White": "Weiß",
-"Interface": "Oberfläche",
-"Knob size": "Reglergröße",
-"Small": "Klein",
-"Normal": "Normal",
-"Large": "Groß",
-"Knob sensitivity": "Reglerempfindlichkeit",
-"Fine": "Fein",
-"Fast": "Schnell",
-"Animations": "Animationen",
-"Off": "Aus",
-"Vibration": "Vibration",
-"Keep screen awake": "Bildschirm anlassen",
-"Keyboard": "Tastatur",
-"Audio & global": "Audio & Global",
-"Master tune": "Master-Stimmung",
-"Master volume": "Gesamtlautstärke",
-"Polyphony": "Polyphonie",
-"Pitch-bend range": "Pitch-Bend-Bereich",
-"Stop all notes": "Alle Noten stoppen",
-"Reset interface": "Oberfläche zurücksetzen",
-"Interface reset": "Oberfläche zurückgesetzt",
-"System": "System",
-"Keyboard span": "Tastaturumfang",
-"Auto": "Auto",
-"Keyboard height": "Tastaturhöhe",
-"Compact": "Kompakt",
-"Medium": "Mittel",
-"Tall": "Hoch",
-"Pitch & mod wheels": "Pitch- & Mod-Räder",
-"Always": "Immer",
-"Hidden": "Versteckt",
-"Hand": "Hand",
-"Right-handed": "Rechtshänder",
-"Left-handed": "Linkshänder",
-"Keys dock on PLAY tab": "Tastendock im PLAY-Tab",
-"Shown": "Sichtbar",
-"Oscillator A": "Oszillator A",
-"Oscillator B": "Oszillator B",
-"Wave editor": "Wellen-Editor"
-},
-"es": {
-"touch anywhere to start": "toca en cualquier lugar para empezar",
-"headphones recommended": "se recomiendan auriculares",
-"loading…": "cargando…",
-"touch anywhere to retry": "toca para reintentar",
-"Audio running": "Audio activo",
-"compat mode": "modo compatibilidad",
-"Web Audio is not available in this browser.": "Web Audio no está disponible en este navegador.",
-"Minor pent": "Pentatónica menor",
-"Major pent": "Pentatónica mayor",
-"Major": "Mayor",
-"Minor": "Menor",
-"Dorian": "Dórico",
-"Whole tone": "Tonos enteros",
-"Chromatic": "Cromática",
-"Hold": "Hold",
-"Hold on": "Hold activado",
-"Hold off": "Hold desactivado",
-"Octave down": "Octava abajo",
-"Octave up": "Octava arriba",
-"Pitch bend": "Pitch bend",
-"Mod wheel (Macro 1)": "Rueda de mod (Macro 1)",
-"Show or hide keys": "Mostrar u ocultar teclas",
-"Panic: stop all notes": "Pánico: detener todas las notas",
-"Panic": "Pánico",
-"Open stage": "Abrir escenario",
-"X  PITCH / NOTE    Y  BRIGHTNESS": "X  TONO / NOTA    Y  BRILLO",
-"Back": "Atrás",
-"Previous preset": "Preset anterior",
-"Next preset": "Siguiente preset",
-"Stage": "Escena",
-"Stage: fullscreen keys and pad": "Escenario: teclas y pad a pantalla completa",
-"Live": "En vivo",
-"Keys": "Teclas",
-"Pad": "Pad",
-"Living surface": "Superficie viva",
-"One finger per voice. Slide sideways to glide between notes, move up and down for the Y-AXIS source, press harder for PRESSURE.": "Un dedo por voz. Desliza de lado para deslizar entre notas, arriba y abajo para la fuente Y-AXIS, presiona más fuerte para PRESSURE.",
-"Glide": "Glide",
-"Scale & keys": "Escala y tonalidad",
-"Octave": "Octava",
-"Arpeggiator": "Arpegiador",
-"Arp": "Arp",
-"Tempo": "Tempo",
-"1 oct": "1 oct",
-"2 oct": "2 oct",
-"3 oct": "3 oct",
-"Gate": "Gate",
-"Enable tilt": "Activar inclinación",
-"Performance": "Actuación",
-"Quick Performance Mode": "Modo de actuación rápida",
-"Tilt turns the phone into a TILT modulation source. Route it from the source strip. Quick Performance Mode shows four big macros, four snapshots and a full-screen surface.": "La inclinación convierte el teléfono en una fuente de modulación TILT. Asígnala desde la barra de fuentes. El modo de actuación rápida muestra cuatro macros grandes, cuatro instantáneas y una superficie a pantalla completa.",
-"Tilt on": "Inclinación activa",
-"Hold the pad to store a snapshot": "Mantén el pad para guardar una instantánea",
-"hold to store": "mantén para guardar",
-"Motion access was declined": "Se denegó el acceso al movimiento",
-"Motion is not available here": "El movimiento no está disponible aquí",
-"Oscilloscope": "Osciloscopio",
-"Smooth": "Suavizar",
-"Drag a source onto a knob, or tap it and drag knobs to set depth.": "Arrastra una fuente sobre un mando, o tócala y arrastra mandos para fijar la profundidad.",
-"No routes yet. Drag a coloured source from the strip above onto any ringed knob, or add one below.": "Aún no hay rutas. Arrastra una fuente de color desde la barra de arriba a un mando con anillo, o añade una abajo.",
-"Depth": "Profundidad",
-"Remove route": "Quitar ruta",
-"Route already exists": "La ruta ya existe",
-"1. Pick a source": "1. Elige una fuente",
-"2. Tap a destination to add the route": "2. Toca un destino para añadir la ruta",
-"Matrix full (24 routes)": "Matriz llena (24 rutas)",
-"Custom": "Propia",
-"Untitled": "Sin título",
-"Done": "Hecho",
-"Presets": "Presets",
-"Name for a new preset": "Nombre del nuevo preset",
-"Paste a preset JSON here to import, or press Export.": "Pega aquí un JSON de preset para importar, o pulsa Exportar.",
-"Delete": "Eliminar",
-"Save current": "Guardar actual",
-"Copied to clipboard": "Copiado al portapapeles",
-"Select and copy the text": "Selecciona y copia el texto",
-"Export JSON": "Exportar JSON",
-"Import JSON": "Importar JSON",
-"Imported": "Importado",
-"That is not a BEHEMOTH preset": "Eso no es un preset de BEHEMOTH",
-"All": "Todos",
-"User": "Usuario",
-"Bass": "Bajo",
-"Pluck": "Pluck",
-"Wavetable": "Wavetable",
-"tap to edit as Custom": "toca para editar como Custom",
-"Copy → all": "Copiar → todos",
-"Morph first → last": "Morph primero → último",
-"Normalize": "Normalizar",
-"Reverse": "Invertir orden",
-"Sine": "Seno",
-"Invert": "Invertir",
-"Fold": "Plegar",
-"Skew": "Sesgar",
-"Shift": "Desplazar",
-"Random": "Aleatorio",
-"Brighter": "Más brillante",
-"Darker": "Más oscuro",
-"Random morph": "Morph aleatorio",
-"Harmonic sweep": "Barrido armónico",
-"Sine → saw": "Seno → sierra",
-"Import WAV": "Importar WAV",
-"Could not read that audio file": "No se pudo leer ese archivo de audio",
-"Draw with a finger or use the spectrum bars. Editing a factory table makes a copy called Custom. Serum wavetable .wav files (2048-sample frames) import as they are.": "Dibuja con el dedo o usa las barras de espectro. Editar una tabla de fábrica crea una copia llamada Custom. Los archivos .wav de wavetable de Serum (fotogramas de 2048 muestras) se importan tal cual.",
-"Pos": "Pos",
-"On": "On",
-"Position": "Posición",
-"Warp": "Warp",
-"Lev": "Niv.",
-"Level": "Nivel",
-"Uni": "Uni",
-"Unison": "Unís.",
-"Det": "Det",
-"Detune": "Desafin.",
-"Blend": "Mezcla",
-"Spread": "Apertura",
-"Oct": "Oct",
-"Semi": "Semitono",
-"Sub & Noise": "Sub y ruido",
-"Sub": "Sub",
-"Noise": "Ruido",
-"Filter": "Filtro",
-"Cutoff": "Corte",
-"Reso": "Reso",
-"Drive": "Drive",
-"Key trk": "Seguim.",
-"Env amt": "Env cant.",
-"Mix": "Mezcla",
-"Amp envelope": "Envolvente de amplitud",
-"Drag the three nodes. Velocity sensitivity:": "Arrastra los tres nodos. Sensibilidad a velocity:",
-"Macros": "Macros",
-"Rate": "Velocidad",
-"Envelope 2": "Envolvente 2",
-"Mod matrix": "Matriz de mod",
-"Chorus": "Coro",
-"Delay": "Delay",
-"Time": "Tiempo",
-"Feedback": "Realimentación",
-"Reverb": "Reverb",
-"Size": "Tamaño",
-"Damp": "Amort.",
-"Voice & master": "Voz y master",
-"Mono": "Mono",
-"Voices": "Voces",
-"Master": "Master",
-"Bend range": "Rango de bend",
-"Edit": "Editar",
-"A Position": "Posición A",
-"B Position": "Posición B",
-"A Warp": "Warp A",
-"B Warp": "Warp B",
-"A Level": "Nivel A",
-"B Level": "Nivel B",
-"Pitch": "Tono",
-"Resonance": "Resonancia",
-"Unison Detune": "Desafinación unísono",
-"Sub Level": "Nivel sub",
-"Noise Level": "Nivel ruido",
-"Delay Mix": "Mezcla delay",
-"Reverb Mix": "Mezcla reverb",
-"FX Drive": "Drive FX",
-"Velocity": "Velocity",
-"Pressure": "Presión",
-"Key": "Tecla",
-"Tilt": "Inclinación",
-"Y-axis": "Eje Y",
-"Sound": "Sonido",
-"Mod": "Mod",
-"Play": "Tocar",
-"Menu": "Menú",
-"Screens": "Pantallas",
-"Quick access": "Acceso rápido",
-"Wave A": "Onda A",
-"Wave B": "Onda B",
-"Show": "Mostrar",
-"Mod source strip": "Barra de fuentes (LFO, macros)",
-"Hints": "Pistas",
-"Scope & meter": "Osciloscopio y medidor",
-"Settings": "Ajustes",
-"Close": "Cerrar",
-"Fullscreen": "Pantalla completa",
-"Language": "Idioma",
-"Illumination": "Iluminación",
-"Colour": "Color",
-"Hue": "Tono",
-"Glow": "Brillo",
-"Red": "Rojo",
-"Orange": "Naranja",
-"Amber": "Ámbar",
-"Green": "Verde",
-"Cyan": "Cian",
-"Blue": "Azul",
-"Violet": "Violeta",
-"Magenta": "Magenta",
-"White": "Blanco",
-"Interface": "Interfaz",
-"Knob size": "Tamaño de mandos",
-"Small": "Pequeño",
-"Normal": "Normal",
-"Large": "Grande",
-"Knob sensitivity": "Sensibilidad de mandos",
-"Fine": "Fino",
-"Fast": "Rápido",
-"Animations": "Animaciones",
-"Off": "No",
-"Vibration": "Vibración",
-"Keep screen awake": "Mantener pantalla activa",
-"Keyboard": "Teclado",
-"Audio & global": "Audio y global",
-"Master tune": "Afinación maestra",
-"Master volume": "Volumen general",
-"Polyphony": "Polifonía",
-"Pitch-bend range": "Rango de pitch bend",
-"Stop all notes": "Detener todas las notas",
-"Reset interface": "Restablecer interfaz",
-"Interface reset": "Interfaz restablecida",
-"System": "Sistema",
-"Keyboard span": "Rango del teclado",
-"Auto": "Auto",
-"Keyboard height": "Altura del teclado",
-"Compact": "Compacta",
-"Medium": "Media",
-"Tall": "Alta",
-"Pitch & mod wheels": "Ruedas Pitch y Mod",
-"Always": "Siempre",
-"Hidden": "Ocultas",
-"Hand": "Mano",
-"Right-handed": "Diestro",
-"Left-handed": "Zurdo",
-"Keys dock on PLAY tab": "Teclas en la pestaña PLAY",
-"Shown": "Visibles",
-"Oscillator A": "Oscilador A",
-"Oscillator B": "Oscilador B",
-"Wave editor": "Editor de onda"
 }
 };
 /* strings with numbers or names inside */
 var I18N_RULES = [
-  [/^Oct (\d+)$/, { ru: 'Окт $1', de: 'Okt $1', es: 'Oct $1' }],
-  [/^Frame (\d+)\/(\d+)$/, { ru: 'Кадр $1/$2', de: 'Frame $1/$2', es: 'Fotograma $1/$2' }],
-  [/^Wavetable · OSC ([AB])$/, { ru: 'Вейвтейбл · OSC $1', de: 'Wavetable · OSC $1', es: 'Wavetable · OSC $1' }],
-  [/^Snapshot (\d+) stored$/, { ru: 'Снимок $1 сохранён', de: 'Snapshot $1 gespeichert', es: 'Instantánea $1 guardada' }],
-  [/^SNAP (\d+)$/, { ru: 'СНИМОК $1', de: 'SNAP $1', es: 'INSTANT. $1' }],
-  [/^Saved “(.*)”$/, { ru: 'Сохранено «$1»', de: '„$1“ gespeichert', es: 'Guardado «$1»' }],
-  [/^Patch (\d+)$/, { ru: 'Патч $1', de: 'Patch $1', es: 'Parche $1' }],
-  [/^MACRO (\d)$/, { ru: 'МАКРО $1', de: 'MAKRO $1', es: 'MACRO $1' }],
-  [/^ENV (\d)$/, { ru: 'ОГИБ $1', de: 'HÜLL $1', es: 'ENV $1' }],
-  [/^Imported (\d+) frames? \((\d+) samples each\)$/, { ru: 'Импортировано кадров: $1 (по $2 семплов)', de: '$1 Frame(s) importiert (je $2 Samples)', es: '$1 fotograma(s) importados ($2 muestras c/u)' }],
-  [/^Tune ([+-]?\d+)c · A4 ([\d.]+) Hz$/, { ru: 'Строй $1c · A4 $2 Гц', de: 'Stimmung $1c · A4 $2 Hz', es: 'Afinación $1c · A4 $2 Hz' }]
+  [/^Oct (\d+)$/, { ru: 'Окт $1' }],
+  [/^Frame (\d+)\/(\d+)$/, { ru: 'Кадр $1/$2' }],
+  [/^Wavetable · OSC ([AB])$/, { ru: 'Вейвтейбл · OSC $1' }],
+  [/^Snapshot (\d+) stored$/, { ru: 'Снимок $1 сохранён' }],
+  [/^SNAP (\d+)$/, { ru: 'СНИМОК $1' }],
+  [/^Saved “(.*)”$/, { ru: 'Сохранено «$1»' }],
+  [/^Patch (\d+)$/, { ru: 'Патч $1' }],
+  [/^MACRO (\d)$/, { ru: 'МАКРО $1' }],
+  [/^ENV (\d)$/, { ru: 'ОГИБ $1' }],
+  [/^Imported (\d+) frames? \((\d+) samples each\)$/, { ru: 'Импортировано кадров: $1 (по $2 семплов)' }],
+  [/^Tune ([+-]?\d+)c · A4 ([\d.]+) Hz$/, { ru: 'Строй $1c · A4 $2 Гц' }]
 ];
 var curLang = 'en', i18nRec = new WeakMap(), i18nObs = null, I18N_LC = {};
-['ru', 'de', 'es'].forEach(function (l) { I18N_LC[l] = {}; for (var k in I18N[l]) I18N_LC[l][k.toLowerCase()] = I18N[l][k]; });
-function detectLang() { var l = (navigator.language || 'en').slice(0, 2).toLowerCase(); return l === 'ru' || l === 'de' || l === 'es' ? l : 'en'; }
+['ru'].forEach(function (l) { I18N_LC[l] = {}; for (var k in I18N[l]) I18N_LC[l][k.toLowerCase()] = I18N[l][k]; });
+
 function trPiece(k) {
   var d = I18N[curLang], t = d[k], i, m;
   if (t !== undefined) return t;
@@ -2476,7 +2089,7 @@ function i18nSweep(root) {
   for (var c = root.firstChild; c; c = c.nextSibling) i18nSweep(c);
 }
 function setLang(code) {
-  curLang = code === 'auto' ? detectLang() : code; if (curLang !== 'ru' && curLang !== 'de' && curLang !== 'es') curLang = 'en';
+  curLang = code === 'ru' ? 'ru' : 'en'; CFG.lang = curLang;
   document.documentElement.lang = curLang;
   if (i18nObs) i18nObs.disconnect();
   i18nSweep(document.body);
@@ -2562,6 +2175,12 @@ function setRoute(s, d, a) {
 function removeRoute(s, d) { var i = findRoute(s, d); if (i >= 0) { ROUTES.splice(i, 1); routesChanged(); } }
 
 
+
+/* coming back from the background, a phone call or a locked screen: the browser may leave the audio context suspended or "interrupted"; wake it on return and on the next touch */
+function wakeAudio() { var c = A.ctx; if (c && c.state !== 'running') { try { var p = c.resume(); if (p && p.catch) p.catch(function () { }); } catch (e) { } } }
+document.addEventListener('visibilitychange', function () { if (!document.hidden) wakeAudio(); });
+window.addEventListener('pageshow', wakeAudio);
+document.addEventListener('pointerdown', wakeAudio, true);
 /* ------------------------------------------------ knob */
 function arc(a0, a1, r) {
   if (a1 - a0 < 0.6) return '';
@@ -2616,7 +2235,7 @@ function Knob(o) {
     var zero = (o.min < 0 && o.max > 0) ? clamp(toNorm(0), 0, 1) : 0, za = -135 + 270 * zero;
     val.setAttribute('d', a >= za ? arc(za, a, 24) : arc(a, za, 24));
     var t = a * Math.PI / 180; ind.setAttribute('x2', (32 + 13 * Math.sin(t)).toFixed(2)); ind.setAttribute('y2', (32 - 13 * Math.cos(t)).toFixed(2));
-    vv.textContent = o.fmt(v);
+    vv.textContent = o.fmt(v); el.setAttribute('aria-valuenow', Math.round(n * 100)); el.setAttribute('aria-valuetext', vv.textContent);
     // modulation rings
     while (mods.firstChild) mods.removeChild(mods.firstChild);
     if (o.dest != null) {
@@ -2651,6 +2270,15 @@ function Knob(o) {
   });
   function end() { drag = null; vbHide(); setTimeout(function () { if (!drag) el.classList.remove('touch'); }, 120); }
   el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
+  /* keyboard and screen readers: a knob is a slider, arrows move it, Home resets it */
+  el.tabIndex = 0; el.setAttribute('role', 'slider'); el.setAttribute('aria-label', o.label); el.setAttribute('aria-valuemin', '0'); el.setAttribute('aria-valuemax', '100');
+  el.addEventListener('keydown', function (e) {
+    var s = e.key === 'ArrowUp' || e.key === 'ArrowRight' ? 1 : e.key === 'ArrowDown' || e.key === 'ArrowLeft' ? -1 : 0;
+    if (e.key === 'Home') { setP(o.k, o.def); e.preventDefault(); return; }
+    if (!s) return; e.preventDefault();
+    var n = toNorm(P[o.k]), st = o.kind === 'int' ? 1 / Math.max(1, o.max - o.min) : (e.shiftKey ? .002 : .02);
+    setP(o.k, fromNorm(clamp(n + s * st, 0, 1)));
+  });
   knobs.push(K); K.update();
   return K;
 }
@@ -2692,7 +2320,7 @@ function card(title, kids, cls, right) {
 var dpr = Math.min(2, window.devicePixelRatio || 1);
 function fit(cv, hCss) {
   if (cv._fg === layoutGen && cv._fh === hCss && cv._fit) return cv._fit;
-  var w = Math.max(40, Math.round(cv.clientWidth || cv.parentNode && cv.parentNode.clientWidth || 300)), ht = hCss || parseInt(cv.dataset.h || '100', 10); if (cv.dataset.ls && window.matchMedia && matchMedia('(orientation: landscape) and (max-height: 540px)').matches) ht = Math.round(ht * 0.62);
+  var w = Math.max(40, Math.round(cv.clientWidth || cv.parentNode && cv.parentNode.clientWidth || 300)), ht = hCss || parseInt(cv.dataset.h || '100', 10); if (cv.dataset.ls && window.matchMedia && matchMedia('(orientation: landscape) and (max-height: 540px)').matches) ht = Math.round(ht * 0.9);
   if (cv.dataset.grow) { var vw = window.innerWidth; ht = Math.round(ht * (vw >= 1100 ? 1.65 : vw >= 700 ? 1.45 : 1)); }
   cv.style.height = ht + 'px';
   if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(ht * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(ht * dpr); }
@@ -2744,7 +2372,7 @@ function relayout() { layoutGen++; clearTimeout(relayoutT); relayoutT = setTimeo
 /* 3D wavetable stack: static layer cached offscreen; per frame only the live slice is drawn */
 function TableView(slot, hgt) {
   var cv = h('canvas', { class: 'vis', 'data-h': hgt || 104, 'data-ls': 1, 'data-grow': 1 }), bgc = document.createElement('canvas');
-  var posK = slot ? 'bPos' : 'aPos', dest = slot ? 1 : 0, PTS = 96, SKEW = 26, AMP = 15, G = null, pos = null, dirty = true, lastSig = '';
+  var posK = slot ? 'bPos' : 'aPos', dest = slot ? 1 : 0, PTS = 96, SKEW = 26, AMP = 11, G = null, pos = null, dirty = true, lastSig = '';
   function build(c, t) {
     var W = c.w, H = c.h, Ln = Math.min(t.n, 22), dy = (H - 36) / Math.max(1, Ln - 1), lines = [], li, i, f, yb, xo, a;
     for (li = 0; li < Ln; li++) {
@@ -3229,7 +2857,7 @@ function histUi() {
     else if (e.k === 'ab') { e.el.classList.toggle('on', AB.on); e.el.textContent = AB.on ? 'B' : 'A/B'; }
   });
 }
-function histBtn(k, txt, label, fn, cls) { var b = h('button', { class: cls || 'pnav', type: 'button', 'aria-label': label, onclick: fn }, txt); histEls.push({ k: k, el: b }); return b; }
+function histBtn(k, txt, label, fn, cls) { var b = h('button', { class: cls || 'pnav', type: 'button', 'aria-label': label, onclick: fn }, txt.charAt(0) === '<' ? null : txt); if (txt.charAt(0) === '<') b.innerHTML = txt; histEls.push({ k: k, el: b }); return b; }
 
 var RND = { aPos: [0, 1], bPos: [0, 1], aWarp: [0, .8], bWarp: [0, .8], aWMode: [0, 9, 1], bWMode: [0, 9, 1], aUni: [1, 6, 1], bUni: [1, 5, 1], aDet: [0, .5], bDet: [0, .4], aBlend: [.4, 1], aSpread: [.3, 1],
   fType: [0, 7, 1], fCut: [.25, .92], fRes: [0, .65], fDrive: [0, .6], fEnv: [-.3, .7], e1A: [.001, 1.2, 0, 1], e1D: [.1, 1.5, 0, 1], e1S: [.1, 1], e1R: [.05, 2, 0, 1], e2A: [.001, 1, 0, 1], e2D: [.1, 1.5, 0, 1], e2S: [0, .8], e2R: [.05, 2, 0, 1],
@@ -3274,7 +2902,7 @@ function loadFactory(i) { var f = FACTORY[i], p = {}; for (var k in f.p) p[k] = 
 /* ------------------------------------------------ sheets */
 function Sheet(id, title) {
   var bg = h('div', { class: 'sheetbg', onclick: close }), sh = h('div', { class: 'sheet', id: id });
-  var body = h('div', { class: 'sbody' }), head = h('h2', null, h('span', null, title), h('button', { class: 'btn', type: 'button', onclick: close }, 'Done'));
+  var body = h('div', { class: 'sbody' }), head = h('h2', null, h('span', null, title), h('button', { class: 'btn', type: 'button', 'aria-label': 'Close', onclick: close, html: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>' }));
   sh.append(h('div', { class: 'grab' }), head, body); document.body.append(bg, sh);
   function open() { bg.classList.add('on'); sh.classList.add('on'); S_.onOpen && S_.onOpen(); drawAllVis(); }
   function close() { bg.classList.remove('on'); sh.classList.remove('on'); S_.onClose && S_.onClose(); }
@@ -3366,6 +2994,7 @@ function buildSettings() {
     section('Illumination', true, [
       slider('Glow', 0, 1.6, 0.05, function () { return CFG.glow; }, function (v) { CFG.glow = v; applyCfg(); applyTheme(); }, function (v) { return Math.round(v * 100) + '%'; })]),
     section('Interface', false, [
+      cfgChips('Level', 'level', [['simple', 'Simple'], ['full', 'Full']], function () { showTab(curTab); }),
       cfgChips('Text size', 'text', [['m', 'Normal'], ['l', 'Large']]),
       cfgChips('Contrast', 'contrast', [['normal', 'Normal'], ['high', 'High']]),
       cfgChips('Knob size', 'ksize', [['s', 'Small'], ['m', 'Normal'], ['l', 'Large']], drawAllVis),
@@ -3399,7 +3028,7 @@ function buildSettings() {
       document.fullscreenEnabled ? h('button', { class: 'btn', type: 'button', onclick: toggleFullscreen }, 'Fullscreen') : null,
       h('button', { class: 'btn', type: 'button', onclick: function () { var l = CFG.lang; for (var k in CFG_DEFAULT) CFG[k] = CFG_DEFAULT[k]; CFG.lang = l; CFG.tune = 0; setP('tune', 0); applyAll(); repaintSettings(); toast('Interface reset'); } }, 'Reset interface'))));
   var langSheet = Sheet('langSheet', 'Language');
-  langSheet.body.append(cfgChips('', 'lang', [['auto', 'Auto'], ['en', 'English'], ['ru', 'Русский'], ['de', 'Deutsch'], ['es', 'Español']], function () { setLang(CFG.lang); repaintSettings(); }));
+  langSheet.body.append(cfgChips('', 'lang', [['en', 'English'], ['ru', 'Русский']], function () { setLang(CFG.lang); repaintSettings(); }));
   settingsSheet.body.append(h('div', { class: 'btns' }, h('button', { class: 'btn', type: 'button', onclick: function () { langSheet.open(); } }, 'Language')));
   settingsSheet.onOpen = repaintSettings;
 }
@@ -3582,7 +3211,7 @@ function oscCard(slot) {
   var warpOpts = [{ l: 'OFF', v: 0 }, { l: 'BEND +', v: 1 }, { l: 'BEND −', v: 2 }, { l: 'ASYM +', v: 3 }, { l: 'ASYM −', v: 4 }, { l: 'SYNC', v: 5 }, { l: 'MIRROR', v: 6 }, { l: 'QUANT', v: 7 }, { l: slot ? 'FM (A)' : 'FM (B)', v: 8 }, { l: slot ? 'RM (A)' : 'RM (B)', v: 9 }];
   return card('Oscillator ' + name, [
     h('div', { class: 'tabhead' }, tb, Switch(p + 'On')),
-    TableView(slot, 136),
+    TableView(slot, 104),
     Chips(p + 'WMode', warpOpts),
     h('div', { class: 'row' }, Knob({ k: p + 'Pos', label: 'Position', dest: slot ? 1 : 0 }).el, Knob({ k: p + 'Warp', label: 'Warp', dest: slot ? 3 : 2 }).el, Knob({ k: p + 'Lev', label: 'Level', dest: slot ? 5 : 4 }).el,
       Knob({ k: p + 'Uni', label: 'Unison', kind: 'int', fmt: FMT.num }).el, Knob({ k: p + 'Det', label: 'Detune', dest: slot ? dstIdx('bDet') : 10 }).el),
@@ -3630,7 +3259,7 @@ function buildFx() {
   v.append(card('Reverb', h('div', { class: 'row' }, Knob({ k: 'rvMix', label: 'Mix', dest: 14 }).el, Knob({ k: 'rvSize', label: 'Size' }).el, Knob({ k: 'rvDamp', label: 'Damp' }).el)));
   v.append(card('Voice & master', [
     h('div', { class: 'ctlrow' }, h('span', { class: 'lab' }, 'Mono'), Switch('mono'), h('span', { class: 'lab', style: 'margin-left:12px' }, 'Voices'), Stepper('voices', 1, function (x) { return Math.round(x) + ''; })),
-    h('div', { class: 'row' }, Knob({ k: 'vol', label: 'Master', dest: dstIdx('vol') }).el, Knob({ k: 'glide', label: 'Glide' }).el, Knob({ k: 'bend', label: 'Bend range', kind: 'int', fmt: function (x) { return '±' + Math.round(x); } }).el)
+    h('div', { class: 'row' }, Knob({ k: 'vol', label: 'Master', dest: dstIdx('vol') }).el, Knob({ k: 'glide', label: 'Glide' }).el, Knob({ k: 'bend', label: 'Bend', kind: 'int', fmt: function (x) { return '±' + Math.round(x); } }).el)
   ], 'wide'));
 }
 
@@ -3646,6 +3275,23 @@ var Hold = { on: false, latched: {}, fingers: 0, btns: [] };
 window.__dbg = { Hold: Hold, PL: PL };
 var CHORDS = [['Off', [0]], ['Oct', [0, 12]], ['5th', [0, 7]], ['Power', [0, 7, 12]], ['Maj', [0, 4, 7]], ['Min', [0, 3, 7]], ['Sus4', [0, 5, 7]], ['Maj7', [0, 4, 7, 11]], ['Min7', [0, 3, 7, 10]]];
 var chordIdx = +(store('behemoth.chord') || 0), CH = {};
+var voiceLead = store('behemoth.vl') === '1', vlLast = null;
+/* upper chord notes for root n: with voice leading each tone lands in the octave nearest to the previous chord, so changes move by steps instead of jumping */
+function chordNotes(n, iv) {
+  var out = [], j, c = null, x, best, k, cand;
+  if (voiceLead && vlLast && vlLast.length) { c = 0; vlLast.forEach(function (v) { c += v; }); c /= vlLast.length; }
+  for (j = 1; j < iv.length; j++) {
+    x = n + iv[j];
+    if (c !== null) {
+      best = null;
+      for (k = -2; k <= 2; k++) { cand = x + 12 * k; if (cand > n && cand <= n + 14 && out.indexOf(cand) < 0 && (best === null || Math.abs(cand - c) < Math.abs(best - c))) best = cand; }
+      if (best !== null) x = best;
+    }
+    out.push(x);
+  }
+  vlLast = out.slice();
+  return out;
+}
 function noteOff(id) { A.send({ t: 'off', id: id }); var l = CH[id]; if (l) { l.forEach(function (x) { A.send({ t: 'off', id: x }); }); delete CH[id]; } }
 function releaseLatched() { for (var id in Hold.latched) noteOff(+id); Hold.latched = {}; }
 function playOn(n, vel, id) {
@@ -3655,7 +3301,7 @@ function playOn(n, vel, id) {
   var poly = P.mono >= 0.5 && Hold.fingers > 0;   /* mono preset: a second finger adds a voice instead of replacing the first */
   Hold.fingers++; A.send({ t: 'on', n: n, vel: vel, id: id, poly: poly });
   var iv = CHORDS[chordIdx][1];
-  if (iv.length > 1) { CH[id] = []; for (var j = 1; j < iv.length; j++) { var cid = id + 100000 * j; CH[id].push(cid); A.send({ t: 'on', n: n + iv[j], vel: vel * 0.9, id: cid, poly: true }); } }
+  if (iv.length > 1) { CH[id] = []; var cn = chordNotes(n, iv); for (var j = 1; j < iv.length; j++) { var cid = id + 100000 * j; CH[id].push(cid); A.send({ t: 'on', n: cn[j - 1], vel: vel * 0.9, id: cid, poly: true }); } }
 }
 function playOff(id) { if (SEQ.on) return; Hold.fingers = Math.max(0, Hold.fingers - 1); if (Hold.on) Hold.latched[id] = 1; else noteOff(id); }
 function setHold(v, quiet) { Hold.on = v; if (!v) releaseLatched(); Hold.btns.forEach(function (b) { b.classList.toggle('on', v); b.setAttribute('aria-pressed', v ? 'true' : 'false'); }); if (!quiet) toast(v ? 'Hold on' : 'Hold off'); }
@@ -3847,10 +3493,14 @@ function buildStage() {
     main.innerHTML = ''; main.className = 'main m-' + m; glide.style.display = m === 'pad' ? '' : 'none';
     var D = keyDims();
     stageEl.style.setProperty('--kh', D.kh + 'px');
+    /* a phone held sideways has room for one row only: a single keyboard at the global octave, as tall as the screen allows */
+    var one = !!(window.matchMedia && matchMedia('(orientation: landscape) and (max-height: 540px)').matches);
+    bSplit.textContent = one ? 'KEYS' : 'SPLIT'; if (typeof i18nEl === 'function') i18nEl(bSplit);
     if (m === 'split') {
       var wrap = h('div', { class: 'splitw' });
+      if (one) stageEl.style.setProperty('--kh', clamp(D.H - 8, 110, 300) + 'px');
       /* two rows around the global octave: upper = Oct+1, lower = Oct-1 (the OCT control in the bar moves both) */
-      [[1, 7000], [-1, 8000]].forEach(function (r) {
+      (one ? [[0, 7000]] : [[1, 7000], [-1, 8000]]).forEach(function (r) {
         var el = h('div', { class: 'kbd' });
         el._force = function () { return stageForce.call(el); }; el._oct = function () { return clamp(PL.oct + r[0], 0, 7); }; el._idb = r[1];
         wrap.append(h('div', { class: 'splitrow' }, el));
@@ -3931,14 +3581,15 @@ function buildPlay() {
   var chordChips = h('div', { class: 'chips' });
   function paintChords() { chordChips.innerHTML = ''; CHORDS.forEach(function (c, i) { chordChips.append(h('button', { type: 'button', class: 'chip' + (chordIdx === i ? ' on' : ''), onclick: function () { chordIdx = i; store('behemoth.chord', i); paintChords(); } }, c[0])); }); }
   paintChords();
-  v.append(card('Chord memory', [chordChips, h('div', { class: 'empty' }, 'One key plays the whole chord. Combine with the arpeggiator for instant patterns.')]));
+  var vlBtn = h('button', { type: 'button', class: 'chip' + (voiceLead ? ' on' : ''), onclick: function () { voiceLead = !voiceLead; vlLast = null; store('behemoth.vl', voiceLead ? '1' : '0'); vlBtn.classList.toggle('on', voiceLead); toast(voiceLead ? 'Voice leading on' : 'Voice leading off'); } }, 'Voice leading');
+  v.append(card('Chord memory', [chordChips, h('div', { class: 'chips' }, vlBtn), h('div', { class: 'empty' }, 'One key plays the whole chord. Voice leading keeps the upper notes close to the previous chord. Combine with the arpeggiator for instant patterns.')]));
   /* step sequencer */
   var sqGrid = h('div', { class: 'sqgrid' }); for (var si = 0; si < 16; si++) sqGrid.append(SeqStep(si));
   var sqPlay = h('button', { class: 'btn pri', type: 'button', onclick: function () { SEQ.on ? seqStop() : seqStart(); } }, 'Play'); seqBtns.push(sqPlay);
   var sqLen = h('div', { class: 'chips' }); [8, 16].forEach(function (n) { var b = h('button', { type: 'button', class: 'chip' + (SEQ.len === n ? ' on' : ''), onclick: function () { SEQ.len = n; $$('.chip', sqLen).forEach(function (x) { x.classList.toggle('on', +x.dataset.n === n); }); seqSave(); seqPaint(); } }, n + ' steps'); b.dataset.n = n; sqLen.append(b); });
   var sqRand = h('button', { class: 'btn', type: 'button', onclick: function () { var sc = [0, 0, 0, 12, 7, 5, 10, 3]; SEQ.steps.forEach(function (st, i) { st.s = Math.random() < .7 ? (Math.random() < .25 ? 2 : 1) : 0; st.n = pick(sc); }); seqSave(); seqPaint(); } }, 'Random');
   var sqClr = h('button', { class: 'btn', type: 'button', onclick: function () { SEQ.steps.forEach(function (st) { st.s = 0; st.n = 0; }); seqSave(); seqPaint(); } }, 'Clear');
-  v.append(card('Step sequencer', [h('div', { class: 'btns' }, sqPlay, sqRand, sqClr), sqLen, sqGrid,
+  v.append(card('Step sequencer', [h('div', { class: 'btns' }, sqPlay, sqRand, sqClr, h('button', { class: 'btn', type: 'button', onclick: seqExportMidi }, 'MIDI')), sqLen, sqGrid,
     h('div', { class: 'empty' }, 'Tap a step: rest → note → accent. Drag a step up or down to change its pitch (semitones). While it runs, the keys transpose the pattern. Tempo, rate and gate come from the arpeggiator.')]));
   seqPaint();
   var tiltBtn = h('button', { class: 'btn', type: 'button', id: 'tiltBtn' }, 'Enable tilt');
@@ -4013,6 +3664,29 @@ function arpPatSend() { A.send({ t: 'arppat', steps: ARPPAT.on ? ARPPAT.steps.sl
 var apEls = [];
 function arpPatPaint() { apEls.forEach(function (c, i) { c.dataset.s = ARPPAT.steps[i]; c.classList.toggle('off', i >= ARPPAT.len || !ARPPAT.on); var o = ARPPAT.offs[i]; c.firstChild.textContent = o > 0 ? '+' + o : o < 0 ? '' + o : ''; }); }
 
+
+/* export the step pattern as a Standard MIDI File (format 0, 480 ppq) */
+function seqMidi(bars) {
+  var ppq = 480, step = Math.round(ppq * ARP_DIV_UI[Math.round(P.arpRate)]), gate = Math.max(1, Math.round(step * P.arpGate)), ev = [], i, b, n = SEQ.len;
+  for (b = 0; b < (bars || 4); b++) for (i = 0; i < n; i++) {
+    var st = SEQ.steps[i]; if (!st.s) continue;
+    var t = (b * n + i) * step, note = clamp(SEQ.base + st.n, 0, 127), v = st.s === 2 ? 120 : 90;
+    ev.push([t, 0x90, note, v], [t + gate, 0x80, note, 0]);
+  }
+  ev.sort(function (a, c) { return a[0] - c[0] || a[1] - c[1]; });
+  function vlq(x) { var o = [x & 127]; while ((x >>= 7)) o.unshift((x & 127) | 128); return o; }
+  var tr = [0, 0xFF, 0x51, 3], us = Math.round(60000000 / P.bpm), last = 0;
+  tr.push((us >> 16) & 255, (us >> 8) & 255, us & 255);
+  ev.forEach(function (e) { tr = tr.concat(vlq(e[0] - last), [e[1], e[2], e[3]]); last = e[0]; });
+  tr = tr.concat([0, 0xFF, 0x2F, 0]);
+  var h = [0x4D, 0x54, 0x68, 0x64, 0, 0, 0, 6, 0, 0, 0, 1, ppq >> 8, ppq & 255, 0x4D, 0x54, 0x72, 0x6B, (tr.length >>> 24) & 255, (tr.length >>> 16) & 255, (tr.length >>> 8) & 255, tr.length & 255];
+  return new Blob([new Uint8Array(h.concat(tr))], { type: 'audio/midi' });
+}
+function seqExportMidi() {
+  var url = URL.createObjectURL(seqMidi(4)), a = document.createElement('a');
+  a.href = url; a.download = 'behemoth-seq.mid'; document.body.append(a); a.click(); a.remove();
+  setTimeout(function () { URL.revokeObjectURL(url); }, 4000); toast('Saved behemoth-seq.mid');
+}
 /* tilt */
 var tiltOn = false;
 function enableTilt() {
@@ -4194,7 +3868,7 @@ function buildRec() {
 function toggleRec() { REC.on ? recStop() : recStart(); }
 
 /* ------------------------------------------------ tutorial (step by step) and contextual tips */
-var TOUR = [
+var TOUR_ALL = [
   { title: 'Welcome', text: 'BEHEMOTH is a wavetable bass synth. This short tour shows the essentials. You can skip it and replay it any time from the menu: Tutorial & tips.' },
   { sel: '#dock', alt: '#top', title: 'Play', text: 'Tap the keys. HOLD sustains notes, ARP arpeggiates them, the square stops all sound, the arrows icon makes the keys bigger (full-screen Stage in landscape) and the chevron hides them.' },
   { sel: '#presetBtn', title: 'Presets', text: 'Tap here to browse presets. Star favourites, search, or press Random preset. Mutate and Randomize create new sounds from the current one.' },
@@ -4209,6 +3883,11 @@ var TOUR = [
 var tourEl = null;
 function tourStart(force) {
   if (tourEl || (!force && store('behemoth.tour'))) return;
+  /* the simple level has no MOD tab and no source strip */
+  var TOUR = TOUR_ALL;
+  if (CFG.level !== 'full') TOUR = TOUR_ALL.filter(function (t) { return t.sel !== '#srcbar'; }).map(function (t) {
+    return t.sel === '#tabs' ? { sel: t.sel, title: t.title, text: 'SOUND shapes the tone, FX adds drive, chorus, delay and reverb, PLAY has the touchpad, chords, arpeggiator and step sequencer. For MOD, LFOs and the routing matrix open the menu and set Level to Full.' } : t;
+  });
   var i = 0, veil = h('div', { id: 'tour' }, h('div', { class: 'tspot' }), h('div', { class: 'tcard' }, h('b'), h('p'), h('div', { class: 'tdots' }),
     h('div', { class: 'btns' }, h('button', { class: 'btn', type: 'button', onclick: done }, 'Skip'), h('button', { class: 'btn', type: 'button', id: 'tBack', onclick: function () { go(-1); } }, 'Back'), h('button', { class: 'btn pri', type: 'button', id: 'tNext', onclick: function () { go(1); } }, 'Next'))));
   tourEl = veil; document.body.append(veil);
@@ -4251,11 +3930,103 @@ function maybeTip(n) {
   document.body.append(tipEl); tipT = setTimeout(hideTip, 14000);
 }
 
+/* black-and-white glass over the displays: gradients only, no backdrop-filter. The highlight follows the finger. */
+(function () {
+  function wrap(c) {
+    if (!c.parentNode || (c.parentNode.classList && c.parentNode.classList.contains('glass'))) return;
+    var g = document.createElement('div'); g.className = 'glass'; c.parentNode.insertBefore(g, c); g.appendChild(c);
+    function mv(e) {
+      var r = g.getBoundingClientRect(); if (!r.width) return;
+      g.style.setProperty('--gx', Math.max(0, Math.min(100, (e.clientX - r.left) / r.width * 100)).toFixed(0) + '%');
+      g.style.setProperty('--gy', Math.max(-10, Math.min(60, (e.clientY - r.top) / r.height * 60 - 10)).toFixed(0) + '%');
+    }
+    g.addEventListener('pointermove', mv, { passive: true }); g.addEventListener('pointerdown', mv, { passive: true });
+  }
+  function scan() { var l = document.querySelectorAll('canvas.vis'), i; for (i = 0; i < l.length; i++) wrap(l[i]); }
+  scan();
+  if (window.MutationObserver) new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
+})();
+/* DOT TEXT: a text element is shown as one dot-matrix line (5x7 glyphs, Latin and Cyrillic, no font file).
+   The element keeps its text, so readers, translations and tests are unaffected; only a canvas is painted instead. */
+var DOTF = (function () {
+  var g = {
+    'A': '01110 10001 10001 11111 10001 10001 10001', 'B': '11110 10001 10001 11110 10001 10001 11110', 'C': '01110 10001 10000 10000 10000 10001 01110',
+    'D': '11110 10001 10001 10001 10001 10001 11110', 'E': '11111 10000 10000 11110 10000 10000 11111', 'F': '11111 10000 10000 11110 10000 10000 10000',
+    'G': '01110 10001 10000 10111 10001 10001 01111', 'H': '10001 10001 10001 11111 10001 10001 10001', 'I': '01110 00100 00100 00100 00100 00100 01110',
+    'J': '00111 00010 00010 00010 00010 10010 01100', 'K': '10001 10010 10100 11000 10100 10010 10001', 'L': '10000 10000 10000 10000 10000 10000 11111',
+    'M': '10001 11011 10101 10101 10001 10001 10001', 'N': '10001 11001 10101 10011 10001 10001 10001', 'O': '01110 10001 10001 10001 10001 10001 01110',
+    'P': '11110 10001 10001 11110 10000 10000 10000', 'Q': '01110 10001 10001 10001 10101 10010 01101', 'R': '11110 10001 10001 11110 10100 10010 10001',
+    'S': '01111 10000 10000 01110 00001 00001 11110', 'T': '11111 00100 00100 00100 00100 00100 00100', 'U': '10001 10001 10001 10001 10001 10001 01110',
+    'V': '10001 10001 10001 10001 10001 01010 00100', 'W': '10001 10001 10001 10101 10101 11011 10001', 'X': '10001 10001 01010 00100 01010 10001 10001',
+    'Y': '10001 10001 01010 00100 00100 00100 00100', 'Z': '11111 00001 00010 00100 01000 10000 11111',
+    '0': '01110 10001 10011 10101 11001 10001 01110', '1': '00100 01100 00100 00100 00100 00100 01110', '2': '01110 10001 00001 00010 00100 01000 11111',
+    '3': '11110 00001 00001 01110 00001 00001 11110', '4': '00010 00110 01010 10010 11111 00010 00010', '5': '11111 10000 11110 00001 00001 10001 01110',
+    '6': '00110 01000 10000 11110 10001 10001 01110', '7': '11111 00001 00010 00100 01000 01000 01000', '8': '01110 10001 10001 01110 10001 10001 01110',
+    '9': '01110 10001 10001 01111 00001 00010 01100',
+    'Б': '11111 10000 10000 11110 10001 10001 11110', 'Г': '11111 10000 10000 10000 10000 10000 10000', 'Д': '00110 01010 01010 01010 01010 11111 10001',
+    'Ё': '01010 11111 10000 11110 10000 10000 11111', 'Ж': '10101 10101 10101 01110 10101 10101 10101', 'З': '01110 10001 00001 00110 00001 10001 01110',
+    'И': '10001 10001 10011 10101 11001 10001 10001', 'Й': '01010 00100 10001 10011 10101 11001 10001', 'Л': '00111 01001 01001 01001 01001 01001 10001',
+    'П': '11111 10001 10001 10001 10001 10001 10001', 'У': '10001 10001 10001 01111 00001 10001 01110', 'Ф': '00100 01110 10101 10101 10101 01110 00100',
+    'Ц': '10010 10010 10010 10010 10010 11111 00001', 'Ч': '10001 10001 10001 01111 00001 00001 00001', 'Ш': '10101 10101 10101 10101 10101 10101 11111',
+    'Щ': '10101 10101 10101 10101 10101 11111 00001', 'Ъ': '11000 01000 01000 01110 01001 01001 01110', 'Ы': '10001 10001 10001 11001 10101 10101 11001',
+    'Ь': '10000 10000 10000 11110 10001 10001 11110', 'Э': '01110 10001 00001 00111 00001 10001 01110', 'Ю': '10010 10101 10101 11101 10101 10101 10010',
+    'Я': '01111 10001 10001 01111 00101 01001 10001',
+    ' ': '00000 00000 00000 00000 00000 00000 00000', '.': '00000 00000 00000 00000 00000 01100 01100', ',': '00000 00000 00000 00000 01100 00100 01000',
+    ':': '00000 01100 01100 00000 01100 01100 00000', ';': '00000 01100 01100 00000 01100 00100 01000', '!': '00100 00100 00100 00100 00100 00000 00100',
+    '?': '01110 10001 00001 00010 00100 00000 00100', '-': '00000 00000 00000 11111 00000 00000 00000', '+': '00000 00100 00100 11111 00100 00100 00000',
+    '=': '00000 00000 11111 00000 11111 00000 00000', '/': '00001 00010 00010 00100 01000 01000 10000', '%': '11001 11010 00010 00100 01000 01011 10011',
+    '(': '00010 00100 01000 01000 01000 00100 00010', ')': '01000 00100 00010 00010 00010 00100 01000', '\'': '00100 00100 01000 00000 00000 00000 00000',
+    '"': '01010 01010 00000 00000 00000 00000 00000', '_': '00000 00000 00000 00000 00000 00000 11111', '#': '01010 01010 11111 01010 11111 01010 01010',
+    '*': '00000 10101 01110 11111 01110 10101 00000', '<': '00010 00100 01000 10000 01000 00100 00010', '>': '01000 00100 00010 00001 00010 00100 01000',
+    '~': '00000 00000 01000 10101 00010 00000 00000', '·': '00000 00000 00000 00100 00000 00000 00000', '×': '00000 10001 01010 00100 01010 10001 00000',
+    '…': '00000 00000 00000 00000 00000 00000 10101', '▸': '01000 01100 01110 01111 01110 01100 01000', '●': '00000 01110 11111 11111 11111 01110 00000'
+  };
+  var alias = { 'А': 'A', 'В': 'B', 'Е': 'E', 'К': 'K', 'М': 'M', 'Н': 'H', 'О': 'O', 'Р': 'P', 'С': 'C', 'Т': 'T', 'Х': 'X', '–': '-', '—': '-', '•': '·', '−': '-', '’': '\'', ' ': ' ' };
+  var out = {}, k;
+  for (k in g) out[k] = g[k].split(' ');
+  for (k in alias) out[k] = out[alias[k]];
+  return out;
+})();
+function dotText(src, opt) {
+  opt = opt || {};
+  if (!src || src._dot) return;
+  var cv = document.createElement('canvas'), pending = 0, last = '';
+  cv.className = 'dotcv'; cv.setAttribute('aria-hidden', 'true');
+  src.classList.add('dotsrc'); src._dot = cv; src.parentNode.insertBefore(cv, src.nextSibling);
+  function avail() {
+    var p = src.parentNode, cs = getComputedStyle(p), w = p.clientWidth - (parseFloat(cs.paddingLeft) || 0) - (parseFloat(cs.paddingRight) || 0), i, c, gap = parseFloat(cs.columnGap) || 0;
+    if (cs.display.indexOf('flex') >= 0 && cs.flexDirection.indexOf('column') < 0) for (i = 0; i < p.children.length; i++) { c = p.children[i]; if (c !== cv && c !== src && c.offsetWidth) w -= c.offsetWidth + gap; }
+    return Math.max(20, w);
+  }
+  function draw() {
+    pending = 0;
+    var t = (src.textContent || '').replace(/\s+/g, ' ').trim().toUpperCase(), cs = getComputedStyle(src), fs = parseFloat(cs.fontSize) || 16, d = window.devicePixelRatio || 1,
+      pitch = Math.max(1.8, Math.min(opt.max || 4, fs * (opt.k || 0.17))), av = avail(), n = t.length, cols = n * 6 - 1, maxChars, i, j, y, x, gl, ctx, W, H, r, on, off, key;
+    if (cols * pitch > av) { pitch = av / cols; if (pitch < 1.8) { pitch = 1.8; maxChars = Math.max(1, Math.floor((av / pitch + 1) / 6)); t = t.slice(0, Math.max(0, maxChars - 1)) + '…'; n = t.length; cols = n * 6 - 1; } }
+    key = t + '|' + pitch.toFixed(2) + '|' + cs.color + '|' + d; if (key === last) return; last = key;
+    W = Math.max(1, Math.ceil(cols * pitch)); H = Math.ceil(7 * pitch);
+    cv.width = Math.ceil(W * d); cv.height = Math.ceil(H * d); cv.style.width = W + 'px'; cv.style.height = H + 'px'; cv.style.marginTop = cs.marginTop;
+    ctx = cv.getContext('2d'); ctx.clearRect(0, 0, cv.width, cv.height); r = pitch * 0.4 * d; on = cs.color; off = 'rgba(255,255,255,.06)';
+    for (i = 0; i < n; i++) {
+      gl = DOTF[t.charAt(i)] || DOTF['?'];
+      for (y = 0; y < 7; y++) for (x = 0; x < 5; x++) {
+        ctx.fillStyle = gl[y].charAt(x) === '1' ? on : off; ctx.beginPath(); ctx.arc((i * 6 + x + .5) * pitch * d, (y + .5) * pitch * d, r, 0, 6.2832); ctx.fill();
+      }
+    }
+  }
+  function soon() { if (!pending) pending = requestAnimationFrame(draw); }
+  new MutationObserver(soon).observe(src, { childList: true, characterData: true, subtree: true });
+  window.addEventListener('resize', soon); window.addEventListener('orientationchange', soon);
+  if (window.ResizeObserver) new ResizeObserver(soon).observe(src.parentNode);
+  draw();
+}
+
+(function dotInit() { var o = document.getElementById('oledName'), pn = document.getElementById('presetName'); if (o && !o._dot) { dotText(o, { k: 0.1, max: 2.5 }); if (pn) { var cp = function () { o.textContent = pn.textContent; }; cp(); new MutationObserver(cp).observe(pn, { childList: true, characterData: true, subtree: true }); } } else if (!o) setTimeout(dotInit, 120); })();
 /* ------------------------------------------------ header meters */
 function headerLoop() {
   var sc = $('#scope'), g, W, H;
   (function frame() {
-    var c = fit(sc, 34); g = c.g; W = c.w; H = c.h; g.clearRect(0, 0, W, H);
+    var c = fit(sc, sc.clientHeight || 36); g = c.g; W = c.w; H = c.h; g.clearRect(0, 0, W, H);
     var a = A.scope, w = A.scopeW | 0, i;
     g.beginPath(); for (i = 0; i < 256; i++) { var v = a[(w + i) & 255] || 0, x = i / 255 * W, y = H / 2 - v * (H / 2 - 3); i ? g.lineTo(x, y) : g.moveTo(x, y); }
     g.lineWidth = 1.4; g.strokeStyle = cssvCache.accent; g.stroke();
@@ -4273,28 +4044,30 @@ function buildUi() {
   app.innerHTML = '';
   app.append(
     h('header', { id: 'top' }, h('span', { class: 'logo' }, 'BEHEMOTH'),
-      h('div', { class: 'pgroup' }, h('button', { class: 'pnav', type: 'button', 'aria-label': 'Previous preset', onclick: function () { stepPreset(-1); } }, '‹'),
-        h('button', { id: 'presetBtn', type: 'button', onclick: function () { presetSheet.open(); } }, h('span', { id: 'presetName' }, curPreset), h('i', null, 'PRESETS')),
-        h('button', { class: 'pnav', type: 'button', 'aria-label': 'Next preset', onclick: function () { stepPreset(1); } }, '›'),
-        histBtn('undo', '↶', 'Undo', histUndo), histBtn('ab', 'A/B', 'Compare with the saved preset', abToggle, 'pnav ab')),
-      h('canvas', { id: 'scope', 'aria-label': 'Oscilloscope' }), h('div', { class: 'meter', id: 'meter' }, h('b')), h('div', { id: 'voices' }, '0v'),
+      h('div', { class: 'pgroup' }, h('button', { class: 'pnav', type: 'button', 'aria-label': 'Previous preset', onclick: function () { stepPreset(-1); }, html: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>' }),
+        h('button', { id: 'presetBtn', type: 'button', onclick: function () { presetSheet.open(); } }, h('span', { id: 'presetName' }, curPreset), h('i', null, '\u25BE')),
+        h('button', { class: 'pnav', type: 'button', 'aria-label': 'Next preset', onclick: function () { stepPreset(1); }, html: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>' }),
+        histBtn('undo', '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 010 12h-3"/></svg>', 'Undo', histUndo), histBtn('ab', 'A/B', 'Compare with the saved preset', abToggle, 'pnav ab')),
+      h('div', { class: 'meter', id: 'meter' }, h('b')),
       h('button', { class: 'hbtn rec', id: 'recBtn', type: 'button', 'aria-label': 'Record audio', onclick: toggleRec }, 'REC'),
       h('button', { class: 'hbtn stg', type: 'button', 'aria-label': 'Stage: fullscreen keys and pad', onclick: openStage }, 'STAGE'),
       h('button', { class: 'hbtn ico menu', type: 'button', 'aria-label': 'Menu', onclick: function () { settingsSheet.open(); buzz(6); }, html: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="square"><path d="M4 7h16M4 12h16M4 17h16"/></svg>' })),
+    h('div', { id: 'oled', role: 'button', tabindex: '0', 'aria-label': 'Presets', onclick: function () { presetSheet.open(); }, onkeydown: function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); presetSheet.open(); } } }, h('div', { class: 'ptxt' }, h('small', null, h('span', { class: 'pcap' }, 'PRESET'), ' \u00B7 ', h('b', { id: 'voices' }, '0v')), h('span', { id: 'oledName' }, curPreset)), h('canvas', { id: 'scope', 'aria-label': 'Oscilloscope' })),
     h('div', { id: 'srcbar' }), h('div', { id: 'hint' }),
     h('main', { id: 'views' }, ['sound', 'mod', 'fx', 'play'].map(function (n) { var d = h('div', { class: 'view', id: 'v-' + n }); views[n] = d; return d; })),
     buildDock(),
-    h('aside', { id: 'rail' }, h('nav', { id: 'tabs' }, [['sound', 'SOUND'], ['mod', 'MOD'], ['fx', 'FX'], ['play', 'PLAY']].map(function (t, i) { return h('button', { type: 'button', 'data-t': t[0], class: i ? '' : 'on', onclick: function () { showTab(t[0]); } }, h('span', null, t[1])); }))));
+    h('aside', { id: 'rail' }, h('nav', { id: 'tabs', role: 'tablist', 'aria-label': 'Screens' }, [['sound', 'SOUND'], ['mod', 'MOD'], ['fx', 'FX'], ['play', 'PLAY']].map(function (t, i) { return h('button', { type: 'button', 'data-t': t[0], class: i ? '' : 'on', onclick: function () { showTab(t[0]); } }, h('span', null, t[1])); }))));
   buildCaps(); buildSound(); buildMod(); buildFx(); buildPlay(); buildPresetSheet(); buildSettings(); buildTableSheet(); buildQpm(); buildStage(); buildRec();
   showTab('sound');
   applyTheme(); applyMotion(); applyWake(); setLang(CFG.lang);
 }
 var curTab = 'sound';
 function showTab(n) {
+  if (CFG.level !== 'full' && n === 'mod') n = 'sound';
   curTab = n;
-  $$('#tabs button').forEach(function (b) { b.classList.toggle('on', b.dataset.t === n); });
+  $$('#tabs button').forEach(function (b) { var on = b.dataset.t === n; b.classList.toggle('on', on); b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
   for (var k in views) views[k].classList.toggle('on', k === n);
-  var strip = (n === 'sound' || n === 'mod' || n === 'fx') ? 'flex' : 'none'; $('#srcbar').style.display = strip; $('#hint').style.display = strip; $('#dock').style.display = (n === 'play' && CFG.dockPlay !== 'on') ? 'none' : '';
+  var strip = (n === 'sound' || n === 'mod' || n === 'fx') ? 'flex' : 'none'; var stripSrc = CFG.level === 'full' ? strip : 'none'; $('#srcbar').style.display = stripSrc; $('#hint').style.display = stripSrc; $('#dock').style.display = (n === 'play' && CFG.dockPlay !== 'on') ? 'none' : '';
   $('#views').scrollTop = 0; setTimeout(drawAllVis, 0); maybeTip(n);
 }
 function boot() {

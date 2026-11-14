@@ -16,7 +16,7 @@
 }
 @media (orientation: landscape) and (max-height: 540px) {
   header#top { padding: 3px 0 5px; margin-bottom: 2px; } #srcbar { padding: 2px 0 4px; } #hint { display: none !important; } #views { padding-bottom: 6px; }
-  .logo { font-size: 16px; } #scope { height: 28px; } .meter { height: 28px; } .hbtn, .pnav { height: 32px; } #presetBtn { padding: 5px 10px; }
+  .logo { font-size: 16px; }  .meter { height: 28px; } .hbtn, .pnav { height: 32px; } #presetBtn { padding: 5px 10px; }
   #surface { height: clamp(110px, 52cqh, 220px); } .card { padding-top: 8px; } #toast { bottom: 70px; }
   :root { --dkh: 46px; } :root[data-kh="s"] { --dkh: 40px; } :root[data-kh="m"] { --dkh: 50px; } :root[data-kh="l"] { --dkh: 64px; }
   .knob { --kw: clamp(52px, 19cqw, 84px); }
@@ -38,4 +38,12 @@
 @media (orientation: landscape) and (min-width: 640px) {
   #v-play .card:has(.sqgrid) { column-span: all; }
   #v-play .card:has(.sqgrid) .sqgrid:has(> :nth-child(16)) { grid-template-columns: repeat(16, 1fr); }
+}
+
+/* phone sideways: the SOUND screen is a swipe pager - Osc A and Osc B side by side, swipe for Sub & Noise + Filter, then Amp */
+@media (orientation: landscape) and (max-height: 540px) {
+  #views:has(#v-sound.on) { overflow: hidden; }
+  #v-sound.on { height: 100%; display: grid; grid-auto-flow: column; grid-template-columns: none; grid-auto-columns: calc((100% - 10px) / 2); gap: 10px; align-items: stretch; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  #v-sound.on::-webkit-scrollbar { display: none; }
+  #v-sound.on > .card { scroll-snap-align: start; overflow-y: auto; min-height: 0; max-height: 100%; margin: 0; overscroll-behavior: contain; touch-action: pan-x pan-y; }
 }

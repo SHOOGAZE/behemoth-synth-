@@ -1,20 +1,20 @@
 /* strings with numbers or names inside */
 var I18N_RULES = [
-  [/^Oct (\d+)$/, { ru: 'Окт $1', de: 'Okt $1', es: 'Oct $1' }],
-  [/^Frame (\d+)\/(\d+)$/, { ru: 'Кадр $1/$2', de: 'Frame $1/$2', es: 'Fotograma $1/$2' }],
-  [/^Wavetable · OSC ([AB])$/, { ru: 'Вейвтейбл · OSC $1', de: 'Wavetable · OSC $1', es: 'Wavetable · OSC $1' }],
-  [/^Snapshot (\d+) stored$/, { ru: 'Снимок $1 сохранён', de: 'Snapshot $1 gespeichert', es: 'Instantánea $1 guardada' }],
-  [/^SNAP (\d+)$/, { ru: 'СНИМОК $1', de: 'SNAP $1', es: 'INSTANT. $1' }],
-  [/^Saved “(.*)”$/, { ru: 'Сохранено «$1»', de: '„$1“ gespeichert', es: 'Guardado «$1»' }],
-  [/^Patch (\d+)$/, { ru: 'Патч $1', de: 'Patch $1', es: 'Parche $1' }],
-  [/^MACRO (\d)$/, { ru: 'МАКРО $1', de: 'MAKRO $1', es: 'MACRO $1' }],
-  [/^ENV (\d)$/, { ru: 'ОГИБ $1', de: 'HÜLL $1', es: 'ENV $1' }],
-  [/^Imported (\d+) frames? \((\d+) samples each\)$/, { ru: 'Импортировано кадров: $1 (по $2 семплов)', de: '$1 Frame(s) importiert (je $2 Samples)', es: '$1 fotograma(s) importados ($2 muestras c/u)' }],
-  [/^Tune ([+-]?\d+)c · A4 ([\d.]+) Hz$/, { ru: 'Строй $1c · A4 $2 Гц', de: 'Stimmung $1c · A4 $2 Hz', es: 'Afinación $1c · A4 $2 Hz' }]
+  [/^Oct (\d+)$/, { ru: 'Окт $1' }],
+  [/^Frame (\d+)\/(\d+)$/, { ru: 'Кадр $1/$2' }],
+  [/^Wavetable · OSC ([AB])$/, { ru: 'Вейвтейбл · OSC $1' }],
+  [/^Snapshot (\d+) stored$/, { ru: 'Снимок $1 сохранён' }],
+  [/^SNAP (\d+)$/, { ru: 'СНИМОК $1' }],
+  [/^Saved “(.*)”$/, { ru: 'Сохранено «$1»' }],
+  [/^Patch (\d+)$/, { ru: 'Патч $1' }],
+  [/^MACRO (\d)$/, { ru: 'МАКРО $1' }],
+  [/^ENV (\d)$/, { ru: 'ОГИБ $1' }],
+  [/^Imported (\d+) frames? \((\d+) samples each\)$/, { ru: 'Импортировано кадров: $1 (по $2 семплов)' }],
+  [/^Tune ([+-]?\d+)c · A4 ([\d.]+) Hz$/, { ru: 'Строй $1c · A4 $2 Гц' }]
 ];
 var curLang = 'en', i18nRec = new WeakMap(), i18nObs = null, I18N_LC = {};
-['ru', 'de', 'es'].forEach(function (l) { I18N_LC[l] = {}; for (var k in I18N[l]) I18N_LC[l][k.toLowerCase()] = I18N[l][k]; });
-function detectLang() { var l = (navigator.language || 'en').slice(0, 2).toLowerCase(); return l === 'ru' || l === 'de' || l === 'es' ? l : 'en'; }
+['ru'].forEach(function (l) { I18N_LC[l] = {}; for (var k in I18N[l]) I18N_LC[l][k.toLowerCase()] = I18N[l][k]; });
+
 function trPiece(k) {
   var d = I18N[curLang], t = d[k], i, m;
   if (t !== undefined) return t;
@@ -53,7 +53,7 @@ function i18nSweep(root) {
   for (var c = root.firstChild; c; c = c.nextSibling) i18nSweep(c);
 }
 function setLang(code) {
-  curLang = code === 'auto' ? detectLang() : code; if (curLang !== 'ru' && curLang !== 'de' && curLang !== 'es') curLang = 'en';
+  curLang = code === 'ru' ? 'ru' : 'en'; CFG.lang = curLang;
   document.documentElement.lang = curLang;
   if (i18nObs) i18nObs.disconnect();
   i18nSweep(document.body);

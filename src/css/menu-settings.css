@@ -101,7 +101,7 @@ body.learning .knob { outline: 1px dashed color-mix(in srgb, var(--accent) 60%, 
 #hint b { margin-right: .5em; }
 #srcbar { -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; scroll-snap-type: x proximity; padding-right: 24px; }
 #srcbar .cap { touch-action: pan-x; scroll-snap-align: start; }
-@media (max-width: 1100px) { #scope, #voices, .meter { display: none; } }
+@media (max-width: 1100px) { .meter { display: none; } }
 @media (max-width: 900px) { #presetBtn i { display: none; } }
 #presetBtn { min-width: 120px; }
 #stage .splitw { height: 100%; display: flex; flex-direction: column; justify-content: center; gap: 8px; min-height: 0; }
@@ -190,3 +190,47 @@ button:focus-visible, .chip:focus-visible, .pill:focus-visible { outline: 2px so
   #rail nav#tabs button.on { background: #121212; border-color: #2c2c2c; }
   #rail nav#tabs button::before { display: none; }
 }
+
+/* level: simple hides the MOD tab and the mod source strip; full shows everything */
+:root[data-level="simple"] nav#tabs button[data-t="mod"] { display: none !important; }
+:root[data-level="simple"] nav#tabs { grid-template-columns: repeat(3, 1fr); }
+
+/* touch targets: chips answer a little above and below their outline */
+.chip { position: relative; }
+.chip::before { content: ""; position: absolute; left: 0; right: 0; top: -4px; bottom: -6px; }
+/* folded phones (under 330px): the preset row and the dock row must fit without sideways scroll */
+@media (max-width: 330px) {
+  .pgroup { gap: 4px; } .pnav { width: 30px; } .pnav.ab { min-width: 32px; padding: 0 4px; letter-spacing: 0; }
+  #presetBtn { min-width: 0; padding-left: 8px; padding-right: 8px; }
+  #dock .drow { gap: 2px; } #dock .drow .pill { padding: 0 3px; font-size: 9.5px; letter-spacing: 0; } #dock .drow .pill.sq { min-width: 25px; width: 25px; } #dock .drow .stepper button { width: 20px; min-width: 20px; } #dock .drow .stepper span { min-width: 20px; font-size: 9.5px; }
+  #dock { padding-left: 6px; padding-right: 6px; }
+}
+/* long knob captions ("Bend range") may not push past their knob on narrow phones */
+@media (max-width: 420px) { .knob .lbl { max-width: 100%; overflow: hidden; text-overflow: ellipsis; letter-spacing: .04em; } }
+
+/* DOT TEXT: the source element stays in the page for readers and tests but takes no room; a canvas shows the dots */
+.dotsrc{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;white-space:nowrap!important;margin:0!important;padding:0!important;border:0!important}
+.dotcv{display:block;flex:none;max-width:100%}
+
+/* stage in portrait: keyboards (or the pad) fill all the room under the macro knobs, wheels run the full height - no dead gap */
+@media (orientation: portrait) {
+  #stage .splitw { justify-content: stretch; gap: 10px; }
+  #stage .splitrow { flex: 1 1 0; max-height: none; }
+  #stage .splitrow .kbd { max-height: none; }
+  #stage .wgrp { height: 100%; max-height: none; align-self: stretch; }
+  #stage .sbody .wheel { width: 44px; }
+}
+@media (orientation: portrait) { #stage #surfaceS { background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.02)); border: 1px solid var(--b-line, #2a2a2a); } }
+
+/* unified OLED panel: the same display as GRAINS and ELEPHANT - caption and dot-matrix name on the left, the scope on the right */
+#presetBtn i { display: inline !important; font-size: 12px; }
+#oled { flex: none; display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 8px; cursor: pointer; border-radius: 8px; border: 1px solid #222; box-shadow: inset 0 2px 6px #000c, 0 0 0 3px #0c0c0c, 0 0 0 4px #000, 0 1px 0 4px rgba(255,255,255,.07); background: #050505 radial-gradient(rgba(255,255,255,.05) 1px, transparent 1.2px) 0 0 / 4px 4px; margin: 3px 4px 5px; }
+#oled .ptxt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; align-items: flex-start; }
+#oled small { font: 500 9.5px var(--f-mono, ui-monospace, monospace); letter-spacing: .1em; color: var(--mute); white-space: nowrap; text-transform: uppercase; }
+#oled small b { font-weight: 500; }
+#oled #scope { display: block !important; width: 96px; height: 30px !important; flex: none; background: none; border: 0; box-shadow: none; border-radius: 0; }
+#oled .dotcv { align-self: flex-start; color: var(--fg); }
+@media (max-width: 360px) { #oled #scope { width: 64px; } }
+@media (min-width: 820px) { #oled { height: 52px; } #oled #scope { width: 130px; height: 36px !important; } }
+@media (orientation: landscape) and (max-height: 540px) { #oled { display: none; } }
+:root[data-meters="off"] #oled #scope { display: none !important; }

@@ -1,6 +1,6 @@
 {
   "name": "behemoth",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Wavetable bass synthesizer for the browser (single HTML file)",
   "license": "MIT",
   "author": "Kirill Kinderhart",
@@ -9,6 +9,8 @@
   "scripts": {
     "build": "node build.mjs",
     "check": "node build.mjs --check",
-    "test": "node test/engine.test.mjs"
+    "test": "node test/engine.test.mjs && python3 test/ui.test.py",
+    "test:engine": "node test/engine.test.mjs",
+    "test:audio": "python3 test/audio_fuzz.py"
   }
 }

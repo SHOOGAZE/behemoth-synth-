@@ -31,7 +31,7 @@ function histUi() {
     else if (e.k === 'ab') { e.el.classList.toggle('on', AB.on); e.el.textContent = AB.on ? 'B' : 'A/B'; }
   });
 }
-function histBtn(k, txt, label, fn, cls) { var b = h('button', { class: cls || 'pnav', type: 'button', 'aria-label': label, onclick: fn }, txt); histEls.push({ k: k, el: b }); return b; }
+function histBtn(k, txt, label, fn, cls) { var b = h('button', { class: cls || 'pnav', type: 'button', 'aria-label': label, onclick: fn }, txt.charAt(0) === '<' ? null : txt); if (txt.charAt(0) === '<') b.innerHTML = txt; histEls.push({ k: k, el: b }); return b; }
 
 var RND = { aPos: [0, 1], bPos: [0, 1], aWarp: [0, .8], bWarp: [0, .8], aWMode: [0, 9, 1], bWMode: [0, 9, 1], aUni: [1, 6, 1], bUni: [1, 5, 1], aDet: [0, .5], bDet: [0, .4], aBlend: [.4, 1], aSpread: [.3, 1],
   fType: [0, 7, 1], fCut: [.25, .92], fRes: [0, .65], fDrive: [0, .6], fEnv: [-.3, .7], e1A: [.001, 1.2, 0, 1], e1D: [.1, 1.5, 0, 1], e1S: [.1, 1], e1R: [.05, 2, 0, 1], e2A: [.001, 1, 0, 1], e2D: [.1, 1.5, 0, 1], e2S: [0, .8], e2R: [.05, 2, 0, 1],

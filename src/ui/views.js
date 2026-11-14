@@ -8,7 +8,7 @@ function oscCard(slot) {
   var warpOpts = [{ l: 'OFF', v: 0 }, { l: 'BEND +', v: 1 }, { l: 'BEND −', v: 2 }, { l: 'ASYM +', v: 3 }, { l: 'ASYM −', v: 4 }, { l: 'SYNC', v: 5 }, { l: 'MIRROR', v: 6 }, { l: 'QUANT', v: 7 }, { l: slot ? 'FM (A)' : 'FM (B)', v: 8 }, { l: slot ? 'RM (A)' : 'RM (B)', v: 9 }];
   return card('Oscillator ' + name, [
     h('div', { class: 'tabhead' }, tb, Switch(p + 'On')),
-    TableView(slot, 136),
+    TableView(slot, 104),
     Chips(p + 'WMode', warpOpts),
     h('div', { class: 'row' }, Knob({ k: p + 'Pos', label: 'Position', dest: slot ? 1 : 0 }).el, Knob({ k: p + 'Warp', label: 'Warp', dest: slot ? 3 : 2 }).el, Knob({ k: p + 'Lev', label: 'Level', dest: slot ? 5 : 4 }).el,
       Knob({ k: p + 'Uni', label: 'Unison', kind: 'int', fmt: FMT.num }).el, Knob({ k: p + 'Det', label: 'Detune', dest: slot ? dstIdx('bDet') : 10 }).el),
@@ -56,7 +56,7 @@ function buildFx() {
   v.append(card('Reverb', h('div', { class: 'row' }, Knob({ k: 'rvMix', label: 'Mix', dest: 14 }).el, Knob({ k: 'rvSize', label: 'Size' }).el, Knob({ k: 'rvDamp', label: 'Damp' }).el)));
   v.append(card('Voice & master', [
     h('div', { class: 'ctlrow' }, h('span', { class: 'lab' }, 'Mono'), Switch('mono'), h('span', { class: 'lab', style: 'margin-left:12px' }, 'Voices'), Stepper('voices', 1, function (x) { return Math.round(x) + ''; })),
-    h('div', { class: 'row' }, Knob({ k: 'vol', label: 'Master', dest: dstIdx('vol') }).el, Knob({ k: 'glide', label: 'Glide' }).el, Knob({ k: 'bend', label: 'Bend range', kind: 'int', fmt: function (x) { return '±' + Math.round(x); } }).el)
+    h('div', { class: 'row' }, Knob({ k: 'vol', label: 'Master', dest: dstIdx('vol') }).el, Knob({ k: 'glide', label: 'Glide' }).el, Knob({ k: 'bend', label: 'Bend', kind: 'int', fmt: function (x) { return '±' + Math.round(x); } }).el)
   ], 'wide'));
 }
 

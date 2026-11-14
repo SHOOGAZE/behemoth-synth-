@@ -3,7 +3,7 @@
 .pnav { width: 34px; flex: none; font-size: 22px; line-height: 1; cursor: pointer; background: var(--raised); border: 1px solid var(--line); border-radius: 3px; padding: 0 0 3px; }
 .hbtn { height: 38px; padding: 0 11px; font: 700 11px var(--f-mono); letter-spacing: .1em; cursor: pointer; background: var(--raised); border: 1px solid var(--line); border-radius: 3px; display: inline-flex; align-items: center; justify-content: center; flex: none; }
 .hbtn.ico { width: 38px; padding: 0; }
-@media (max-width: 560px) { #scope, #voices, .meter { display: none; } header#top { flex-wrap: wrap; row-gap: 6px; } .logo { flex: 1; } .pgroup { order: 5; flex: 1 1 100%; } }
+@media (max-width: 560px) { .meter { display: none; } header#top { flex-wrap: wrap; row-gap: 6px; } .logo { flex: 1; } .pgroup { order: 5; flex: 1 1 100%; } }
 .setg { margin-bottom: 14px; }
 .setg .chips { flex-wrap: wrap; overflow: visible; }
 .lab2 { font: 700 10px var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--mute); margin-bottom: 6px; }
@@ -15,10 +15,10 @@
 :root[data-wheels="on"] .wheel { display: block; }
 #dock .dmain { display: flex; gap: 8px; align-items: stretch; }
 #dock .dmain .kbd { flex: 1; min-width: 0; }
-:root { --dkh: 58px; }
-:root[data-kh="s"] { --dkh: 44px; }
-:root[data-kh="m"] { --dkh: 60px; }
-:root[data-kh="l"] { --dkh: 84px; }
+:root { --dkh: 76px; }
+:root[data-kh="s"] { --dkh: 58px; }
+:root[data-kh="m"] { --dkh: 76px; }
+:root[data-kh="l"] { --dkh: 100px; }
 #dock .kbd { height: var(--dkh); }
 #dock.min .dmain { display: none; }
 
@@ -26,7 +26,7 @@
 @media (min-width: 700px) and (min-height: 541px) {
   :root { --dkh: 88px; } :root[data-kh="s"] { --dkh: 64px; } :root[data-kh="m"] { --dkh: 92px; } :root[data-kh="l"] { --dkh: 128px; }
   body { font-size: 15px; }
-  .logo { font-size: 22px; } .hbtn { height: 44px; } .pnav { width: 44px; height: 44px; } #presetBtn { padding: 11px 14px; } #scope { width: 150px; height: 44px; } .meter { height: 44px; }
+  .logo { font-size: 22px; } .hbtn { height: 44px; } .pnav { width: 44px; height: 44px; } #presetBtn { padding: 11px 14px; }  .meter { height: 44px; }
   #surface { height: clamp(220px, 36vh, 440px); } #v-play .kbd { height: 140px; }
   #dock .pill { height: 46px; padding: 0 18px; } #dock .stepper button { width: 44px; height: 46px; }
   .chip { min-height: 42px; padding: 10px 14px; } .knob.big { width: 110px; } .knob.big svg { width: 104px; height: 104px; }

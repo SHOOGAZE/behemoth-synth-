@@ -70,3 +70,9 @@ function setRoute(s, d, a) {
 function removeRoute(s, d) { var i = findRoute(s, d); if (i >= 0) { ROUTES.splice(i, 1); routesChanged(); } }
 
 
+
+/* coming back from the background, a phone call or a locked screen: the browser may leave the audio context suspended or "interrupted"; wake it on return and on the next touch */
+function wakeAudio() { var c = A.ctx; if (c && c.state !== 'running') { try { var p = c.resume(); if (p && p.catch) p.catch(function () { }); } catch (e) { } } }
+document.addEventListener('visibilitychange', function () { if (!document.hidden) wakeAudio(); });
+window.addEventListener('pageshow', wakeAudio);
+document.addEventListener('pointerdown', wakeAudio, true);

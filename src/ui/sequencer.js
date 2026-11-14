@@ -61,3 +61,26 @@ function arpPatSend() { A.send({ t: 'arppat', steps: ARPPAT.on ? ARPPAT.steps.sl
 var apEls = [];
 function arpPatPaint() { apEls.forEach(function (c, i) { c.dataset.s = ARPPAT.steps[i]; c.classList.toggle('off', i >= ARPPAT.len || !ARPPAT.on); var o = ARPPAT.offs[i]; c.firstChild.textContent = o > 0 ? '+' + o : o < 0 ? '' + o : ''; }); }
 
+
+/* export the step pattern as a Standard MIDI File (format 0, 480 ppq) */
+function seqMidi(bars) {
+  var ppq = 480, step = Math.round(ppq * ARP_DIV_UI[Math.round(P.arpRate)]), gate = Math.max(1, Math.round(step * P.arpGate)), ev = [], i, b, n = SEQ.len;
+  for (b = 0; b < (bars || 4); b++) for (i = 0; i < n; i++) {
+    var st = SEQ.steps[i]; if (!st.s) continue;
+    var t = (b * n + i) * step, note = clamp(SEQ.base + st.n, 0, 127), v = st.s === 2 ? 120 : 90;
+    ev.push([t, 0x90, note, v], [t + gate, 0x80, note, 0]);
+  }
+  ev.sort(function (a, c) { return a[0] - c[0] || a[1] - c[1]; });
+  function vlq(x) { var o = [x & 127]; while ((x >>= 7)) o.unshift((x & 127) | 128); return o; }
+  var tr = [0, 0xFF, 0x51, 3], us = Math.round(60000000 / P.bpm), last = 0;
+  tr.push((us >> 16) & 255, (us >> 8) & 255, us & 255);
+  ev.forEach(function (e) { tr = tr.concat(vlq(e[0] - last), [e[1], e[2], e[3]]); last = e[0]; });
+  tr = tr.concat([0, 0xFF, 0x2F, 0]);
+  var h = [0x4D, 0x54, 0x68, 0x64, 0, 0, 0, 6, 0, 0, 0, 1, ppq >> 8, ppq & 255, 0x4D, 0x54, 0x72, 0x6B, (tr.length >>> 24) & 255, (tr.length >>> 16) & 255, (tr.length >>> 8) & 255, tr.length & 255];
+  return new Blob([new Uint8Array(h.concat(tr))], { type: 'audio/midi' });
+}
+function seqExportMidi() {
+  var url = URL.createObjectURL(seqMidi(4)), a = document.createElement('a');
+  a.href = url; a.download = 'behemoth-seq.mid'; document.body.append(a); a.click(); a.remove();
+  setTimeout(function () { URL.revokeObjectURL(url); }, 4000); toast('Saved behemoth-seq.mid');
+}

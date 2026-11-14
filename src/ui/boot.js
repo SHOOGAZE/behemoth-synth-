@@ -2,7 +2,7 @@
 function headerLoop() {
   var sc = $('#scope'), g, W, H;
   (function frame() {
-    var c = fit(sc, 34); g = c.g; W = c.w; H = c.h; g.clearRect(0, 0, W, H);
+    var c = fit(sc, sc.clientHeight || 36); g = c.g; W = c.w; H = c.h; g.clearRect(0, 0, W, H);
     var a = A.scope, w = A.scopeW | 0, i;
     g.beginPath(); for (i = 0; i < 256; i++) { var v = a[(w + i) & 255] || 0, x = i / 255 * W, y = H / 2 - v * (H / 2 - 3); i ? g.lineTo(x, y) : g.moveTo(x, y); }
     g.lineWidth = 1.4; g.strokeStyle = cssvCache.accent; g.stroke();
@@ -20,28 +20,30 @@ function buildUi() {
   app.innerHTML = '';
   app.append(
     h('header', { id: 'top' }, h('span', { class: 'logo' }, 'BEHEMOTH'),
-      h('div', { class: 'pgroup' }, h('button', { class: 'pnav', type: 'button', 'aria-label': 'Previous preset', onclick: function () { stepPreset(-1); } }, '‹'),
-        h('button', { id: 'presetBtn', type: 'button', onclick: function () { presetSheet.open(); } }, h('span', { id: 'presetName' }, curPreset), h('i', null, 'PRESETS')),
-        h('button', { class: 'pnav', type: 'button', 'aria-label': 'Next preset', onclick: function () { stepPreset(1); } }, '›'),
-        histBtn('undo', '↶', 'Undo', histUndo), histBtn('ab', 'A/B', 'Compare with the saved preset', abToggle, 'pnav ab')),
-      h('canvas', { id: 'scope', 'aria-label': 'Oscilloscope' }), h('div', { class: 'meter', id: 'meter' }, h('b')), h('div', { id: 'voices' }, '0v'),
+      h('div', { class: 'pgroup' }, h('button', { class: 'pnav', type: 'button', 'aria-label': 'Previous preset', onclick: function () { stepPreset(-1); }, html: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>' }),
+        h('button', { id: 'presetBtn', type: 'button', onclick: function () { presetSheet.open(); } }, h('span', { id: 'presetName' }, curPreset), h('i', null, '\u25BE')),
+        h('button', { class: 'pnav', type: 'button', 'aria-label': 'Next preset', onclick: function () { stepPreset(1); }, html: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>' }),
+        histBtn('undo', '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 010 12h-3"/></svg>', 'Undo', histUndo), histBtn('ab', 'A/B', 'Compare with the saved preset', abToggle, 'pnav ab')),
+      h('div', { class: 'meter', id: 'meter' }, h('b')),
       h('button', { class: 'hbtn rec', id: 'recBtn', type: 'button', 'aria-label': 'Record audio', onclick: toggleRec }, 'REC'),
       h('button', { class: 'hbtn stg', type: 'button', 'aria-label': 'Stage: fullscreen keys and pad', onclick: openStage }, 'STAGE'),
       h('button', { class: 'hbtn ico menu', type: 'button', 'aria-label': 'Menu', onclick: function () { settingsSheet.open(); buzz(6); }, html: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="square"><path d="M4 7h16M4 12h16M4 17h16"/></svg>' })),
+    h('div', { id: 'oled', role: 'button', tabindex: '0', 'aria-label': 'Presets', onclick: function () { presetSheet.open(); }, onkeydown: function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); presetSheet.open(); } } }, h('div', { class: 'ptxt' }, h('small', null, h('span', { class: 'pcap' }, 'PRESET'), ' \u00B7 ', h('b', { id: 'voices' }, '0v')), h('span', { id: 'oledName' }, curPreset)), h('canvas', { id: 'scope', 'aria-label': 'Oscilloscope' })),
     h('div', { id: 'srcbar' }), h('div', { id: 'hint' }),
     h('main', { id: 'views' }, ['sound', 'mod', 'fx', 'play'].map(function (n) { var d = h('div', { class: 'view', id: 'v-' + n }); views[n] = d; return d; })),
     buildDock(),
-    h('aside', { id: 'rail' }, h('nav', { id: 'tabs' }, [['sound', 'SOUND'], ['mod', 'MOD'], ['fx', 'FX'], ['play', 'PLAY']].map(function (t, i) { return h('button', { type: 'button', 'data-t': t[0], class: i ? '' : 'on', onclick: function () { showTab(t[0]); } }, h('span', null, t[1])); }))));
+    h('aside', { id: 'rail' }, h('nav', { id: 'tabs', role: 'tablist', 'aria-label': 'Screens' }, [['sound', 'SOUND'], ['mod', 'MOD'], ['fx', 'FX'], ['play', 'PLAY']].map(function (t, i) { return h('button', { type: 'button', 'data-t': t[0], class: i ? '' : 'on', onclick: function () { showTab(t[0]); } }, h('span', null, t[1])); }))));
   buildCaps(); buildSound(); buildMod(); buildFx(); buildPlay(); buildPresetSheet(); buildSettings(); buildTableSheet(); buildQpm(); buildStage(); buildRec();
   showTab('sound');
   applyTheme(); applyMotion(); applyWake(); setLang(CFG.lang);
 }
 var curTab = 'sound';
 function showTab(n) {
+  if (CFG.level !== 'full' && n === 'mod') n = 'sound';
   curTab = n;
-  $$('#tabs button').forEach(function (b) { b.classList.toggle('on', b.dataset.t === n); });
+  $$('#tabs button').forEach(function (b) { var on = b.dataset.t === n; b.classList.toggle('on', on); b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
   for (var k in views) views[k].classList.toggle('on', k === n);
-  var strip = (n === 'sound' || n === 'mod' || n === 'fx') ? 'flex' : 'none'; $('#srcbar').style.display = strip; $('#hint').style.display = strip; $('#dock').style.display = (n === 'play' && CFG.dockPlay !== 'on') ? 'none' : '';
+  var strip = (n === 'sound' || n === 'mod' || n === 'fx') ? 'flex' : 'none'; var stripSrc = CFG.level === 'full' ? strip : 'none'; $('#srcbar').style.display = stripSrc; $('#hint').style.display = stripSrc; $('#dock').style.display = (n === 'play' && CFG.dockPlay !== 'on') ? 'none' : '';
   $('#views').scrollTop = 0; setTimeout(drawAllVis, 0); maybeTip(n);
 }
 function boot() {

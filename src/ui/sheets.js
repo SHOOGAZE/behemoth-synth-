@@ -1,7 +1,7 @@
 /* ------------------------------------------------ sheets */
 function Sheet(id, title) {
   var bg = h('div', { class: 'sheetbg', onclick: close }), sh = h('div', { class: 'sheet', id: id });
-  var body = h('div', { class: 'sbody' }), head = h('h2', null, h('span', null, title), h('button', { class: 'btn', type: 'button', onclick: close }, 'Done'));
+  var body = h('div', { class: 'sbody' }), head = h('h2', null, h('span', null, title), h('button', { class: 'btn', type: 'button', 'aria-label': 'Close', onclick: close, html: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>' }));
   sh.append(h('div', { class: 'grab' }), head, body); document.body.append(bg, sh);
   function open() { bg.classList.add('on'); sh.classList.add('on'); S_.onOpen && S_.onOpen(); drawAllVis(); }
   function close() { bg.classList.remove('on'); sh.classList.remove('on'); S_.onClose && S_.onClose(); }

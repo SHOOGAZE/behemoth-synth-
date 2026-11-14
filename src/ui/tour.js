@@ -1,5 +1,5 @@
 /* ------------------------------------------------ tutorial (step by step) and contextual tips */
-var TOUR = [
+var TOUR_ALL = [
   { title: 'Welcome', text: 'BEHEMOTH is a wavetable bass synth. This short tour shows the essentials. You can skip it and replay it any time from the menu: Tutorial & tips.' },
   { sel: '#dock', alt: '#top', title: 'Play', text: 'Tap the keys. HOLD sustains notes, ARP arpeggiates them, the square stops all sound, the arrows icon makes the keys bigger (full-screen Stage in landscape) and the chevron hides them.' },
   { sel: '#presetBtn', title: 'Presets', text: 'Tap here to browse presets. Star favourites, search, or press Random preset. Mutate and Randomize create new sounds from the current one.' },
@@ -14,6 +14,11 @@ var TOUR = [
 var tourEl = null;
 function tourStart(force) {
   if (tourEl || (!force && store('behemoth.tour'))) return;
+  /* the simple level has no MOD tab and no source strip */
+  var TOUR = TOUR_ALL;
+  if (CFG.level !== 'full') TOUR = TOUR_ALL.filter(function (t) { return t.sel !== '#srcbar'; }).map(function (t) {
+    return t.sel === '#tabs' ? { sel: t.sel, title: t.title, text: 'SOUND shapes the tone, FX adds drive, chorus, delay and reverb, PLAY has the touchpad, chords, arpeggiator and step sequencer. For MOD, LFOs and the routing matrix open the menu and set Level to Full.' } : t;
+  });
   var i = 0, veil = h('div', { id: 'tour' }, h('div', { class: 'tspot' }), h('div', { class: 'tcard' }, h('b'), h('p'), h('div', { class: 'tdots' }),
     h('div', { class: 'btns' }, h('button', { class: 'btn', type: 'button', onclick: done }, 'Skip'), h('button', { class: 'btn', type: 'button', id: 'tBack', onclick: function () { go(-1); } }, 'Back'), h('button', { class: 'btn pri', type: 'button', id: 'tNext', onclick: function () { go(1); } }, 'Next'))));
   tourEl = veil; document.body.append(veil);

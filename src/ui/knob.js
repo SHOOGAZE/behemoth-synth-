@@ -52,7 +52,7 @@ function Knob(o) {
     var zero = (o.min < 0 && o.max > 0) ? clamp(toNorm(0), 0, 1) : 0, za = -135 + 270 * zero;
     val.setAttribute('d', a >= za ? arc(za, a, 24) : arc(a, za, 24));
     var t = a * Math.PI / 180; ind.setAttribute('x2', (32 + 13 * Math.sin(t)).toFixed(2)); ind.setAttribute('y2', (32 - 13 * Math.cos(t)).toFixed(2));
-    vv.textContent = o.fmt(v);
+    vv.textContent = o.fmt(v); el.setAttribute('aria-valuenow', Math.round(n * 100)); el.setAttribute('aria-valuetext', vv.textContent);
     // modulation rings
     while (mods.firstChild) mods.removeChild(mods.firstChild);
     if (o.dest != null) {
@@ -87,6 +87,15 @@ function Knob(o) {
   });
   function end() { drag = null; vbHide(); setTimeout(function () { if (!drag) el.classList.remove('touch'); }, 120); }
   el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
+  /* keyboard and screen readers: a knob is a slider, arrows move it, Home resets it */
+  el.tabIndex = 0; el.setAttribute('role', 'slider'); el.setAttribute('aria-label', o.label); el.setAttribute('aria-valuemin', '0'); el.setAttribute('aria-valuemax', '100');
+  el.addEventListener('keydown', function (e) {
+    var s = e.key === 'ArrowUp' || e.key === 'ArrowRight' ? 1 : e.key === 'ArrowDown' || e.key === 'ArrowLeft' ? -1 : 0;
+    if (e.key === 'Home') { setP(o.k, o.def); e.preventDefault(); return; }
+    if (!s) return; e.preventDefault();
+    var n = toNorm(P[o.k]), st = o.kind === 'int' ? 1 / Math.max(1, o.max - o.min) : (e.shiftKey ? .002 : .02);
+    setP(o.k, fromNorm(clamp(n + s * st, 0, 1)));
+  });
   knobs.push(K); K.update();
   return K;
 }

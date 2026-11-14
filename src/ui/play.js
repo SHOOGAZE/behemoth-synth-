@@ -9,6 +9,23 @@ var Hold = { on: false, latched: {}, fingers: 0, btns: [] };
 window.__dbg = { Hold: Hold, PL: PL };
 var CHORDS = [['Off', [0]], ['Oct', [0, 12]], ['5th', [0, 7]], ['Power', [0, 7, 12]], ['Maj', [0, 4, 7]], ['Min', [0, 3, 7]], ['Sus4', [0, 5, 7]], ['Maj7', [0, 4, 7, 11]], ['Min7', [0, 3, 7, 10]]];
 var chordIdx = +(store('behemoth.chord') || 0), CH = {};
+var voiceLead = store('behemoth.vl') === '1', vlLast = null;
+/* upper chord notes for root n: with voice leading each tone lands in the octave nearest to the previous chord, so changes move by steps instead of jumping */
+function chordNotes(n, iv) {
+  var out = [], j, c = null, x, best, k, cand;
+  if (voiceLead && vlLast && vlLast.length) { c = 0; vlLast.forEach(function (v) { c += v; }); c /= vlLast.length; }
+  for (j = 1; j < iv.length; j++) {
+    x = n + iv[j];
+    if (c !== null) {
+      best = null;
+      for (k = -2; k <= 2; k++) { cand = x + 12 * k; if (cand > n && cand <= n + 14 && out.indexOf(cand) < 0 && (best === null || Math.abs(cand - c) < Math.abs(best - c))) best = cand; }
+      if (best !== null) x = best;
+    }
+    out.push(x);
+  }
+  vlLast = out.slice();
+  return out;
+}
 function noteOff(id) { A.send({ t: 'off', id: id }); var l = CH[id]; if (l) { l.forEach(function (x) { A.send({ t: 'off', id: x }); }); delete CH[id]; } }
 function releaseLatched() { for (var id in Hold.latched) noteOff(+id); Hold.latched = {}; }
 function playOn(n, vel, id) {
@@ -18,7 +35,7 @@ function playOn(n, vel, id) {
   var poly = P.mono >= 0.5 && Hold.fingers > 0;   /* mono preset: a second finger adds a voice instead of replacing the first */
   Hold.fingers++; A.send({ t: 'on', n: n, vel: vel, id: id, poly: poly });
   var iv = CHORDS[chordIdx][1];
-  if (iv.length > 1) { CH[id] = []; for (var j = 1; j < iv.length; j++) { var cid = id + 100000 * j; CH[id].push(cid); A.send({ t: 'on', n: n + iv[j], vel: vel * 0.9, id: cid, poly: true }); } }
+  if (iv.length > 1) { CH[id] = []; var cn = chordNotes(n, iv); for (var j = 1; j < iv.length; j++) { var cid = id + 100000 * j; CH[id].push(cid); A.send({ t: 'on', n: cn[j - 1], vel: vel * 0.9, id: cid, poly: true }); } }
 }
 function playOff(id) { if (SEQ.on) return; Hold.fingers = Math.max(0, Hold.fingers - 1); if (Hold.on) Hold.latched[id] = 1; else noteOff(id); }
 function setHold(v, quiet) { Hold.on = v; if (!v) releaseLatched(); Hold.btns.forEach(function (b) { b.classList.toggle('on', v); b.setAttribute('aria-pressed', v ? 'true' : 'false'); }); if (!quiet) toast(v ? 'Hold on' : 'Hold off'); }

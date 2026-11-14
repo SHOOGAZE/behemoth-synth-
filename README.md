@@ -50,9 +50,9 @@ Phone held sideways and a tablet (a permanent tab rail on tablets): the tabs mov
 **Playing**
 - Expandable keys window (portrait) and full-screen Stage (landscape), finger-sized keys, pitch and mod wheels on one side
 - Expressive pad: one finger per voice, slide to glide, move up and down for the Y-axis source, press harder for pressure
-- Chord memory (octave, fifth, power, major, minor, sus4, maj7, min7)
+- Chord memory (octave, fifth, power, major, minor, sus4, maj7, min7) with optional voice leading: the upper notes stay close to the previous chord, so progressions move smoothly
 - Arpeggiator with a 4–16 step rhythm pattern (rests, accents, per-step transpose), swing, chance, humanize and accent amount, up to 4 octaves
-- 16-step bass sequencer: tap a step for rest / note / accent, drag it to set pitch; keys transpose the pattern
+- 16-step bass sequencer: tap a step for rest / note / accent, drag it to set pitch; keys transpose the pattern; MIDI button saves the pattern as a .mid file (4 bars at the current tempo and rate); displays sit under a thin black-and-white glass whose highlight follows your finger
 - Hold, glide, mono/poly (up to 8 voices); on mono presets extra fingers and chords still add voices, tilt as a modulation source
 
 **Workflow**
@@ -63,7 +63,7 @@ Phone held sideways and a tablet (a permanent tab rail on tablets): the tabs mov
 - MIDI: notes, pitch bend, sustain pedal (CC 64), channel and poly aftertouch, and MIDI learn for any knob (Settings → MIDI)
 - User presets with JSON import/export, wavetable editor
 - Collapsible modules, value readout above your finger while turning a knob, text size and contrast settings, step-by-step tutorial and contextual tips (switch them off or replay in the menu)
-- Interface languages: English, Russian, German and Spanish (follows the browser language, or choose it in the menu → Language)
+- Interface languages: English (default) and Russian; choose it in the menu → Language
 
 **Phones and tablets**
 - Portrait, landscape and tablet layouts; wide screens flow the modules into 2–3 columns and keep the keyboard on screen

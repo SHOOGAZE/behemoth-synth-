@@ -21,10 +21,14 @@ function buildStage() {
     main.innerHTML = ''; main.className = 'main m-' + m; glide.style.display = m === 'pad' ? '' : 'none';
     var D = keyDims();
     stageEl.style.setProperty('--kh', D.kh + 'px');
+    /* a phone held sideways has room for one row only: a single keyboard at the global octave, as tall as the screen allows */
+    var one = !!(window.matchMedia && matchMedia('(orientation: landscape) and (max-height: 540px)').matches);
+    bSplit.textContent = one ? 'KEYS' : 'SPLIT'; if (typeof i18nEl === 'function') i18nEl(bSplit);
     if (m === 'split') {
       var wrap = h('div', { class: 'splitw' });
+      if (one) stageEl.style.setProperty('--kh', clamp(D.H - 8, 110, 300) + 'px');
       /* two rows around the global octave: upper = Oct+1, lower = Oct-1 (the OCT control in the bar moves both) */
-      [[1, 7000], [-1, 8000]].forEach(function (r) {
+      (one ? [[0, 7000]] : [[1, 7000], [-1, 8000]]).forEach(function (r) {
         var el = h('div', { class: 'kbd' });
         el._force = function () { return stageForce.call(el); }; el._oct = function () { return clamp(PL.oct + r[0], 0, 7); }; el._idb = r[1];
         wrap.append(h('div', { class: 'splitrow' }, el));
@@ -105,14 +109,15 @@ function buildPlay() {
   var chordChips = h('div', { class: 'chips' });
   function paintChords() { chordChips.innerHTML = ''; CHORDS.forEach(function (c, i) { chordChips.append(h('button', { type: 'button', class: 'chip' + (chordIdx === i ? ' on' : ''), onclick: function () { chordIdx = i; store('behemoth.chord', i); paintChords(); } }, c[0])); }); }
   paintChords();
-  v.append(card('Chord memory', [chordChips, h('div', { class: 'empty' }, 'One key plays the whole chord. Combine with the arpeggiator for instant patterns.')]));
+  var vlBtn = h('button', { type: 'button', class: 'chip' + (voiceLead ? ' on' : ''), onclick: function () { voiceLead = !voiceLead; vlLast = null; store('behemoth.vl', voiceLead ? '1' : '0'); vlBtn.classList.toggle('on', voiceLead); toast(voiceLead ? 'Voice leading on' : 'Voice leading off'); } }, 'Voice leading');
+  v.append(card('Chord memory', [chordChips, h('div', { class: 'chips' }, vlBtn), h('div', { class: 'empty' }, 'One key plays the whole chord. Voice leading keeps the upper notes close to the previous chord. Combine with the arpeggiator for instant patterns.')]));
   /* step sequencer */
   var sqGrid = h('div', { class: 'sqgrid' }); for (var si = 0; si < 16; si++) sqGrid.append(SeqStep(si));
   var sqPlay = h('button', { class: 'btn pri', type: 'button', onclick: function () { SEQ.on ? seqStop() : seqStart(); } }, 'Play'); seqBtns.push(sqPlay);
   var sqLen = h('div', { class: 'chips' }); [8, 16].forEach(function (n) { var b = h('button', { type: 'button', class: 'chip' + (SEQ.len === n ? ' on' : ''), onclick: function () { SEQ.len = n; $$('.chip', sqLen).forEach(function (x) { x.classList.toggle('on', +x.dataset.n === n); }); seqSave(); seqPaint(); } }, n + ' steps'); b.dataset.n = n; sqLen.append(b); });
   var sqRand = h('button', { class: 'btn', type: 'button', onclick: function () { var sc = [0, 0, 0, 12, 7, 5, 10, 3]; SEQ.steps.forEach(function (st, i) { st.s = Math.random() < .7 ? (Math.random() < .25 ? 2 : 1) : 0; st.n = pick(sc); }); seqSave(); seqPaint(); } }, 'Random');
   var sqClr = h('button', { class: 'btn', type: 'button', onclick: function () { SEQ.steps.forEach(function (st) { st.s = 0; st.n = 0; }); seqSave(); seqPaint(); } }, 'Clear');
-  v.append(card('Step sequencer', [h('div', { class: 'btns' }, sqPlay, sqRand, sqClr), sqLen, sqGrid,
+  v.append(card('Step sequencer', [h('div', { class: 'btns' }, sqPlay, sqRand, sqClr, h('button', { class: 'btn', type: 'button', onclick: seqExportMidi }, 'MIDI')), sqLen, sqGrid,
     h('div', { class: 'empty' }, 'Tap a step: rest → note → accent. Drag a step up or down to change its pitch (semitones). While it runs, the keys transpose the pattern. Tempo, rate and gate come from the arpeggiator.')]));
   seqPaint();
   var tiltBtn = h('button', { class: 'btn', type: 'button', id: 'tiltBtn' }, 'Enable tilt');

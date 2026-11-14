@@ -13,7 +13,7 @@ function h(tag, attrs) {
 function clamp(x, a, b) { return x < a ? a : x > b ? b : x; }
 /* user settings: persisted in localStorage, applied to <html> data-attributes and CSS variables */
 var CFG = { keys: 'auto', kh: 'm', wheels: 'auto', hand: 'right', dockPlay: 'off',
-  lang: 'auto', tips: 'on', text: 'm', contrast: 'normal', hue: 0, sat: 0, glow: 1, srcbar: 'on', hint: 'on', meters: 'on', ksize: 'm', ksens: 1, haptics: 'on', motion: 'auto', wake: 'off', skw: 'l', tune: 0 };
+  lang: 'en', tips: 'on', text: 'm', contrast: 'normal', hue: 0, sat: 0, glow: 1, srcbar: 'on', hint: 'on', level: 'simple', meters: 'on', ksize: 'm', ksens: 1, haptics: 'on', motion: 'auto', wake: 'off', skw: 'l', tune: 0 };
 function store(k, v) {
   try {
     if (v === undefined) { var raw = localStorage.getItem(k); if (raw === null && k.indexOf('behemoth.') === 0) raw = localStorage.getItem('strata.' + k.slice(9)); /* migrate data saved by earlier builds */ return JSON.parse(raw); }
@@ -24,7 +24,7 @@ var CFG_DEFAULT = JSON.parse(JSON.stringify(CFG));
 (function () { var c = store('beh.cfg'); if (c) for (var k in c) if (k in CFG) CFG[k] = c[k]; })();
 function applyCfg() {
   var r = document.documentElement.dataset;
-  r.hand = CFG.hand; r.kh = CFG.kh; r.wheels = CFG.wheels; r.srcbar = CFG.srcbar; r.hint = CFG.hint; r.meters = CFG.meters; r.ksize = CFG.ksize; r.text = CFG.text; r.contrast = CFG.contrast;
+  r.hand = CFG.hand; r.kh = CFG.kh; r.wheels = CFG.wheels; r.srcbar = CFG.srcbar; r.level = CFG.level; r.hint = CFG.hint; r.meters = CFG.meters; r.ksize = CFG.ksize; r.text = CFG.text; r.contrast = CFG.contrast;
   store('beh.cfg', CFG);
 }
 applyCfg();

@@ -35,6 +35,7 @@ function buildSettings() {
     section('Illumination', true, [
       slider('Glow', 0, 1.6, 0.05, function () { return CFG.glow; }, function (v) { CFG.glow = v; applyCfg(); applyTheme(); }, function (v) { return Math.round(v * 100) + '%'; })]),
     section('Interface', false, [
+      cfgChips('Level', 'level', [['simple', 'Simple'], ['full', 'Full']], function () { showTab(curTab); }),
       cfgChips('Text size', 'text', [['m', 'Normal'], ['l', 'Large']]),
       cfgChips('Contrast', 'contrast', [['normal', 'Normal'], ['high', 'High']]),
       cfgChips('Knob size', 'ksize', [['s', 'Small'], ['m', 'Normal'], ['l', 'Large']], drawAllVis),
@@ -68,7 +69,7 @@ function buildSettings() {
       document.fullscreenEnabled ? h('button', { class: 'btn', type: 'button', onclick: toggleFullscreen }, 'Fullscreen') : null,
       h('button', { class: 'btn', type: 'button', onclick: function () { var l = CFG.lang; for (var k in CFG_DEFAULT) CFG[k] = CFG_DEFAULT[k]; CFG.lang = l; CFG.tune = 0; setP('tune', 0); applyAll(); repaintSettings(); toast('Interface reset'); } }, 'Reset interface'))));
   var langSheet = Sheet('langSheet', 'Language');
-  langSheet.body.append(cfgChips('', 'lang', [['auto', 'Auto'], ['en', 'English'], ['ru', 'Русский'], ['de', 'Deutsch'], ['es', 'Español']], function () { setLang(CFG.lang); repaintSettings(); }));
+  langSheet.body.append(cfgChips('', 'lang', [['en', 'English'], ['ru', 'Русский']], function () { setLang(CFG.lang); repaintSettings(); }));
   settingsSheet.body.append(h('div', { class: 'btns' }, h('button', { class: 'btn', type: 'button', onclick: function () { langSheet.open(); } }, 'Language')));
   settingsSheet.onOpen = repaintSettings;
 }
