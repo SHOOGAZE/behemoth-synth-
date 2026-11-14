@@ -41,7 +41,7 @@ function playOff(id) { if (SEQ.on) return; Hold.fingers = Math.max(0, Hold.finge
 function setHold(v, quiet) { Hold.on = v; if (!v) releaseLatched(); Hold.btns.forEach(function (b) { b.classList.toggle('on', v); b.setAttribute('aria-pressed', v ? 'true' : 'false'); }); if (!quiet) toast(v ? 'Hold on' : 'Hold off'); }
 function panicAll() { Hold.latched = {}; Hold.fingers = 0; CH = {}; seqStop(true); A.send({ t: 'panic' }); }
 function holdButton(cls, style) { var b = h('button', { class: cls, type: 'button', 'aria-pressed': 'false', onclick: function () { setHold(!Hold.on); } }, 'HOLD'); if (style) b.style.cssText = style; Hold.btns.push(b); b.classList.toggle('on', Hold.on); return b; }
-function setOct(o) { PL.oct = clamp(o, 0, 6); octLabels.forEach(function (s) { s.textContent = 'Oct ' + PL.oct; }); rebuildSurfaces(); rebuildKbds(); }
+function setOct(o) { PL.oct = clamp(o, 0, 6); octLabels.forEach(function (s) { s.textContent = 'Oct ' + PL.oct; }); rebuildSurfaces(); rebuildKbds(); stageStrip(); }
 function OctControl() {
   var span = h('span', null, 'Oct ' + PL.oct);
   var st = h('div', { class: 'stepper' }, h('button', { type: 'button', 'aria-label': 'Octave down', onclick: function () { setOct(PL.oct - 1); } }, '−'), span, h('button', { type: 'button', 'aria-label': 'Octave up', onclick: function () { setOct(PL.oct + 1); } }, '+'));
@@ -93,25 +93,22 @@ function setDockOpen(o) {
 }
 /* portrait: the dock grows in place into a window with a split keyboard or a touch pad; the sound controls above stay usable */
 function buildDockWindow(dock) {
-  var xMode = store('beh.stage') === 'pad' ? 'pad' : 'split', main = h('div', { class: 'dxmain' }), pad = h('div', { id: 'surfaceD' });
+  var xMode = store('beh.stage') === 'pad' ? 'pad' : 'keys', main = h('div', { class: 'dxmain' }), pad = h('div', { id: 'surfaceD' });
   pad._cols = 8; var padD = Surface(pad, 8);
-  var bSplit = h('button', { type: 'button', onclick: function () { xset('split'); } }, 'SPLIT'), bPad = h('button', { type: 'button', onclick: function () { xset('pad'); } }, 'PAD');
+  var bSplit = h('button', { type: 'button', onclick: function () { xset('keys'); } }, 'KEYS'), bPad = h('button', { type: 'button', onclick: function () { xset('pad'); } }, 'PAD');
   var glide = h('button', { class: 'pill', type: 'button', onclick: function () { PL.glide = !PL.glide; gl(); } }, 'GLIDE');
   function gl() { glide.classList.toggle('on', !!PL.glide); }
   function force(el) { var w = el.clientWidth || main.clientWidth || (window.innerWidth - 80), per = { s: 46, m: 62, l: 76 }[CFG.skw] || 76; return clamp(Math.ceil((w / per - 1) / 7 - .1), 1, 5); }
   function xset(m) {
     if (m) { xMode = m; store('beh.stage', m); }
-    bSplit.classList.toggle('on', xMode === 'split'); bPad.classList.toggle('on', xMode === 'pad'); gl(); glide.style.display = xMode === 'pad' ? '' : 'none';
+    bSplit.classList.toggle('on', xMode === 'keys'); bPad.classList.toggle('on', xMode === 'pad'); gl(); glide.style.display = xMode === 'pad' ? '' : 'none';
     KBDS = KBDS.filter(function (k) { return !main.contains(k); }); main.innerHTML = ''; main.className = 'dxmain m-' + xMode;
-    if (xMode === 'split') {
-      var sp = h('div', { class: 'dxsplit' });
-      /* two rows one above the other: the upper one continues where the lower one ends */
-      [[1, 9000], [0, 9500]].forEach(function (r) {
-        var el = h('div', { class: 'kbd' });
-        el._force = function () { return force(el); }; el._oct = function () { return clamp(PL.oct + (r[0] ? (el._oc || 1) : 0), 0, 7); }; el._idb = r[1];
-        sp.append(el);
-      });
-      main.append(sp); requestAnimationFrame(function () { $$('.kbd', sp).forEach(buildKeyboard); });
+    if (xMode === 'keys') {
+      /* one tall keyboard at the global octave */
+      var sp = h('div', { class: 'dxsplit' }), el = h('div', { class: 'kbd' });
+      el._force = function () { return force(el); }; el._oct = function () { return clamp(PL.oct, 0, 7); }; el._idb = 9000;
+      sp.append(el);
+      main.append(sp); requestAnimationFrame(function () { buildKeyboard(el); });
     } else { main.append(pad); padD.rebuild(); }
   }
   var lastP = isPortrait();

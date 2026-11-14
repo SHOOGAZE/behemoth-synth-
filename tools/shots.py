@@ -10,8 +10,8 @@ DK=lambda m:"document.querySelector('.xbtn').click();setTimeout(()=>{const b=[..
 S=[('sound',P,TAB('sound')),('modulation',P,TAB('mod')),('effects',P,TAB('fx')),('play',P,TAB('play')),
    ('wavetable-editor',P,"document.querySelector('.tn').click()"),
    ('presets',P,"document.querySelector('#presetBtn').click()"),
-   ('dock-split',P,DK('SPLIT')),('dock-pad',P,DK('PAD')),
-   ('landscape',L,TAB('sound')),('landscape-stage',L,STG('SPLIT')),('landscape-macro',L,STG('MACRO')),
+   ('dock-keys',P,DK('KEYS')),('dock-pad',P,DK('PAD')),
+   ('landscape',L,TAB('sound')),('landscape-stage',L,STG('KEYS')),
    ('tablet',T,TAB('sound'))]
 with sync_playwright() as p:
     b=p.chromium.launch(args=['--autoplay-policy=no-user-gesture-required'])

@@ -48,11 +48,21 @@ body.learning .knob { outline: 1px dashed color-mix(in srgb, var(--accent) 60%, 
 .mrow2 { display: flex; align-items: center; gap: 10px; padding: 7px 10px; background: var(--raised); border: 1px solid var(--line); border-radius: 8px; font-size: 12px; }
 .mrow2 b { flex: 1; font-weight: 600; } .mrow2 button { background: none; border: 0; color: var(--mute); padding: 4px 8px; cursor: pointer; }
 
-/* MACRO tab: four big knobs fill the play area */
-#stage .smacros { display: flex; justify-content: center; align-items: center; gap: clamp(18px, 6vw, 56px); height: 100%; }
-#stage .smacros .knob { --kw: clamp(64px, 26vh, 120px); }
-#stage.mac .wgrp { display: none; }
-
+/* the four macros sit in a row above the keys (like GarageBand's smart controls) */
+#stage .scol { flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 6px; }
+#stage .smacros { flex: none; display: flex; justify-content: center; align-items: flex-start; gap: clamp(14px, 5vw, 64px); }
+#stage .smacros .knob { --kw: clamp(46px, 9vh, 96px); }
+#stage .smacros .knob .vv { font-size: 10px; min-height: 12px; }
+#stage .smacros .knob .lbl { font-size: 10px; }
+#stage .krow { flex: 1; min-height: 0; display: flex; gap: 8px; }
+#stage .krow .wgrp { align-self: stretch; height: auto; max-height: none; }
+#stage .ostrip { flex: none; display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; height: 22px; touch-action: none; cursor: pointer; }
+#stage .ostrip i { display: flex; align-items: center; justify-content: center; font: 600 10px var(--f-mono); font-style: normal; letter-spacing: .06em; color: var(--mute); background: #131313; border: 1px solid #222; border-radius: 4px; }
+#stage .ostrip i.on { background: color-mix(in srgb, var(--accent) 30%, #0a0a0a); border-color: color-mix(in srgb, var(--accent) 70%, #000); color: var(--accent-fg); }
+#stage .ostrip i.lo { background: var(--accent); color: var(--accent-ink); }
+#stage .main.m-keys .kbd { flex: 1 1 0; height: auto; min-height: 90px; max-height: 720px; }
+#stage .main.m-keys .kbd .bk { height: 62%; }
+@media (max-height: 400px) { #stage .smacros .knob { --kw: 40px; } #stage .smacros .knob .vv { display: none; } #stage .ostrip { height: 18px; } }
 .ptools { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 10px; } .ptools .btn { flex: 1 1 auto; padding: 9px 10px; font-size: 12px; } .ptools .btn:disabled { opacity: .35; }
 .ptools .btn.on, .pnav.ab.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 .pnav:disabled { opacity: .3; } .pnav.ab { width: auto; min-width: 44px; padding: 0 8px; font: 700 11px var(--f-mono); letter-spacing: .06em; }
@@ -103,10 +113,6 @@ body.learning .knob { outline: 1px dashed color-mix(in srgb, var(--accent) 60%, 
 @media (max-width: 1100px) { .meter { display: none; } }
 @media (max-width: 900px) { #presetBtn i { display: none; } }
 #presetBtn { min-width: 120px; }
-#stage .splitw { height: 100%; display: flex; flex-direction: column; justify-content: center; gap: 8px; min-height: 0; }
-#stage .splitrow { flex: 0 1 var(--kh, 180px); min-height: 0; display: flex; flex-direction: column; justify-content: center; }
-#stage .splitrow .kbd { flex: 1 1 0; height: auto; min-height: 0; max-height: var(--kh, 180px); }
-#stage .splitw .kbd .bk { height: 60%; }
 
 /* ---- unified controls: one radius, two heights, one type style, one pressed/on state ---- */
 :root { --br: 6px; --bh: 40px; --bh-s: 32px; --b-bg: #151515; --b-line: #2a2a2a; }
@@ -157,9 +163,6 @@ button:focus-visible, .chip:focus-visible, .pill:focus-visible { outline: 2px so
 @media (orientation: landscape) {
   #stage .sbody { flex: 1; min-width: 0; min-height: 0; }
   #stage .wgrp { height: 100%; align-self: stretch; max-height: none; }
-  #stage .splitw { justify-content: flex-end; }
-  #stage .splitrow { flex: 1 1 0; max-height: none; }
-  #stage .splitrow .kbd { max-height: none; }
 }
 }
 
@@ -218,3 +221,13 @@ button:focus-visible, .chip:focus-visible, .pill:focus-visible { outline: 2px so
 :root[data-meters="off"] #oled #scope { display: none !important; }
 
 @media (orientation: portrait) { .hbtn.stg, .fsbtn { display: none !important; } }
+
+/* tablets: bigger macro knobs, keys no taller than a hand can use and sitting at the bottom; the portrait keys window grows too */
+@media (min-width: 700px) and (min-height: 600px) {
+  #stage .smacros { flex: none; padding-block: 10px 6px; align-items: center; gap: clamp(28px, 7vw, 110px); }
+  #stage .smacros .knob { --kw: clamp(72px, 12vh, 112px); }
+  #stage .smacros .knob .vv, #stage .smacros .knob .lbl { font-size: 12px; }
+  #stage .main.m-keys { justify-content: flex-end; }
+  #stage .main.m-keys .kbd { max-height: 600px; }
+  #dock .dxbody { height: clamp(260px, 38dvh, 480px); }
+}

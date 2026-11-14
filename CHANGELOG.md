@@ -1,7 +1,7 @@
 # Changelog
 
 ## Unreleased
-- Landscape Stage: the side panel with macro knobs is gone. The four macros live on their own MACRO tab (KEYS | PAD | MACRO), and the keys use the full width and the full height, sitting low under the thumbs.
+- Stage: SPLIT and the MACRO tab are gone (KEYS | PAD). One big keyboard fills the width and height, the four macro knobs sit in a row right above it (like GarageBand's smart controls) and an octave strip scrolls the keyboard range. Portrait keys window: SPLIT became a single tall KEYS row too.
 - Unified OLED panel (caption, dot-matrix name with Cyrillic, scope) shared by GRAINS, ELEPHANT and BEHEMOTH.
 - Stage is landscape-only; in portrait the docked keys and pad panel is the play surface. Sound screen is a swipe pager (Osc A | Osc B, then Sub & Noise | Filter, then Amp) on a phone held sideways.
 
