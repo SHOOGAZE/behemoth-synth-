@@ -48,8 +48,9 @@ function i18nEl(el) {
 }
 function i18nSweep(root) {
   if (root.nodeType === 3) { i18nNode(root); return; }
-  if (root.nodeType !== 1 || /^(SCRIPT|STYLE|TEXTAREA|CANVAS)$/.test(root.tagName)) return;
+  if (root.nodeType !== 1 || /^(SCRIPT|STYLE)$/.test(root.tagName)) return;
   i18nEl(root);
+  if (/^(TEXTAREA|CANVAS)$/.test(root.tagName)) return;
   for (var c = root.firstChild; c; c = c.nextSibling) i18nSweep(c);
 }
 function setLang(code) {
