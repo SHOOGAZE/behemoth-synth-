@@ -6,7 +6,7 @@ A wavetable bass synthesizer that runs in the browser. One HTML file, no depende
 
 ## Screenshots
 
-Phone upright: SOUND, MOD, FX and PLAY tabs, the wavetable editor, the preset browser, and the keys window expanded into a tall keyboard or a multi-touch pad.
+Phone upright: SOUND, MOD, FX and PLAY tabs, the wavetable editor, and the preset browser. The compact keyboard stays at the bottom of every tab.
 
 <p>
   <img src="screenshots/sound.png" width="24%" alt="Sound: wavetable oscillator with 3D table view">
@@ -17,26 +17,25 @@ Phone upright: SOUND, MOD, FX and PLAY tabs, the wavetable editor, the preset br
 <p>
   <img src="screenshots/wavetable-editor.png" width="24%" alt="Wavetable editor">
   <img src="screenshots/presets.png" width="24%" alt="Preset browser">
-  <img src="screenshots/dock-keys.png" width="24%" alt="Expanded keys: tall keyboard">
-  <img src="screenshots/dock-pad.png" width="24%" alt="Expanded keys: multi-touch pad">
 </p>
 
 Phone held sideways and a tablet (a permanent tab rail on tablets): the tabs move to a side rail, and Stage turns the whole screen into an instrument.
 
 <p>
   <img src="screenshots/landscape.png" width="49%" alt="Landscape layout">
-  <img src="screenshots/landscape-stage.png" width="49%" alt="Landscape Stage: macro knobs, octave strip, one big keyboard, pitch and mod wheels">
+  <img src="screenshots/landscape-stage.png" width="49%" alt="Landscape Stage: pitch and mod wheels on the left, one big keyboard, a column of four macro encoders on the right">
 </p>
 <p>
-  <img src="screenshots/tablet.png" width="70%" alt="Tablet layout">
+  <img src="screenshots/landscape-stage-pad.png" width="49%" alt="Landscape Stage: multi-touch pad">
+  <img src="screenshots/tablet.png" width="30%" alt="Tablet layout">
 </p>
 
 ## Playing
 
-- **Portrait:** the keyboard sits at the bottom of every tab. The arrows button expands it in place into a window with one **tall keyboard** or a **multi-touch pad**, with pitch and mod wheels on your playing hand's side. All knobs above stay reachable, the window never closes by itself and HOLD stays on while you turn them. The chevron hides the keys completely.
-- **Landscape:** the same button opens **Stage**, a full-screen version: a slim control bar, the four macro knobs in a row, an octave strip (tap or drag to move the range) and one big keyboard that uses the full width, with the wheels on your playing hand's side. KEYS | PAD switches to the touch pad.
+- **Portrait:** a compact keyboard with pitch and mod wheels sits at the bottom of every tab, so you can hear the sound while you turn knobs above it. HOLD keeps a note sounding, the chevron hides the keys. The wide surfaces are the **PLAY** tab (touch pad, scale keys) and, with the phone on its side, Stage.
+- **Landscape:** the arrows button opens **Stage**, a full-screen version: a slim control bar, pitch and mod wheels on the left, one big keyboard in the middle and the four macro encoders in a column on the right. KEYS | PAD switches to the touch pad; the octave is the - / + in the bar.
 - **Keys, pad, arpeggiator, chords, sequencer** are on the PLAY tab; MIDI and a computer keyboard work everywhere.
-- Left-handed mode mirrors the wheels and the macro column (menu → Hand).
+- Left-handed mode mirrors the Stage (wheels right, macros left) (menu → Hand).
 
 ## Features
 

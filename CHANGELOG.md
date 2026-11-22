@@ -1,9 +1,10 @@
 # Changelog
 
 ## Unreleased
-- Stage: SPLIT and the MACRO tab are gone (KEYS | PAD). One big keyboard fills the width and height, the four macro knobs sit in a row right above it (like GarageBand's smart controls) and an octave strip scrolls the keyboard range. Portrait keys window: SPLIT became a single tall KEYS row too.
+- Stage: SPLIT and the MACRO tab are gone (KEYS | PAD). One big keyboard fills the height, pitch and mod wheels sit on the left and the four macros are a column of encoders on the right (mirrored for left-handed mode) and the octave strip is gone (use - / +).
+- Portrait: the expandable keys/pad window is removed (it duplicated the PLAY tab and Stage); the compact dock keyboard stays on every tab for auditioning sounds.
 - Unified OLED panel (caption, dot-matrix name with Cyrillic, scope) shared by GRAINS, ELEPHANT and BEHEMOTH.
-- Stage is landscape-only; in portrait the docked keys and pad panel is the play surface. Sound screen is a swipe pager (Osc A | Osc B, then Sub & Noise | Filter, then Amp) on a phone held sideways.
+- Stage is landscape-only; in portrait the PLAY tab is the play surface. Sound screen is a swipe pager (Osc A | Osc B, then Sub & Noise | Filter, then Amp) on a phone held sideways.
 
 ## 1.1.0 (2026-11-13)
 

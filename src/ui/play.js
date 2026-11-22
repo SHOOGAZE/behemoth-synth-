@@ -82,51 +82,17 @@ function controls(cls) {
   return h('div', { class: cls }, holdButton('pill'), arp, OctControl(),
     h('button', { class: 'pill sq', type: 'button', 'aria-label': 'Panic: stop all notes', onclick: panicAll, html: ico('<rect x="6.5" y="6.5" width="11" height="11" rx="1.5" fill="currentColor" stroke="none"/>') }),
     h('span', { class: 'dgap' }),
-    h('button', { class: 'pill sq xbtn', type: 'button', 'aria-label': 'Expand or collapse the keys', onclick: function () { if (isPortrait()) setDockOpen(!(dockEl.classList.contains('open') && !dockEl.classList.contains('min'))); else openStage(); },
+    h('button', { class: 'pill sq xbtn', type: 'button', 'aria-label': 'Expand or collapse the keys', onclick: function () { if (!isPortrait()) openStage(); },
       html: ico('<path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/>', ' class="i1"') + ico('<path d="M20 10h-6V4M4 14h6v6M14 10l7-7M3 21l7-7"/>', ' class="i2"') }), tog);
 }
 function isPortrait() { return window.innerHeight > window.innerWidth; }
-function setDockOpen(o) {
-  if (!dockEl) return; if (o) setDockMin(false);
-  dockEl.classList.toggle('open', !!o); store('behemoth.dockOpen', o ? 1 : 0);
-  if (o && dockEl._xset) requestAnimationFrame(function () { dockEl._xset(); });
-}
-/* portrait: the dock grows in place into a window with a split keyboard or a touch pad; the sound controls above stay usable */
-function buildDockWindow(dock) {
-  var xMode = store('beh.stage') === 'pad' ? 'pad' : 'keys', main = h('div', { class: 'dxmain' }), pad = h('div', { id: 'surfaceD' });
-  pad._cols = 8; var padD = Surface(pad, 8);
-  var bSplit = h('button', { type: 'button', onclick: function () { xset('keys'); } }, 'KEYS'), bPad = h('button', { type: 'button', onclick: function () { xset('pad'); } }, 'PAD');
-  var glide = h('button', { class: 'pill', type: 'button', onclick: function () { PL.glide = !PL.glide; gl(); } }, 'GLIDE');
-  function gl() { glide.classList.toggle('on', !!PL.glide); }
-  function force(el) { var w = el.clientWidth || main.clientWidth || (window.innerWidth - 80), per = { s: 46, m: 62, l: 76 }[CFG.skw] || 76; return clamp(Math.ceil((w / per - 1) / 7 - .1), 1, 5); }
-  function xset(m) {
-    if (m) { xMode = m; store('beh.stage', m); }
-    bSplit.classList.toggle('on', xMode === 'keys'); bPad.classList.toggle('on', xMode === 'pad'); gl(); glide.style.display = xMode === 'pad' ? '' : 'none';
-    KBDS = KBDS.filter(function (k) { return !main.contains(k); }); main.innerHTML = ''; main.className = 'dxmain m-' + xMode;
-    if (xMode === 'keys') {
-      /* one tall keyboard at the global octave */
-      var sp = h('div', { class: 'dxsplit' }), el = h('div', { class: 'kbd' });
-      el._force = function () { return force(el); }; el._oct = function () { return clamp(PL.oct, 0, 7); }; el._idb = 9000;
-      sp.append(el);
-      main.append(sp); requestAnimationFrame(function () { buildKeyboard(el); });
-    } else { main.append(pad); padD.rebuild(); }
-  }
-  var lastP = isPortrait();
-  window.addEventListener('resize', function () {
-    var p = isPortrait(); if (p === lastP) return; lastP = p;
-    if (p && typeof stageEl !== 'undefined' && stageEl && stageEl.classList.contains('on')) closeStage();   /* no full-screen Stage in portrait */
-    if (p && dock.classList.contains('open') && Hold.fingers === 0) requestAnimationFrame(function () { xset(); });
-  });
-  dock._xset = xset; xset();
-  return h('div', { class: 'dxp' }, h('div', { class: 'dxbar' }, h('div', { class: 'seg' }, bSplit, bPad), h('span', { class: 'dgap' }), glide),
-    h('div', { class: 'dxbody' }, main, h('div', { class: 'wgrp' }, Wheel('pitch'), Wheel('mod'))));
-}
+/* portrait: the compact dock below the tabs is the audition keyboard; the wide play surface lives on the PLAY tab, full-screen Stage in landscape */
+window.addEventListener('resize', function () { if (isPortrait() && typeof stageEl !== 'undefined' && stageEl && stageEl.classList.contains('on')) closeStage(); });
 function buildDock() {
   var dock = h('div', { id: 'dock' }), kb = h('div', { class: 'kbd', id: 'kbdDock' });
   dockEl = dock; buildKeyboard(kb);
-  dock.append(controls('drow'), h('div', { class: 'dmain' }, Wheel('pitch'), kb, Wheel('mod')), buildDockWindow(dock));
+  dock.append(controls('drow'), h('div', { class: 'dmain' }, Wheel('pitch'), kb, Wheel('mod')));
   if (store('behemoth.dockMin')) setDockMin(true);
-  else if (store('behemoth.dockOpen')) setDockOpen(true);
   return dock;
 }
 var surfaces = [], active = {};

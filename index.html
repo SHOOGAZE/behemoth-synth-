@@ -422,8 +422,8 @@ input[type=range]::-webkit-slider-thumb { box-shadow: none; }
 #stage .seg button { padding: 8px 14px; border: 0; background: #111; color: var(--mute); font-weight: 800; font-size: 12px; letter-spacing: .08em; cursor: pointer; }
 #stage .seg button.on { background: var(--accent); color: var(--accent-ink); }
 #stage .sbody { flex: 1; min-height: 0; display: flex; gap: 8px; }
-#stage .wgrp { flex: none; display: flex; gap: 4px; order: 2; align-self: center; height: min(calc(var(--kh, 180px) * 2 + 6px), 260px); max-height: 100%; }
-#stage.lh .wgrp { order: 0; }
+#stage .wgrp { flex: none; display: flex; gap: 4px; order: -1; align-self: center; height: min(calc(var(--kh, 180px) * 2 + 6px), 260px); max-height: 100%; }
+#stage.lh .wgrp { order: 2; }
 #stage .sbody .wheel { display: block; width: 34px; height: auto; align-self: stretch; }
 #stage .main.m-keys { display: flex; flex-direction: column; gap: 6px; }
 #stage .main { flex: 1; min-width: 0; min-height: 0; position: relative; overflow: hidden; }
@@ -444,30 +444,9 @@ input[type=range]::-webkit-slider-thumb { box-shadow: none; }
 @media (orientation: landscape) { .hbtn.stg { height: 40px; padding: 0 20px; font-size: 12px; } }
 
 
-/* ================= portrait: no full-screen Stage, the dock expands in place ================= */
-#dock .dxp { display: none; }
-#dock .dxbar { display: flex; align-items: center; gap: 6px; }
-#dock .dxbar .dgap { flex: 1; min-width: 0; }
-#dock .seg { display: flex; flex: none; border-radius: 8px; overflow: hidden; border: 1px solid #000; box-shadow: inset 0 1px 0 rgba(255,255,255,.08); }
-#dock .seg button { height: var(--ch, 40px); padding: 0 16px; border: 0; background: #111; color: var(--mute); font-weight: 800; font-size: 11.5px; letter-spacing: .08em; cursor: pointer; }
-#dock .seg button.on { background: var(--accent); color: var(--accent-ink); }
-#dock .dxbody { display: flex; gap: 6px; height: clamp(200px, 30vh, 300px); }
-@supports (height: 100dvh) { #dock .dxbody { height: clamp(200px, 30dvh, 300px); } }
-#dock .dxmain { flex: 1; min-width: 0; min-height: 0; position: relative; }
-#dock .dxsplit { display: flex; flex-direction: column; gap: 6px; height: 100%; }
-#dock .dxp .kbd { flex: 1 1 0; height: auto; min-height: 0; border-radius: 10px; }
-#dock .dxp .kbd .wk { font-size: 11px; padding-bottom: 6px; }
-#dock .dxp .kbd .bk { height: 60%; }
-#dock .dxp #surfaceD { height: 100%; border-radius: 12px; }
-#dock .dxp .wgrp { flex: none; display: flex; gap: 4px; order: 2; }
-:root[data-hand="left"] #dock .dxp .wgrp { order: 0; }
-#dock .dxp .wheel { display: block; width: 38px; height: auto; align-self: stretch; }
-#dock .drow .xbtn .i2 { display: none; }
+/* ================= portrait: no full-screen Stage, no expand button (the PLAY tab is the wide surface) ================= */
 @media (orientation: portrait) {
-  .hbtn.stg, .fsbtn { display: none !important; }
-  #dock.open:not(.min) .dmain { display: none; }
-  #dock.open:not(.min) .dxp { display: flex; flex-direction: column; gap: 6px; }
-  #dock.open:not(.min) .drow .xbtn .i1 { display: none; } #dock.open:not(.min) .drow .xbtn .i2 { display: block; }
+  .hbtn.stg, .fsbtn, #dock .drow .xbtn { display: none !important; }
 }
 /* ================= side menu, settings sections, illumination swatches ================= */
 
@@ -519,21 +498,20 @@ body.learning .knob { outline: 1px dashed color-mix(in srgb, var(--accent) 60%, 
 .mrow2 { display: flex; align-items: center; gap: 10px; padding: 7px 10px; background: var(--raised); border: 1px solid var(--line); border-radius: 8px; font-size: 12px; }
 .mrow2 b { flex: 1; font-weight: 600; } .mrow2 button { background: none; border: 0; color: var(--mute); padding: 4px 8px; cursor: pointer; }
 
-/* the four macros sit in a row above the keys (like GarageBand's smart controls) */
+/* the four macros are one column of encoders on the right; the wheels sit on the left */
 #stage .scol { flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 6px; }
-#stage .smacros { flex: none; display: flex; justify-content: center; align-items: flex-start; gap: clamp(14px, 5vw, 64px); }
-#stage .smacros .knob { --kw: clamp(46px, 9vh, 96px); }
+#stage .smacros { flex: none; order: 1; display: flex; flex-direction: column; justify-content: space-evenly; align-items: center; width: clamp(60px, 9vw, 100px); }
+#stage.lh .smacros { order: -1; }
+#stage .main { order: 0; }
+#stage .smacros .knob { --kw: clamp(44px, 11vh, 64px); }
 #stage .smacros .knob .vv { font-size: 10px; min-height: 12px; }
 #stage .smacros .knob .lbl { font-size: 10px; }
-#stage .krow { flex: 1; min-height: 0; display: flex; gap: 8px; }
+#stage .krow { flex: 1; min-height: 0; display: flex; align-items: stretch; gap: 8px; }
 #stage .krow .wgrp { align-self: stretch; height: auto; max-height: none; }
-#stage .ostrip { flex: none; display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; height: 22px; touch-action: none; cursor: pointer; }
-#stage .ostrip i { display: flex; align-items: center; justify-content: center; font: 600 10px var(--f-mono); font-style: normal; letter-spacing: .06em; color: var(--mute); background: #131313; border: 1px solid #222; border-radius: 4px; }
-#stage .ostrip i.on { background: color-mix(in srgb, var(--accent) 30%, #0a0a0a); border-color: color-mix(in srgb, var(--accent) 70%, #000); color: var(--accent-fg); }
-#stage .ostrip i.lo { background: var(--accent); color: var(--accent-ink); }
+#stage .krow .main { flex: 1; min-width: 0; }
 #stage .main.m-keys .kbd { flex: 1 1 0; height: auto; min-height: 90px; max-height: 720px; }
 #stage .main.m-keys .kbd .bk { height: 62%; }
-@media (max-height: 400px) { #stage .smacros .knob { --kw: 40px; } #stage .smacros .knob .vv { display: none; } #stage .ostrip { height: 18px; } }
+@media (max-height: 460px) { #stage .smacros { width: 64px; } #stage .smacros .knob { --kw: 46px; } #stage .smacros .knob .vv { display: none; } }
 .ptools { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 10px; } .ptools .btn { flex: 1 1 auto; padding: 9px 10px; font-size: 12px; } .ptools .btn:disabled { opacity: .35; }
 .ptools .btn.on, .pnav.ab.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 .pnav:disabled { opacity: .3; } .pnav.ab { width: auto; min-width: 44px; padding: 0 8px; font: 700 11px var(--f-mono); letter-spacing: .06em; }
@@ -635,7 +613,6 @@ button:focus-visible, .chip:focus-visible, .pill:focus-visible { outline: 2px so
   #stage .sbody { flex: 1; min-width: 0; min-height: 0; }
   #stage .wgrp { height: 100%; align-self: stretch; max-height: none; }
 }
-}
 
 /* portrait tab bar (same look as ELEPHANT): the active mark is a thick bar on the divider line, right above the label */
 @media (orientation: portrait) {
@@ -693,14 +670,13 @@ button:focus-visible, .chip:focus-visible, .pill:focus-visible { outline: 2px so
 
 @media (orientation: portrait) { .hbtn.stg, .fsbtn { display: none !important; } }
 
-/* tablets: bigger macro knobs, keys no taller than a hand can use and sitting at the bottom; the portrait keys window grows too */
+/* tablets: bigger macro knobs, keys no taller than a hand can use and sitting at the bottom */
 @media (min-width: 700px) and (min-height: 600px) {
-  #stage .smacros { flex: none; padding-block: 10px 6px; align-items: center; gap: clamp(28px, 7vw, 110px); }
-  #stage .smacros .knob { --kw: clamp(72px, 12vh, 112px); }
+  #stage .smacros { width: clamp(90px, 9vw, 120px); }
+  #stage .smacros .knob { --kw: clamp(64px, 10vh, 92px); }
   #stage .smacros .knob .vv, #stage .smacros .knob .lbl { font-size: 12px; }
   #stage .main.m-keys { justify-content: flex-end; }
   #stage .main.m-keys .kbd { max-height: 600px; }
-  #dock .dxbody { height: clamp(260px, 38dvh, 480px); }
 }
 </style>
 </head>
@@ -3349,51 +3325,17 @@ function controls(cls) {
   return h('div', { class: cls }, holdButton('pill'), arp, OctControl(),
     h('button', { class: 'pill sq', type: 'button', 'aria-label': 'Panic: stop all notes', onclick: panicAll, html: ico('<rect x="6.5" y="6.5" width="11" height="11" rx="1.5" fill="currentColor" stroke="none"/>') }),
     h('span', { class: 'dgap' }),
-    h('button', { class: 'pill sq xbtn', type: 'button', 'aria-label': 'Expand or collapse the keys', onclick: function () { if (isPortrait()) setDockOpen(!(dockEl.classList.contains('open') && !dockEl.classList.contains('min'))); else openStage(); },
+    h('button', { class: 'pill sq xbtn', type: 'button', 'aria-label': 'Expand or collapse the keys', onclick: function () { if (!isPortrait()) openStage(); },
       html: ico('<path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/>', ' class="i1"') + ico('<path d="M20 10h-6V4M4 14h6v6M14 10l7-7M3 21l7-7"/>', ' class="i2"') }), tog);
 }
 function isPortrait() { return window.innerHeight > window.innerWidth; }
-function setDockOpen(o) {
-  if (!dockEl) return; if (o) setDockMin(false);
-  dockEl.classList.toggle('open', !!o); store('behemoth.dockOpen', o ? 1 : 0);
-  if (o && dockEl._xset) requestAnimationFrame(function () { dockEl._xset(); });
-}
-/* portrait: the dock grows in place into a window with a split keyboard or a touch pad; the sound controls above stay usable */
-function buildDockWindow(dock) {
-  var xMode = store('beh.stage') === 'pad' ? 'pad' : 'keys', main = h('div', { class: 'dxmain' }), pad = h('div', { id: 'surfaceD' });
-  pad._cols = 8; var padD = Surface(pad, 8);
-  var bSplit = h('button', { type: 'button', onclick: function () { xset('keys'); } }, 'KEYS'), bPad = h('button', { type: 'button', onclick: function () { xset('pad'); } }, 'PAD');
-  var glide = h('button', { class: 'pill', type: 'button', onclick: function () { PL.glide = !PL.glide; gl(); } }, 'GLIDE');
-  function gl() { glide.classList.toggle('on', !!PL.glide); }
-  function force(el) { var w = el.clientWidth || main.clientWidth || (window.innerWidth - 80), per = { s: 46, m: 62, l: 76 }[CFG.skw] || 76; return clamp(Math.ceil((w / per - 1) / 7 - .1), 1, 5); }
-  function xset(m) {
-    if (m) { xMode = m; store('beh.stage', m); }
-    bSplit.classList.toggle('on', xMode === 'keys'); bPad.classList.toggle('on', xMode === 'pad'); gl(); glide.style.display = xMode === 'pad' ? '' : 'none';
-    KBDS = KBDS.filter(function (k) { return !main.contains(k); }); main.innerHTML = ''; main.className = 'dxmain m-' + xMode;
-    if (xMode === 'keys') {
-      /* one tall keyboard at the global octave */
-      var sp = h('div', { class: 'dxsplit' }), el = h('div', { class: 'kbd' });
-      el._force = function () { return force(el); }; el._oct = function () { return clamp(PL.oct, 0, 7); }; el._idb = 9000;
-      sp.append(el);
-      main.append(sp); requestAnimationFrame(function () { buildKeyboard(el); });
-    } else { main.append(pad); padD.rebuild(); }
-  }
-  var lastP = isPortrait();
-  window.addEventListener('resize', function () {
-    var p = isPortrait(); if (p === lastP) return; lastP = p;
-    if (p && typeof stageEl !== 'undefined' && stageEl && stageEl.classList.contains('on')) closeStage();   /* no full-screen Stage in portrait */
-    if (p && dock.classList.contains('open') && Hold.fingers === 0) requestAnimationFrame(function () { xset(); });
-  });
-  dock._xset = xset; xset();
-  return h('div', { class: 'dxp' }, h('div', { class: 'dxbar' }, h('div', { class: 'seg' }, bSplit, bPad), h('span', { class: 'dgap' }), glide),
-    h('div', { class: 'dxbody' }, main, h('div', { class: 'wgrp' }, Wheel('pitch'), Wheel('mod'))));
-}
+/* portrait: the compact dock below the tabs is the audition keyboard; the wide play surface lives on the PLAY tab, full-screen Stage in landscape */
+window.addEventListener('resize', function () { if (isPortrait() && typeof stageEl !== 'undefined' && stageEl && stageEl.classList.contains('on')) closeStage(); });
 function buildDock() {
   var dock = h('div', { id: 'dock' }), kb = h('div', { class: 'kbd', id: 'kbdDock' });
   dockEl = dock; buildKeyboard(kb);
-  dock.append(controls('drow'), h('div', { class: 'dmain' }, Wheel('pitch'), kb, Wheel('mod')), buildDockWindow(dock));
+  dock.append(controls('drow'), h('div', { class: 'dmain' }, Wheel('pitch'), kb, Wheel('mod')));
   if (store('behemoth.dockMin')) setDockMin(true);
-  else if (store('behemoth.dockOpen')) setDockOpen(true);
   return dock;
 }
 var surfaces = [], active = {};
@@ -3469,7 +3411,7 @@ function buildKeyboard(el) {
   el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up); el.addEventListener('lostpointercapture', up);
 }
 
-/* STAGE: the whole screen becomes one instrument - one big keyboard with the four macros above it, or one big touch pad; BACK returns to the normal view */
+/* STAGE: the whole screen becomes one instrument - one big keyboard with the wheels on the left and the four macros in a column on the right, or one big touch pad; BACK returns to the normal view */
 var stageStrip = function () { }, stageEl = null, stageMode = store('beh.stage') === 'pad' ? 'pad' : 'keys';
 /* minimum key width: landscape rows are short, so keys can be narrower and more octaves fit */
 function stagePer() { var land = window.innerWidth > window.innerHeight; return (land ? { s: 52, m: 66, l: 80 } : { s: 46, m: 62, l: 76 })[CFG.skw] || (land ? 80 : 76); }
@@ -3487,16 +3429,6 @@ function buildStage() {
   var bKeys = h('button', { type: 'button', onclick: function () { setMode('keys'); } }, 'KEYS'), bPad = h('button', { type: 'button', onclick: function () { setMode('pad'); } }, 'PAD');
   var glide = h('button', { class: 'pill', type: 'button', onclick: function () { PL.glide = !PL.glide; gl(); } }, 'GLIDE');
   function gl() { glide.classList.toggle('on', !!PL.glide); }
-  /* octave strip above the keys (like GarageBand's scroller): the lit cells are the octaves on the keyboard, tap or drag to move them */
-  var strip = h('div', { class: 'ostrip', role: 'group', 'aria-label': 'Octave range' }), cells = [];
-  for (var oi = 0; oi <= 6; oi++) { var ce = h('i', { 'data-o': oi }, 'C' + oi); cells.push(ce); strip.append(ce); }
-  function paintStrip() { var el = $('.kbd', main), oc = el && el._nw ? el._nw / 7 : 2; cells.forEach(function (c, i) { c.classList.toggle('on', i >= PL.oct && i < PL.oct + oc); c.classList.toggle('lo', i === PL.oct); }); }
-  (function () {
-    var dn = false; function at(e) { var r = strip.getBoundingClientRect(), f = clamp((e.clientX - r.left) / Math.max(1, r.width), 0, .999), o = Math.floor(f * 7), el = $('.kbd', main), oc = el && el._nw ? Math.ceil(el._nw / 7) : 2; o = clamp(Math.round(o - (oc - 1) / 2), 0, 6); if (o !== PL.oct) setOct(o); }
-    strip.addEventListener('pointerdown', function (e) { e.preventDefault(); dn = true; try { strip.setPointerCapture(e.pointerId); } catch (x) { } at(e); });
-    strip.addEventListener('pointermove', function (e) { if (dn) at(e); });
-    function up() { dn = false; } strip.addEventListener('pointerup', up); strip.addEventListener('pointercancel', up);
-  })();
   function setMode(m) {
     if (m !== 'pad') m = 'keys';
     stageMode = m; store('beh.stage', m); bKeys.classList.toggle('on', m === 'keys'); bPad.classList.toggle('on', m === 'pad');
@@ -3508,11 +3440,10 @@ function buildStage() {
       el._force = function () { return stageForce.call(el); };
       el._nwk = function () { var w = el.clientWidth || (main.clientWidth || window.innerWidth * .8); return clamp(Math.floor(w / stagePer()), 8, 36); };
       el._oct = function () { return clamp(PL.oct, 0, 7); }; el._idb = 7000;
-      main.append(strip, el); requestAnimationFrame(function () { buildKeyboard(el); paintStrip(); });
+      main.append(el); requestAnimationFrame(function () { buildKeyboard(el); });
     }
     else { main.append(pad, h('div', { class: 'padinfo' }, 'X  PITCH / NOTE    Y  BRIGHTNESS'), h('div', { class: 'pady' })); padS.rebuild(); }
   }
-  stageStrip = paintStrip;
   var back = h('button', { class: 'hbtn back', type: 'button', 'aria-label': 'Back', onclick: closeStage, html: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square"><path d="M15 5l-7 7 7 7"/></svg>BACK' });
   var arp = h('button', { class: 'pill', type: 'button', onclick: function () { setP('arpOn', P.arpOn >= 0.5 ? 0 : 1); } }, 'ARP');
   function arpFn() { arp.classList.toggle('on', P.arpOn >= 0.5); } binders.push({ k: 'arpOn', fn: arpFn }); arpFn();
@@ -3524,9 +3455,10 @@ function buildStage() {
       h('button', { class: 'pill', type: 'button', 'aria-label': 'Previous preset', onclick: function () { stepPreset(-1); }, html: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>' }), nameEl,
       h('button', { class: 'pill', type: 'button', 'aria-label': 'Next preset', onclick: function () { stepPreset(1); }, html: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>' })),
     sctl);
+  /* the four macros are one column of encoders on the right (left in left-handed mode), pitch and mod wheels on the left */
   var mrow = h('div', { class: 'smacros' });
   for (var mj = 0; mj < 4; mj++) { var mk = Knob({ k: 'm' + (mj + 1), label: 'M' + (mj + 1), big: false }); macroKnobs[mj] = mk; mrow.append(mk.el); }
-  stageEl = h('div', { id: 'stage', role: 'dialog', 'aria-label': 'Stage' }, bar, h('div', { class: 'sbody' }, h('div', { class: 'scol' }, mrow, h('div', { class: 'krow' }, h('div', { class: 'wgrp' }, Wheel('pitch'), Wheel('mod')), main))));
+  stageEl = h('div', { id: 'stage', role: 'dialog', 'aria-label': 'Stage' }, bar, h('div', { class: 'sbody' }, h('div', { class: 'scol' }, h('div', { class: 'krow' }, h('div', { class: 'wgrp' }, Wheel('pitch'), Wheel('mod')), main, mrow))));
   function hand() { stageEl.classList.toggle('lh', CFG.hand === 'left'); } stageEl._hand = hand; hand();
   stageEl._name = nameEl; stageEl._set = setMode; stageEl._gl = gl; applyMacroNames();
   document.body.append(stageEl);

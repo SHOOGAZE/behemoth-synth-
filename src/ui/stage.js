@@ -1,4 +1,4 @@
-/* STAGE: the whole screen becomes one instrument - one big keyboard with the four macros above it, or one big touch pad; BACK returns to the normal view */
+/* STAGE: the whole screen becomes one instrument - one big keyboard with the wheels on the left and the four macros in a column on the right, or one big touch pad; BACK returns to the normal view */
 var stageStrip = function () { }, stageEl = null, stageMode = store('beh.stage') === 'pad' ? 'pad' : 'keys';
 /* minimum key width: landscape rows are short, so keys can be narrower and more octaves fit */
 function stagePer() { var land = window.innerWidth > window.innerHeight; return (land ? { s: 52, m: 66, l: 80 } : { s: 46, m: 62, l: 76 })[CFG.skw] || (land ? 80 : 76); }
@@ -16,16 +16,6 @@ function buildStage() {
   var bKeys = h('button', { type: 'button', onclick: function () { setMode('keys'); } }, 'KEYS'), bPad = h('button', { type: 'button', onclick: function () { setMode('pad'); } }, 'PAD');
   var glide = h('button', { class: 'pill', type: 'button', onclick: function () { PL.glide = !PL.glide; gl(); } }, 'GLIDE');
   function gl() { glide.classList.toggle('on', !!PL.glide); }
-  /* octave strip above the keys (like GarageBand's scroller): the lit cells are the octaves on the keyboard, tap or drag to move them */
-  var strip = h('div', { class: 'ostrip', role: 'group', 'aria-label': 'Octave range' }), cells = [];
-  for (var oi = 0; oi <= 6; oi++) { var ce = h('i', { 'data-o': oi }, 'C' + oi); cells.push(ce); strip.append(ce); }
-  function paintStrip() { var el = $('.kbd', main), oc = el && el._nw ? el._nw / 7 : 2; cells.forEach(function (c, i) { c.classList.toggle('on', i >= PL.oct && i < PL.oct + oc); c.classList.toggle('lo', i === PL.oct); }); }
-  (function () {
-    var dn = false; function at(e) { var r = strip.getBoundingClientRect(), f = clamp((e.clientX - r.left) / Math.max(1, r.width), 0, .999), o = Math.floor(f * 7), el = $('.kbd', main), oc = el && el._nw ? Math.ceil(el._nw / 7) : 2; o = clamp(Math.round(o - (oc - 1) / 2), 0, 6); if (o !== PL.oct) setOct(o); }
-    strip.addEventListener('pointerdown', function (e) { e.preventDefault(); dn = true; try { strip.setPointerCapture(e.pointerId); } catch (x) { } at(e); });
-    strip.addEventListener('pointermove', function (e) { if (dn) at(e); });
-    function up() { dn = false; } strip.addEventListener('pointerup', up); strip.addEventListener('pointercancel', up);
-  })();
   function setMode(m) {
     if (m !== 'pad') m = 'keys';
     stageMode = m; store('beh.stage', m); bKeys.classList.toggle('on', m === 'keys'); bPad.classList.toggle('on', m === 'pad');
@@ -37,11 +27,10 @@ function buildStage() {
       el._force = function () { return stageForce.call(el); };
       el._nwk = function () { var w = el.clientWidth || (main.clientWidth || window.innerWidth * .8); return clamp(Math.floor(w / stagePer()), 8, 36); };
       el._oct = function () { return clamp(PL.oct, 0, 7); }; el._idb = 7000;
-      main.append(strip, el); requestAnimationFrame(function () { buildKeyboard(el); paintStrip(); });
+      main.append(el); requestAnimationFrame(function () { buildKeyboard(el); });
     }
     else { main.append(pad, h('div', { class: 'padinfo' }, 'X  PITCH / NOTE    Y  BRIGHTNESS'), h('div', { class: 'pady' })); padS.rebuild(); }
   }
-  stageStrip = paintStrip;
   var back = h('button', { class: 'hbtn back', type: 'button', 'aria-label': 'Back', onclick: closeStage, html: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square"><path d="M15 5l-7 7 7 7"/></svg>BACK' });
   var arp = h('button', { class: 'pill', type: 'button', onclick: function () { setP('arpOn', P.arpOn >= 0.5 ? 0 : 1); } }, 'ARP');
   function arpFn() { arp.classList.toggle('on', P.arpOn >= 0.5); } binders.push({ k: 'arpOn', fn: arpFn }); arpFn();
@@ -53,9 +42,10 @@ function buildStage() {
       h('button', { class: 'pill', type: 'button', 'aria-label': 'Previous preset', onclick: function () { stepPreset(-1); }, html: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>' }), nameEl,
       h('button', { class: 'pill', type: 'button', 'aria-label': 'Next preset', onclick: function () { stepPreset(1); }, html: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>' })),
     sctl);
+  /* the four macros are one column of encoders on the right (left in left-handed mode), pitch and mod wheels on the left */
   var mrow = h('div', { class: 'smacros' });
   for (var mj = 0; mj < 4; mj++) { var mk = Knob({ k: 'm' + (mj + 1), label: 'M' + (mj + 1), big: false }); macroKnobs[mj] = mk; mrow.append(mk.el); }
-  stageEl = h('div', { id: 'stage', role: 'dialog', 'aria-label': 'Stage' }, bar, h('div', { class: 'sbody' }, h('div', { class: 'scol' }, mrow, h('div', { class: 'krow' }, h('div', { class: 'wgrp' }, Wheel('pitch'), Wheel('mod')), main))));
+  stageEl = h('div', { id: 'stage', role: 'dialog', 'aria-label': 'Stage' }, bar, h('div', { class: 'sbody' }, h('div', { class: 'scol' }, h('div', { class: 'krow' }, h('div', { class: 'wgrp' }, Wheel('pitch'), Wheel('mod')), main, mrow))));
   function hand() { stageEl.classList.toggle('lh', CFG.hand === 'left'); } stageEl._hand = hand; hand();
   stageEl._name = nameEl; stageEl._set = setMode; stageEl._gl = gl; applyMacroNames();
   document.body.append(stageEl);
