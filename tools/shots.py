@@ -2,15 +2,14 @@
 import os
 from playwright.sync_api import sync_playwright
 D=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))+'/'
-os.makedirs(D+'screenshots',exist_ok=True)
-P=(390,844); L=(844,390); T=(820,1180)
+import shutil
+shutil.rmtree(D+'screenshots',ignore_errors=True);os.makedirs(D+'screenshots',exist_ok=True)
+P=(390,844); L=(844,390); T=(820,1180); TL=(1180,820)
 TAB=lambda t:"document.querySelector('nav#tabs button[data-t=%s]').click()"%t
 STG=lambda m:"document.querySelector('.hbtn.stg').click();setTimeout(()=>{const b=[...document.querySelectorAll('#stage .bar button, #stage button')].find(x=>x.textContent.trim()==='%s');b&&b.click()},200)"%m
-S=[('sound',P,TAB('sound')),('modulation',P,TAB('mod')),('effects',P,TAB('fx')),('play',P,TAB('play')),
-   ('wavetable-editor',P,"document.querySelector('.tn').click()"),
+S=[('sound',P,TAB('sound')),('modulation',P,TAB('mod')),('play',P,TAB('play')),
    ('presets',P,"document.querySelector('#presetBtn').click()"),
-   ('landscape',L,TAB('sound')),('landscape-stage',L,STG('KEYS')),('landscape-stage-pad',L,STG('PAD')),
-   ('tablet',T,TAB('sound'))]
+   ('landscape-stage',L,STG('KEYS')),('tablet-portrait',T,TAB('sound')),('tablet-landscape',TL,TAB('sound'))]
 with sync_playwright() as p:
     b=p.chromium.launch(args=['--autoplay-policy=no-user-gesture-required'])
     for name,(w,h),js in S:

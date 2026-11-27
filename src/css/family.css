@@ -1,0 +1,30 @@
+/* Family skin (black and white): raised keys, recessed cards, dot-matrix glass.
+   Cheap to paint on a phone: no blurred shadows on repeated controls, no filters, no glow blur, no overlay layers.
+   BEHEMOTH is dense, so the key edge is a single hard pixel line and the cards stay flat. */
+/* one backdrop for the whole page, so nothing shows as a frame around the app */
+html{background:#0b0b0d}
+body{background:linear-gradient(#141417,#0b0b0d 360px) no-repeat #0b0b0d}
+#app{background:none}
+.hbtn,.pill,.pnav,.chip,.tn,.cap,.stepper{border-color:transparent;border-radius:7px;background:linear-gradient(#212126,#151518);color:#e6e3dc;box-shadow:inset 0 1px 0 #ffffff18,0 1px 0 #000}
+.hbtn:active,.pill:active,.pnav:active,.chip:active,.tn:active{transform:translateY(1px);box-shadow:inset 0 1px 0 #ffffff0e}
+.pill.on,.chip.on,.hbtn.on,.pnav.on,.tn.on,.cap.on{background:linear-gradient(#34343a,#1e1e22);color:#fff;box-shadow:inset 0 0 0 1px #f2efe8}
+.hbtn.rec,button.hbtn.rec{color:#ff6a5a}
+.card{background:linear-gradient(#101013,#0c0c0e);border:0;border-radius:12px;box-shadow:inset 0 0 0 1px #1d1d22,inset 0 2px 6px #000a}
+.glass{background:repeating-linear-gradient(0deg,#0000 0 2px,#00000026 2px 3px),radial-gradient(120% 140% at 30% 0%,#1c1c20,#08080a 70%);border-radius:9px;box-shadow:inset 0 0 0 1px #000,0 0 0 3px #17171b,0 0 0 4px #000}
+.kbd .wk{background:linear-gradient(#f3efe6,#cfc8b9);box-shadow:inset 0 -4px 0 #b3ad9e,inset 0 1px 0 #fff;border-right:1px solid #9c9890}
+.kbd .wk.on{background:var(--accent);box-shadow:none}
+.kbd .bk{background:linear-gradient(#2b2b30,#0a0a0b);box-shadow:inset 0 1px 0 #ffffff22,0 3px 0 #000}
+#rail,nav#tabs{background:linear-gradient(#0d0d10,#08080a)}
+
+/* quick number entry */
+.qnum{position:fixed;z-index:500;width:94px;height:44px;box-sizing:border-box;text-align:center;font:700 22px "Helvetica Neue",Helvetica,Arial,sans-serif;color:#fff;background:#0a0a0c;border:0;border-radius:8px;box-shadow:inset 0 0 0 2px #f2efe8,0 8px 24px #000c;outline:none;-webkit-appearance:none;appearance:none;user-select:text;-webkit-user-select:text}
+.qt{border-bottom:1px dotted #ffffff55;cursor:text}
+/* the rest of the keys: dialog buttons, snapshots, minis, the preset picker */
+.btn,.snap,.mini,.pgroup>button{border-color:transparent;border-radius:7px;background:linear-gradient(#222227,#151518);color:#e6e3dc;box-shadow:inset 0 1px 0 #ffffff1a,0 2px 0 #000}
+.btn:active,.snap:active,.mini:active{transform:translateY(1px);box-shadow:inset 0 1px 0 #ffffff0e,0 1px 0 #000}
+.btn.pri{background:linear-gradient(#f3efe6,#d2cbbc);color:#1a1a1d;box-shadow:inset 0 1px 0 #fff,0 2px 0 #7d7666}
+.btn.on,.snap.on,.mini.on,.chip.on,.pill.on{background:linear-gradient(#34343a,#1e1e22)!important;color:#fff!important;box-shadow:inset 0 0 0 1px #f2efe8,0 2px 0 #000!important}
+
+/* portrait: option rows wrap instead of running off the edge; the source bar scrolls and fades at the right */
+@media (orientation:portrait){.chips{flex-wrap:wrap;overflow:visible}}
+#srcbar{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 22px),#0000);mask-image:linear-gradient(90deg,#000 calc(100% - 22px),#0000)}

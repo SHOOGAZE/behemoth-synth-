@@ -1,6 +1,9 @@
 # Changelog
 
 ## Unreleased
+- Family skin (black and white): raised keys, recessed cards, dot-matrix glass, milky keyboard; the buttons and menus share one key language (a flatter, one-pixel edge here, because the screens are dense).
+- Tap the tempo value in the arpeggiator to type a tempo.
+- One backdrop behind the whole page.
 - Stage: SPLIT and the MACRO tab are gone (KEYS | PAD). One big keyboard fills the height, pitch and mod wheels sit on the left and the four macros are a column of encoders on the right (mirrored for left-handed mode) and the octave strip is gone (use - / +).
 - Portrait: the expandable keys/pad window is removed (it duplicated the PLAY tab and Stage); the compact dock keyboard stays on every tab for auditioning sounds.
 - Unified OLED panel (caption, dot-matrix name with Cyrillic, scope) shared by GRAINS, ELEPHANT and BEHEMOTH.

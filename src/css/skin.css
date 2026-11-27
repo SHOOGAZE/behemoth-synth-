@@ -36,9 +36,9 @@ header#top { padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid v
 .knob .vv { color: var(--fg); }
 .knob.armed svg { filter: drop-shadow(0 0 6px var(--arm)); }
 
-canvas.vis, #scope, .meter, #surface, #surfaceQ, #surfaceS, #surfaceD { background: #070707; border: 1px solid #222; border-radius: 5px; box-shadow: none; }
+canvas.vis, #scope, .meter, #surface, #surfaceQ, #surfaceS { background: #070707; border: 1px solid #222; border-radius: 5px; box-shadow: none; }
 .meter b { background: linear-gradient(to top, color-mix(in srgb, var(--accent) 45%, #000), var(--accent) 70%, color-mix(in srgb, var(--accent) 60%, #fff)); }
-#surface .cell.on, #surfaceQ .cell.on, #surfaceS .cell.on, #surfaceD .cell.on { background: radial-gradient(120% 90% at 50% 100%, color-mix(in srgb, var(--accent) 40%, transparent), color-mix(in srgb, var(--accent) 6%, transparent) 70%), #070707; }
+#surface .cell.on, #surfaceQ .cell.on, #surfaceS .cell.on .cell.on { background: radial-gradient(120% 90% at 50% 100%, color-mix(in srgb, var(--accent) 40%, transparent), color-mix(in srgb, var(--accent) 6%, transparent) 70%), #070707; }
 .dotp { background: radial-gradient(circle, #fff 0 18%, var(--accent) 42%, transparent 72%) !important; }
 
 nav#tabs { background: var(--bg); border-top: 1px solid var(--line); box-shadow: none; }

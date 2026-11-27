@@ -115,10 +115,26 @@ function Switch(k, cb) {
   function fn() { s.classList.toggle('on', P[k] >= 0.5); }
   binders.push({ k: k, fn: fn }); fn(); return s;
 }
+/* Quick number entry: tap a counter, type the value, Enter or tap away to apply, Escape to cancel */
+function quickNum(anchor, cur, min, max, apply) {
+  var r = anchor.getBoundingClientRect(), i = document.createElement('input'), done = false;
+  i.type = 'text'; i.inputMode = 'numeric'; i.setAttribute('pattern', '[0-9]*'); i.value = Math.round(cur); i.className = 'qnum'; i.setAttribute('aria-label', 'Type a value');
+  i.style.left = Math.max(6, Math.min(innerWidth - 100, r.left + r.width / 2 - 47)) + 'px'; i.style.top = Math.max(6, r.top + r.height / 2 - 22) + 'px';
+  document.body.appendChild(i); i.focus(); i.select();
+  function fin(ok) {
+    if (done) return; done = true;
+    var v = parseFloat(String(i.value).replace(',', '.'));
+    if (ok && isFinite(v)) apply(Math.min(max, Math.max(min, Math.round(v))));
+    if (i.parentNode) i.parentNode.removeChild(i);
+  }
+  i.addEventListener('keydown', function (e) { if (e.key === 'Enter') fin(true); else if (e.key === 'Escape') fin(false); e.stopPropagation(); });
+  i.addEventListener('blur', function () { fin(true); });
+}
 function Stepper(k, step, fmt, min, max) {
   var sp = h('span'), lo = min !== undefined ? min : S.PARAMS[k][1], hi = max !== undefined ? max : S.PARAMS[k][2];
   var st = h('div', { class: 'stepper' }, h('button', { type: 'button', onclick: function () { setP(k, clamp(P[k] - step, lo, hi)); } }, '−'), sp, h('button', { type: 'button', onclick: function () { setP(k, clamp(P[k] + step, lo, hi)); } }, '+'));
   function fn() { sp.textContent = fmt(P[k]); }
+  if (k === 'bpm') { sp.className = 'qt'; sp.setAttribute('role', 'button'); sp.setAttribute('aria-label', 'Tempo: tap to type a value'); sp.addEventListener('click', function () { quickNum(sp, P[k], lo, hi, function (v) { setP(k, v); }); }); }
   binders.push({ k: k, fn: fn }); fn(); return st;
 }
 function card(title, kids, cls, right) {

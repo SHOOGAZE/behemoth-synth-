@@ -2,7 +2,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 const read = (p) => readFileSync(new URL('./src/' + p, import.meta.url), 'utf8');
 
-const CSS = ['base', 'header-tablet', 'skin', 'landscape', 'living', 'stage', 'menu-settings'].map((n) => `css/${n}.css`);
+const CSS = ['base', 'header-tablet', 'skin', 'landscape', 'living', 'stage', 'menu-settings', 'family'].map((n) => `css/${n}.css`);
 const UI = ['core', 'i18n-dict', 'i18n', 'audio', 'knob', 'visuals', 'modulation', 'presets-data', 'presets', 'history', 'sheets', 'settings',
   'wave-editor', 'views', 'play', 'stage', 'sequencer', 'performance', 'midi', 'record', 'tour', 'glass', 'dottext', 'boot'].map((n) => `ui/${n}.js`);
 

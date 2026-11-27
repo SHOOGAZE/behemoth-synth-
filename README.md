@@ -6,29 +6,23 @@ A wavetable bass synthesizer that runs in the browser. One HTML file, no depende
 
 ## Screenshots
 
-Phone upright: SOUND, MOD, FX and PLAY tabs, the wavetable editor, and the preset browser. The compact keyboard stays at the bottom of every tab.
+Black-and-white look shared with the family: raised keys, a dot-matrix display, a milky keyboard. Phone upright (SOUND, MOD, PLAY, presets), Stage on a phone held sideways, and a tablet in both orientations.
 
 <p>
   <img src="screenshots/sound.png" width="24%" alt="Sound: wavetable oscillator with 3D table view">
   <img src="screenshots/modulation.png" width="24%" alt="Modulation: macros and LFOs">
-  <img src="screenshots/effects.png" width="24%" alt="Effects: drive, chorus, delay, reverb">
   <img src="screenshots/play.png" width="24%" alt="Play: living surface, scale and arpeggiator">
-</p>
-<p>
-  <img src="screenshots/wavetable-editor.png" width="24%" alt="Wavetable editor">
   <img src="screenshots/presets.png" width="24%" alt="Preset browser">
 </p>
-
-Phone held sideways and a tablet (a permanent tab rail on tablets): the tabs move to a side rail, and Stage turns the whole screen into an instrument.
-
 <p>
-  <img src="screenshots/landscape.png" width="49%" alt="Landscape layout">
-  <img src="screenshots/landscape-stage.png" width="49%" alt="Landscape Stage: pitch and mod wheels on the left, one big keyboard, a column of four macro encoders on the right">
+  <img src="screenshots/landscape-stage.png" width="49%" alt="Landscape Stage: wheels, one big keyboard, four macro encoders">
+  <img src="screenshots/tablet-landscape.png" width="49%" alt="Tablet, landscape">
 </p>
 <p>
-  <img src="screenshots/landscape-stage-pad.png" width="49%" alt="Landscape Stage: multi-touch pad">
-  <img src="screenshots/tablet.png" width="30%" alt="Tablet layout">
+  <img src="screenshots/tablet-portrait.png" width="40%" alt="Tablet, portrait">
 </p>
+
+Tap the BPM number to type a tempo.
 
 ## Playing
 
