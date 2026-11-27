@@ -1,7 +1,10 @@
 /* ------------------------------------------------ keyboard & MIDI */
-var KEYMAP = { a: 0, w: 1, s: 2, e: 3, d: 4, f: 5, t: 6, g: 7, y: 8, h: 9, u: 10, j: 11, k: 12, o: 13, l: 14 }, kdown = {};
-window.addEventListener('keydown', function (e) { if (e.repeat || e.metaKey || e.ctrlKey || e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return; var s = KEYMAP[e.key]; if (s === undefined || kdown[e.key]) return; kdown[e.key] = 1; playOn(12 * (PL.oct + 1) + s, 0.8, 7000 + s); });
-window.addEventListener('keyup', function (e) { var s = KEYMAP[e.key]; if (s === undefined) return; delete kdown[e.key]; playOff(7000 + s); });
+/* computer keyboard: matched by physical key (e.code), so it plays on a Russian or any other layout too */
+var KEYMAP = { KeyA: 0, KeyW: 1, KeyS: 2, KeyE: 3, KeyD: 4, KeyF: 5, KeyT: 6, KeyG: 7, KeyY: 8, KeyH: 9, KeyU: 10, KeyJ: 11, KeyK: 12, KeyO: 13, KeyL: 14 }, kdown = {};
+function typing(t) { return t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable); }
+window.addEventListener('keydown', function (e) { if (e.repeat || e.metaKey || e.ctrlKey || e.altKey || typing(e.target)) return; var s = KEYMAP[e.code]; if (s === undefined || kdown[e.code]) return; kdown[e.code] = 1; playOn(12 * (PL.oct + 1) + s, 0.8, 7000 + s); });
+window.addEventListener('keyup', function (e) { var s = KEYMAP[e.code]; if (s === undefined) return; delete kdown[e.code]; playOff(7000 + s); });
+window.addEventListener('blur', function () { for (var c in kdown) { playOff(7000 + KEYMAP[c]); } kdown = {}; });
 /* ------------------------------------------------ MIDI: notes, pitch bend, sustain pedal, aftertouch, learnable CC */
 var MIDI = { learning: false, target: null, map: null, held: {}, inputs: 0 };
 var MIDI_DEFAULT = { 1: 'm1', 2: 'm2', 71: 'fRes', 74: 'fCut', 91: 'rvMix', 93: 'chMix' };

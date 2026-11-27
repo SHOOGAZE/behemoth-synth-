@@ -1,6 +1,10 @@
 # Changelog
 
 ## Unreleased
+
+- Computer keyboard plays on any layout (keys are matched by position, so a Russian layout works too). STAGE shows two stacked keyboards on wide screens. Option rows wrap instead of being cut off on desktop; the wide FX card no longer touches the cards above it.
+
+- Menu block with links to the other two apps of the family.
 - Family skin (black and white): raised keys, recessed cards, dot-matrix glass, milky keyboard; the buttons and menus share one key language (a flatter, one-pixel edge here, because the screens are dense).
 - Tap the tempo value in the arpeggiator to type a tempo.
 - One backdrop behind the whole page.

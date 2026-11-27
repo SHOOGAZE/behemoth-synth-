@@ -2,6 +2,7 @@
 var stageStrip = function () { }, stageEl = null, stageMode = store('beh.stage') === 'pad' ? 'pad' : 'keys';
 /* minimum key width: landscape rows are short, so keys can be narrower and more octaves fit */
 function stagePer() { var land = window.innerWidth > window.innerHeight; return (land ? { s: 52, m: 66, l: 80 } : { s: 46, m: 62, l: 76 })[CFG.skw] || (land ? 80 : 76); }
+function stageSplit() { return window.innerWidth >= 900 && window.innerHeight >= 600 && window.innerWidth > window.innerHeight * 1.2; }
 function buildStage() {
   var pad = h('div', { id: 'surfaceS' }), main = h('div', { class: 'main' }), nameEl = h('div', { class: 'sname' }, '');
   function stageForce() { var el = this, w = (el.clientWidth || window.innerWidth), per = stagePer(); return clamp(Math.ceil((w / per - 1) / 7 - .1), 1, 5); }
@@ -27,7 +28,15 @@ function buildStage() {
       el._force = function () { return stageForce.call(el); };
       el._nwk = function () { var w = el.clientWidth || (main.clientWidth || window.innerWidth * .8); return clamp(Math.floor(w / stagePer()), 8, 36); };
       el._oct = function () { return clamp(PL.oct, 0, 7); }; el._idb = 7000;
-      main.append(el); requestAnimationFrame(function () { buildKeyboard(el); });
+      main.append(el);
+      /* wide and tall enough (tablet, desktop): two stacked keyboards, the upper one continues where the lower one ends */
+      if (stageSplit()) {
+        var up = h('div', { class: 'kbd up' });
+        up._nwk = el._nwk; up._force = el._force; up._idb = 7100;
+        up._oct = function () { return clamp(PL.oct + Math.ceil((el._nw || el._nwk()) / 7), 0, 7); };
+        main.insertBefore(up, el); main.classList.add('split');
+        requestAnimationFrame(function () { buildKeyboard(el); buildKeyboard(up); });
+      } else requestAnimationFrame(function () { buildKeyboard(el); });
     }
     else { main.append(pad, h('div', { class: 'padinfo' }, 'X  PITCH / NOTE    Y  BRIGHTNESS'), h('div', { class: 'pady' })); padS.rebuild(); }
   }
@@ -50,6 +59,7 @@ function buildStage() {
   stageEl._name = nameEl; stageEl._set = setMode; stageEl._gl = gl; applyMacroNames();
   document.body.append(stageEl);
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && stageEl.classList.contains('on')) closeStage(); });
+  var splitNow = stageSplit(); window.addEventListener('resize', function () { var n = stageSplit(); if (n !== splitNow) { splitNow = n; if (stageEl.classList.contains('on') && stageMode === 'keys') setMode('keys'); } });
   window.addEventListener('resize', function () { if (stageEl.classList.contains('on') && isPortrait()) closeStage(); else if (stageEl.classList.contains('on')) { requestAnimationFrame(function () { stageEl._set(stageMode); }); } });
 }
 function openStage(mode) {

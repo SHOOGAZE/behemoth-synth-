@@ -1,8 +1,10 @@
 # BEHEMOTH
 
-A wavetable bass synthesizer that runs in the browser. One HTML file, no dependencies, built for touch screens (phones and tablets). Works with a computer keyboard and MIDI too, and installs as an app that runs offline. Member of a design family with [GRAINS](https://shoogaze.github.io/grains-synth/) and [ELEPHANT](https://shoogaze.github.io/elephant-sequencer/).
+A wavetable bass synthesizer that runs in the browser. One HTML file, no dependencies, built for touch screens (phones and tablets). Works with a computer keyboard and MIDI too, and installs as an app that runs offline.
 
-**Try it:** open [BEHEMOTH](https://shoogaze.github.io/behemoth-synth-/) on your phone and tap the screen to start audio. On an iPhone or iPad use *Share → Add to Home Screen* for a full-screen app.
+**[▶ Open the app](https://shoogaze.github.io/behemoth-synth-/)**  ·  works in the browser, installs to the Home Screen
+
+[ELEPHANT](https://github.com/SHOOGAZE/elephant-sequencer) &nbsp;·&nbsp; **BEHEMOTH** &nbsp;·&nbsp; [GRAINS](https://github.com/SHOOGAZE/grains-synth)
 
 ## Screenshots
 
@@ -104,13 +106,25 @@ Current Chrome, Edge, Safari and Firefox. Web MIDI is available in Chromium-base
 
 ## The family
 
-Three instruments in one black-and-white design, each a single HTML file that runs offline. Open them on the same phone or tablet and add the ones you like to the Home Screen.
+Three instruments in one black-and-white design. Each is a single HTML file that runs offline and answers one question about a track. Open them on the same phone or tablet and add the ones you like to the Home Screen.
 
-| App | What it is | Open | Source |
-| --- | --- | --- | --- |
-| **ELEPHANT** | Pocket sampler groovebox: 16 pads, p-lock sequencer, sampler, FX | [shoogaze.github.io/elephant-sequencer](https://shoogaze.github.io/elephant-sequencer/) | [SHOOGAZE/elephant-sequencer](https://github.com/SHOOGAZE/elephant-sequencer) |
-| **BEHEMOTH** | Wavetable bass synthesizer with a modulation matrix | [shoogaze.github.io/behemoth-synth-](https://shoogaze.github.io/behemoth-synth-/) | [SHOOGAZE/behemoth-synth-](https://github.com/SHOOGAZE/behemoth-synth-) |
-| **GRAINS** | Granular sampler and playable instrument | [shoogaze.github.io/grains-synth](https://shoogaze.github.io/grains-synth/) | [SHOOGAZE/grains-synth](https://github.com/SHOOGAZE/grains-synth) |
+| App | Question | What it does | Live |
+|---|---|---|---|
+| [ELEPHANT](https://github.com/SHOOGAZE/elephant-sequencer) | Where is the beat? | 16 pads, a p-lock sequencer, a sampler and FX | [open](https://shoogaze.github.io/elephant-sequencer/) |
+| **BEHEMOTH** | Where is the bass? | wavetable bass synth with a modulation matrix and a 16-step sequencer | [open](https://shoogaze.github.io/behemoth-synth-/) |
+| [GRAINS](https://github.com/SHOOGAZE/grains-synth) | What is the texture? | granular sampler and playable instrument | [open](https://shoogaze.github.io/grains-synth/) |
+
+### How they link
+
+Each app has a block with buttons that open the other two (Settings, Apps). They do not share state; sounds travel between them as plain WAV files. ELEPHANT and GRAINS load audio; BEHEMOTH only records it, so it is a source here, not a target:
+
+| From | To ELEPHANT | To BEHEMOTH | To GRAINS |
+|---|---|---|---|
+| **ELEPHANT** | — | — | WAV or stem export, loaded as a sample |
+| **BEHEMOTH** | REC OUT as a 16-bit WAV, loaded onto a pad | — | REC OUT as a 16-bit WAV, loaded as a sample |
+| **GRAINS** | REC OUT or SAVE WAV, loaded onto a pad | — | — |
+
+BEHEMOTH also saves its sequencer pattern as a `.mid` file. All three take MIDI in, and tapping the BPM counter in any of them types a tempo.
 
 ## License
 

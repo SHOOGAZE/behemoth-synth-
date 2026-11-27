@@ -708,6 +708,10 @@ body{background:linear-gradient(#141417,#0b0b0d 360px) no-repeat #0b0b0d}
 /* portrait: option rows wrap instead of running off the edge; the source bar scrolls and fades at the right */
 @media (orientation:portrait){.chips{flex-wrap:wrap;overflow:visible}}
 #srcbar{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 22px),#0000);mask-image:linear-gradient(90deg,#000 calc(100% - 22px),#0000)}
+.applinks .btn{flex:1;display:flex;align-items:center;justify-content:center;text-decoration:none;min-height:40px}
+#stage .main.m-keys.split .kbd{max-height:none;flex:1 1 0}
+@media (min-width:700px){.chips{flex-wrap:wrap;overflow:visible}}
+@media (min-width:820px){.view.on > .card.wide{margin-top:14px}}
 </style>
 </head>
 <body>
@@ -1772,6 +1776,7 @@ var I18N = {
 "Randomize": "Случайно",
 "Random preset": "Случайный пресет",
 "Tutorial & tips": "Туториал и подсказки",
+"Apps": "Приложения",
 "Tips": "Подсказки",
 "Start tutorial": "Запустить туториал",
 "Reset tips": "Сбросить подсказки",
@@ -3041,6 +3046,9 @@ function buildSettings() {
       slider('Polyphony', 1, S.MAXV || 16, 1, function () { return P.voices; }, function (v) { setP('voices', v); }, FMT.num),
       slider('Pitch-bend range', 0, 24, 1, function () { return P.bend; }, function (v) { setP('bend', v); }, function (v) { return Math.round(v) + ' st'; })]),
     buildMidiUi(),
+    section('Apps', false, h('div', { class: 'btns applinks' },
+      h('a', { class: 'btn', href: 'https://shoogaze.github.io/elephant-sequencer/', target: '_blank', rel: 'noopener' }, 'ELEPHANT'),
+      h('a', { class: 'btn', href: 'https://shoogaze.github.io/grains-synth/', target: '_blank', rel: 'noopener' }, 'GRAINS'))),
     section('System', false, h('div', { class: 'btns' },
       h('button', { class: 'btn', type: 'button', onclick: panicAll }, 'Stop all notes'),
       (function () {
@@ -3461,6 +3469,7 @@ function buildKeyboard(el) {
 var stageStrip = function () { }, stageEl = null, stageMode = store('beh.stage') === 'pad' ? 'pad' : 'keys';
 /* minimum key width: landscape rows are short, so keys can be narrower and more octaves fit */
 function stagePer() { var land = window.innerWidth > window.innerHeight; return (land ? { s: 52, m: 66, l: 80 } : { s: 46, m: 62, l: 76 })[CFG.skw] || (land ? 80 : 76); }
+function stageSplit() { return window.innerWidth >= 900 && window.innerHeight >= 600 && window.innerWidth > window.innerHeight * 1.2; }
 function buildStage() {
   var pad = h('div', { id: 'surfaceS' }), main = h('div', { class: 'main' }), nameEl = h('div', { class: 'sname' }, '');
   function stageForce() { var el = this, w = (el.clientWidth || window.innerWidth), per = stagePer(); return clamp(Math.ceil((w / per - 1) / 7 - .1), 1, 5); }
@@ -3486,7 +3495,15 @@ function buildStage() {
       el._force = function () { return stageForce.call(el); };
       el._nwk = function () { var w = el.clientWidth || (main.clientWidth || window.innerWidth * .8); return clamp(Math.floor(w / stagePer()), 8, 36); };
       el._oct = function () { return clamp(PL.oct, 0, 7); }; el._idb = 7000;
-      main.append(el); requestAnimationFrame(function () { buildKeyboard(el); });
+      main.append(el);
+      /* wide and tall enough (tablet, desktop): two stacked keyboards, the upper one continues where the lower one ends */
+      if (stageSplit()) {
+        var up = h('div', { class: 'kbd up' });
+        up._nwk = el._nwk; up._force = el._force; up._idb = 7100;
+        up._oct = function () { return clamp(PL.oct + Math.ceil((el._nw || el._nwk()) / 7), 0, 7); };
+        main.insertBefore(up, el); main.classList.add('split');
+        requestAnimationFrame(function () { buildKeyboard(el); buildKeyboard(up); });
+      } else requestAnimationFrame(function () { buildKeyboard(el); });
     }
     else { main.append(pad, h('div', { class: 'padinfo' }, 'X  PITCH / NOTE    Y  BRIGHTNESS'), h('div', { class: 'pady' })); padS.rebuild(); }
   }
@@ -3509,6 +3526,7 @@ function buildStage() {
   stageEl._name = nameEl; stageEl._set = setMode; stageEl._gl = gl; applyMacroNames();
   document.body.append(stageEl);
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && stageEl.classList.contains('on')) closeStage(); });
+  var splitNow = stageSplit(); window.addEventListener('resize', function () { var n = stageSplit(); if (n !== splitNow) { splitNow = n; if (stageEl.classList.contains('on') && stageMode === 'keys') setMode('keys'); } });
   window.addEventListener('resize', function () { if (stageEl.classList.contains('on') && isPortrait()) closeStage(); else if (stageEl.classList.contains('on')) { requestAnimationFrame(function () { stageEl._set(stageMode); }); } });
 }
 function openStage(mode) {
@@ -3729,9 +3747,12 @@ function closeQpm() { qpmEl.classList.remove('on'); try { if (document.fullscree
 
 
 /* ------------------------------------------------ keyboard & MIDI */
-var KEYMAP = { a: 0, w: 1, s: 2, e: 3, d: 4, f: 5, t: 6, g: 7, y: 8, h: 9, u: 10, j: 11, k: 12, o: 13, l: 14 }, kdown = {};
-window.addEventListener('keydown', function (e) { if (e.repeat || e.metaKey || e.ctrlKey || e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return; var s = KEYMAP[e.key]; if (s === undefined || kdown[e.key]) return; kdown[e.key] = 1; playOn(12 * (PL.oct + 1) + s, 0.8, 7000 + s); });
-window.addEventListener('keyup', function (e) { var s = KEYMAP[e.key]; if (s === undefined) return; delete kdown[e.key]; playOff(7000 + s); });
+/* computer keyboard: matched by physical key (e.code), so it plays on a Russian or any other layout too */
+var KEYMAP = { KeyA: 0, KeyW: 1, KeyS: 2, KeyE: 3, KeyD: 4, KeyF: 5, KeyT: 6, KeyG: 7, KeyY: 8, KeyH: 9, KeyU: 10, KeyJ: 11, KeyK: 12, KeyO: 13, KeyL: 14 }, kdown = {};
+function typing(t) { return t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable); }
+window.addEventListener('keydown', function (e) { if (e.repeat || e.metaKey || e.ctrlKey || e.altKey || typing(e.target)) return; var s = KEYMAP[e.code]; if (s === undefined || kdown[e.code]) return; kdown[e.code] = 1; playOn(12 * (PL.oct + 1) + s, 0.8, 7000 + s); });
+window.addEventListener('keyup', function (e) { var s = KEYMAP[e.code]; if (s === undefined) return; delete kdown[e.code]; playOff(7000 + s); });
+window.addEventListener('blur', function () { for (var c in kdown) { playOff(7000 + KEYMAP[c]); } kdown = {}; });
 /* ------------------------------------------------ MIDI: notes, pitch bend, sustain pedal, aftertouch, learnable CC */
 var MIDI = { learning: false, target: null, map: null, held: {}, inputs: 0 };
 var MIDI_DEFAULT = { 1: 'm1', 2: 'm2', 71: 'fRes', 74: 'fCut', 91: 'rvMix', 93: 'chMix' };

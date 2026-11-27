@@ -59,6 +59,9 @@ function buildSettings() {
       slider('Polyphony', 1, S.MAXV || 16, 1, function () { return P.voices; }, function (v) { setP('voices', v); }, FMT.num),
       slider('Pitch-bend range', 0, 24, 1, function () { return P.bend; }, function (v) { setP('bend', v); }, function (v) { return Math.round(v) + ' st'; })]),
     buildMidiUi(),
+    section('Apps', false, h('div', { class: 'btns applinks' },
+      h('a', { class: 'btn', href: 'https://shoogaze.github.io/elephant-sequencer/', target: '_blank', rel: 'noopener' }, 'ELEPHANT'),
+      h('a', { class: 'btn', href: 'https://shoogaze.github.io/grains-synth/', target: '_blank', rel: 'noopener' }, 'GRAINS'))),
     section('System', false, h('div', { class: 'btns' },
       h('button', { class: 'btn', type: 'button', onclick: panicAll }, 'Stop all notes'),
       (function () {
